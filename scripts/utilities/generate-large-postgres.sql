@@ -2,11 +2,11 @@
 -- LARGE e-commerce dataset — for performance & index lessons
 -- ~50k users, 5k products, 200k orders, ~340k order_items
 --
-# Run via:  ./scripts/utilities/load-large-postgres.sh
-# (creates database perf_lab, loads this file, runs ANALYZE)
+-- Run via:  ./scripts/utilities/load-large-postgres.sh
+-- (creates database perf_lab, loads this file, runs ANALYZE)
 --
-# NOTE: no indexes are created here on purpose —
-# you create them yourself in Day 22–24 (SQL) / Day 13–17 (PG).
+-- NOTE: no indexes are created here on purpose —
+-- you create them yourself in Day 22–24 (SQL) / Day 13–17 (PG).
 -- ============================================================
 
 SELECT setseed(0.42);   -- deterministic randomness

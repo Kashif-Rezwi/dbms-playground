@@ -1,5 +1,6 @@
 import os, re, sys
-root = "/Users/kashifrezwi/Developer/dbms-playground"
+# repo root = two levels up from this script (scripts/utilities/check_links.py)
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 broken = []
 checked = 0
 for dirpath, dirs, files in os.walk(root):
@@ -11,6 +12,8 @@ for dirpath, dirs, files in os.walk(root):
         for m in re.finditer(r'\]\(([^)\s]+)\)', text):
             rel = m.group(1)
             if rel.startswith('http') or rel.startswith('#'): continue
+            rel = rel.split('#', 1)[0]  # strip anchor fragment
+            if not rel: continue
             if not rel.endswith('.md') and '.' not in os.path.basename(rel): continue
             target = os.path.normpath(os.path.join(dirpath, rel))
             checked += 1
