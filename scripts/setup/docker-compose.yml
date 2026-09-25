@@ -1,0 +1,29 @@
+# Optional: run both databases in containers.
+#   docker compose -f scripts/setup/docker-compose.yml up -d
+#   docker compose -f scripts/setup/docker-compose.yml down
+# PostgreSQL: localhost:5432 (user: postgres / pass: postgres)
+# MongoDB:   localhost:27017 (no auth, local learning only)
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: dbms-playground-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:7
+    container_name: dbms-playground-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  pgdata:
+  mongodata:
