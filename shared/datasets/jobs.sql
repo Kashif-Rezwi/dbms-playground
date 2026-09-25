@@ -136,5 +136,5 @@ INSERT INTO job_skills (job_id, skill_id, is_required) VALUES
 COMMIT;
 
 -- Sanity check: candidates 8 | companies 6 | jobs 10 | applications 12 | skills 10
---               candidate_skills 20 | job_skills 23
+--               candidate_skills 21 | job_skills 24
 
