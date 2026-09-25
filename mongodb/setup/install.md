@@ -1,4 +1,4 @@
-# 🍃 Installing MongoDB + mongosh
+# Installing MongoDB + mongosh
 
 ## Option A — macOS with Homebrew
 
@@ -63,6 +63,39 @@ mongosh ecommerce
 db.users.countDocuments()                // 10
 ```
 
+## Enabling transactions locally (replica set)
+
+**Skip this until Day 23.** Multi-document transactions require a *replica set* — even a single-node one. A standalone `mongod` (the default after install) refuses them with `Transaction numbers are only allowed on a replica set member or mongos`.
+
+### Homebrew
+
+```bash
+# 1. Add replication to the config:
+#      $(brew --prefix)/etc/mongod.conf
+#
+#      replication:
+#        replSetName: rs0
+
+# 2. Restart the service
+brew services restart mongodb-community
+
+# 3. Initialize the one-node replica set (once, ever)
+mongosh --eval "rs.initiate()"
+
+# 4. Verify — myState 1 means PRIMARY, transactions now work
+mongosh --eval "rs.status().myState"
+```
+
+Your existing databases survive this change. If mongosh sessions started *before* `rs.initiate()` behave oddly, reconnect (Day 23 covers why).
+
+### Docker
+
+The compose file starts MongoDB with `--replSet rs0` already. Run the one-time initialization:
+
+```bash
+docker exec dbms-playground-mongo mongosh --eval "rs.initiate()"
+```
+
 ## Troubleshooting
 
 | Symptom | Fix |
@@ -70,5 +103,7 @@ db.users.countDocuments()                // 10
 | `mongosh: command not found` | install `mongodb-shell`, reopen terminal |
 | `connect ECONNREFUSED 127.0.0.1:27017` | `brew services start mongodb-community`, check the log |
 | Dataset "missing" | rerun the seed script; check `show dbs` |
+| `Transaction numbers are only allowed on a replica set...` | do the replica-set steps above |
+| `rs.initiate()` errors with "not started with --replSet" | mongod wasn't restarted with the replication config — check step 1–2 |
 
 **Next: `mongosh-survival-guide.md` — the shell habits that carry the track.**

@@ -1,4 +1,4 @@
-# 🛟 mongosh Survival Guide
+# mongosh Survival Guide
 
 `mongosh` is a JavaScript shell with a `db` object. It feels like a REPL crossed with a query tool. These are the moves that carry the whole track.
 
@@ -72,6 +72,10 @@ use ecommerce
 db.users.findOne()
 // then whatever today's lesson says
 ```
+
+## One setup note for later (Day 23)
+
+Multi-document **transactions** need MongoDB running as a single-node replica set — the one-time steps live in `install.md` under "Enabling transactions locally". Everything before Day 23 works without it, so don't do it now.
 
 ## Reset any time
 

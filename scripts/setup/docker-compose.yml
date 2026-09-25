@@ -3,6 +3,10 @@
 #   docker compose -f scripts/setup/docker-compose.yml down
 # PostgreSQL: localhost:5432 (user: postgres / pass: postgres)
 # MongoDB:   localhost:27017 (no auth, local learning only)
+#
+# MongoDB runs as a single-node replica set so multi-document
+# transactions work (MongoDB Days 23-24). One-time, after first up:
+#   docker exec dbms-playground-mongo mongosh --eval "rs.initiate()"
 
 services:
   postgres:
@@ -19,6 +23,7 @@ services:
   mongodb:
     image: mongo:7
     container_name: dbms-playground-mongo
+    command: ["--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "27017:27017"
     volumes:
