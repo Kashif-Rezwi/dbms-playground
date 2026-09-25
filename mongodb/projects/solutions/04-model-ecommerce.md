@@ -1,4 +1,4 @@
-# ✅ Solutions — P4: Model an E-Commerce Store
+# Solutions — P4: Model an E-Commerce Store
 
 > A *reference* design — yours may differ and still be right if every choice is defended. Compare reasoning, not shapes.
 

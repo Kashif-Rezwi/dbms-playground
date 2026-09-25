@@ -1,4 +1,4 @@
-# ✅ Solutions — P6: E-Commerce Analytics (Pipeline)
+# Solutions — P6: E-Commerce Analytics (Pipeline)
 
 > Counts verified against the seed data — predict before you compare!
 

@@ -1,4 +1,4 @@
-# 🏗️ P4 — Bank Transfer, Concurrency Edition
+# P4 — Bank Transfer, Concurrency Edition
 
 **Milestone:** PG Stage 5 (after Day 20) · **Time:** ~90 min · **Two psql sessions required**
 
@@ -24,11 +24,11 @@ Rebuild the SQL-track bank with concurrency-proofed transfers — and *reproduce
 8. The invariant check: SUM(balances) equals seed total minus... nothing (transfers conserve!) — write the expected number *first*, verify.
 9. "Suspicious accounts": any account whose live balance ≠ seed ± net flow (must be zero rows — until you sabotage one balance by hand and show the check catching it).
 
-## Challenge ⭐
+## Challenge
 
 10. **Idempotency, PG-grade:** add `client_ref TEXT UNIQUE` to transfers; run the same transfer twice with the same ref (`ON CONFLICT DO NOTHING`) — prove the second call is a no-op (RETURNING empty).
 
-## Bonus 🔴
+## Bonus
 
 11. **The two-counter problem:** transfer logs must be *gapless* for auditors. Implement with a `counters` table (per-year row) + `SELECT ... FOR UPDATE` inside the transfer transaction. Explain why a sequence (Day 5) was forbidden here.
 
@@ -38,4 +38,4 @@ Rebuild the SQL-track bank with concurrency-proofed transfers — and *reproduce
 - What's the difference between what the DB guarantees (no lost update) and what the *app* must still do (retry, read RETURNING)?
 - Which experiment surprised you, and what would you tell the team?
 
-> ✅ [solutions/04-bank-concurrency.md](solutions/04-bank-concurrency.md)
+> [solutions/04-bank-concurrency.md](solutions/04-bank-concurrency.md)

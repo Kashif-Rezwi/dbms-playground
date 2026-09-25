@@ -1,6 +1,6 @@
 # Day 30 — PostgreSQL Capstone: Production-Grade Schema + Ops
 
-**Milestone:** PG track finale · **Difficulty:** 🔴 · Full spec: **[../projects/07-capstone.md](../projects/07-capstone.md)**
+**Milestone:** PG track finale · **Difficulty:** Advanced · Full spec: **[../projects/07-capstone.md](../projects/07-capstone.md)**
 
 ## The Assignment (short version)
 

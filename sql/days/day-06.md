@@ -1,13 +1,13 @@
 # Day 06 — UPDATE & DELETE
 
-**Track:** SQL · **Stage:** 2 — CRUD + Querying · **Difficulty:** 🟢 Beginner
+**Track:** SQL · **Stage:** 2 — CRUD + Querying · **Difficulty:** Beginner
 **Prerequisites:** Days 01–05 · **Dataset:** `ecommerce` (reset it first if you mutated it yesterday)
 
-## 🎯 Goal
+## Goal
 
 Modify and remove rows safely — and build the reflex of testing WHERE clauses *before* dangerous writes.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **UPDATE** changes existing rows:
 
@@ -23,7 +23,7 @@ Read as: *"for rows where id = 4, set price to 1999."* You can update several co
 DELETE FROM reviews WHERE id = 12;
 ```
 
-**⚠️ The most important habit of this whole track:**
+** The most important habit of this whole track:**
 
 > **An UPDATE or DELETE without WHERE affects EVERY ROW.**
 
@@ -41,15 +41,15 @@ DELETE FROM reviews WHERE rating = 5;       -- now you know
 
 **RETURNING** (PostgreSQL) shows what changed: `UPDATE ... WHERE id = 4 RETURNING *;`
 
-## 🔍 Why It Matters
+## Why It Matters
 
 The U and D of CRUD — and the #1 source of real-world "I deleted production" horror stories. Learn the safety habits now, not after an incident.
 
-## 💡 Mental Model
+## Mental Model
 
 > UPDATE is a **find-and-replace across the table**, and DELETE is a **paper shredder**. WHERE is the *scope selector*. No scope = whole table. Always ask: "what's my WHERE, and what does it match?"
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- preview first!
@@ -66,23 +66,23 @@ SELECT id FROM orders WHERE status = 'pending';
 DELETE FROM orders WHERE status = 'pending';
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Set `is_active` to TRUE for user id 8. Verify.
-🟢 **P2.** Raise the price of every product in category 1 (Electronics) by 5% (`price * 1.05`). Preview the affected rows *first*, then update, then verify.
-🟢 **P3.** Reduce stock of product 7 by 1 (as if one sold). One statement, using the old value.
-🟢 **P4.** Delete any user you created on Day 5 — *but preview first*. What happens if that user has orders? Read the error: that's a **foreign key violation**, the DB protecting you.
-🟡 **P5. ⭐ Predict first:** exactly how many rows change?
+[Beginner] **P1.** Set `is_active` to TRUE for user id 8. Verify.
+[Beginner] **P2.** Raise the price of every product in category 1 (Electronics) by 5% (`price * 1.05`). Preview the affected rows *first*, then update, then verify.
+[Beginner] **P3.** Reduce stock of product 7 by 1 (as if one sold). One statement, using the old value.
+[Beginner] **P4.** Delete any user you created on Day 5 — *but preview first*. What happens if that user has orders? Read the error: that's a **foreign key violation**, the DB protecting you.
+[Intermediate] **P5. Predict first:** exactly how many rows change?
 
 ```sql
 UPDATE users SET is_active = TRUE WHERE is_active = FALSE;
 ```
 
-🟡 **P6.** Mark order 8 (pending) as `'shipped'`, setting its `ordered_at` to today — two columns, one statement.
-🟡 **P7. From memory:** delete all reviews with rating 1 (none exist — predict the count first).
-🔴 **P8.** "Soft delete" pattern: instead of `DELETE`ing reviews with rating ≤ 2, *keep* them but... invent a way to mark them as hidden without adding a column. (Hint: a comment can be changed.) Explain when soft deletes beat hard deletes.
+[Intermediate] **P6.** Mark order 8 (pending) as `'shipped'`, setting its `ordered_at` to today — two columns, one statement.
+[Intermediate] **P7. From memory:** delete all reviews with rating 1 (none exist — predict the count first).
+[Advanced] **P8.** "Soft delete" pattern: instead of `DELETE`ing reviews with rating ≤ 2, *keep* them but... invent a way to mark them as hidden without adding a column. (Hint: a comment can be changed.) Explain when soft deletes beat hard deletes.
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1 (catastrophic-by-design — run in a scratch table you create for safety)
@@ -101,31 +101,31 @@ UPDATE products SET stock = 0 WHERE category_id = 4;
 UPDATE products SET price = 100 WHERE id = 1 AND;
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The Day 5 mini-flow, reversed: **update** all inactive users to active (preview → update → verify), then **list** active Karachi users sorted by join date, **top 3**. One workflow, four concepts.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. What happens to unlisted columns in an INSERT?
 2. Write from memory: insert a category `(99, 'Testing')`. Then delete it. Safely.
 3. What does `SELECT DISTINCT status FROM orders` return?
 4. Why is `SELECT *` risky in code?
 
-## 🧠 Recall
+## Recall
 
 1. What does an UPDATE without WHERE do? A DELETE without WHERE?
 2. What safety check do you run before every write?
 3. What does `SET stock = stock - 1` do that `SET stock = 99` doesn't?
 4. What stopped you from deleting a user with orders — and what is that mechanism called?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How do you prevent accidental full-table updates or deletes?"
 2. "What's a soft delete and why do products prefer it to DELETE?"
 3. "You ran `UPDATE` on the wrong rows in production. What do you wish you had done?" *(Transactions — or a backup + preview SELECT.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand UPDATE, DELETE, WHERE scoping
 - [ ] Previewed before EVERY write

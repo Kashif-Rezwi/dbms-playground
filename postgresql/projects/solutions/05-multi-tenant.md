@@ -1,4 +1,4 @@
-# ✅ Solutions — P5: Secure a Multi-Tenant Schema
+# Solutions — P5: Secure a Multi-Tenant Schema
 
 ## 1. The roles
 

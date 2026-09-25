@@ -1,4 +1,4 @@
-# 🏗️ Project 3 — Student Course Management System
+# Project 3 — Student Course Management System
 
 **Milestone:** SQL Stage 3 (after Day 14) · **Time:** ~90 min · **Dataset:** your own
 
@@ -46,12 +46,12 @@ Insert 8 students, 5 courses, and ~15 enrollments (some ungraded), including: on
 
 None (tiny data) — but name the column you'd index first for query 4 and say why.
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 12. Add a grade constraint (CHECK between 0 and 100 — or A–F letter, your design) and prove a bad insert fails
 13. A "transcript" query: one row per student — name, courses taken, average grade (GROUP BY + join)
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 14. Students enrolled in **more than one course with the same instructor** (self-join with two different aliases of courses)
 15. Revenue per instructor (SUM of fee across their enrollments) — watch for double counting students... there is none (each enrollment pays once) — but *say why* before running.
@@ -67,4 +67,4 @@ Your first real many-to-many system, built and queried — the design pattern be
 - Query 9's `<` trick — what breaks without it?
 - Compare your design with `shared/datasets/jobs.sql` (applications/candidate_skills) — same pattern?
 
-> ✅ Done? [solutions/03-student-courses.md](solutions/03-student-courses.md)
+> Done? [solutions/03-student-courses.md](solutions/03-student-courses.md)

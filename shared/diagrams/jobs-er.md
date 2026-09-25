@@ -1,4 +1,4 @@
-# 💼 Job Platform — ER Diagram
+# Job Platform — ER Diagram
 
 ```mermaid
 erDiagram

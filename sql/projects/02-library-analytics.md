@@ -1,4 +1,4 @@
-# 🏗️ Project 2 — Library Analytics
+# Project 2 — Library Analytics
 
 **Milestone:** SQL Stage 2 (after Day 10) · **Time:** ~60 min · **Dataset:** your own small library dataset
 
@@ -40,12 +40,12 @@ Insert **10 books** and **25+ checkouts** spread across genres, members, and mon
 
 Tiny data — none. Focus on *correctness*.
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 13. Overdue detection: books where `returned_date IS NULL` and checkout older than 30 days
 14. Per-member report: member, total checkouts, still-out count, average duration — one query, LEFT JOIN + GROUP BY + conditional counting
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 15. "Genre loyalty": for each member, the genre they check out most. (Hint: GROUP BY member, genre + a window function — Day 16 preview; or do it with a subquery.)
 
@@ -59,4 +59,4 @@ A library you built, 12+ queries answered, and a feel for what "analytics" means
 - Why does the "never checked out" question need an outer join?
 - What did NULL mean in your data — and which aggregate silently ignored it?
 
-> ✅ Done? [solutions/02-library-analytics.md](solutions/02-library-analytics.md)
+> Done? [solutions/02-library-analytics.md](solutions/02-library-analytics.md)

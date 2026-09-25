@@ -1,4 +1,4 @@
-# 🔀 Cross-Database Exercises — Same Questions, Two Engines
+# Cross-Database Exercises — Same Questions, Two Engines
 
 > Requires: both `ecommerce` seeds loaded (SQL + Mongo — same data, different shapes!). Predict before running, every time.
 
@@ -9,7 +9,7 @@
 ./scripts/seed/seed-mongo.sh ecommerce
 ```
 
-## Level 🟢 — Direct translations (predict the answer, run BOTH, compare)
+## Level — Direct translations (predict the answer, run BOTH, compare)
 
 **X1.** "Products under 2000, cheapest first, top 3" — SQL and Mongo. Same rows? Same order? (Note the tie-handling difference if two prices were equal — ORDER BY name as tiebreaker in both.)
 
@@ -17,7 +17,7 @@
 
 **X3.** "Users with no reviews" — the SQL LEFT JOIN pattern vs Mongo's app-side $in (or $lookup + $size 0). Which engine made this *easier*, and why? (Honest answer: SQL — the LEFT JOIN + IS NULL pattern is one statement.)
 
-## Level 🟡 — Same business answer, different tools
+## Level — Same business answer, different tools
 
 **X4.** "Revenue per city" — SQL: JOIN + GROUP BY. Mongo: $match → $lookup → $unwind → $group. Run both; same numbers (Karachi 20547 — predicted yet?). Two lines: which shape felt more natural, and which *would* you rather maintain?
 
@@ -27,7 +27,7 @@
 
 **X7.** The *integrity* comparison: run `UPDATE products SET price = -5 WHERE id = 1` (after adding the CHECK — PG Day 19 P7) vs the Mongo equivalent — is one rejected and the other accepted? What tool fills the gap in Mongo (validator — add it and prove it now rejects).
 
-## Level 🔴 — Design decisions, argued in both worlds
+## Level — Design decisions, argued in both worlds
 
 **X8.** "Model the shopping cart" — SQL: carts + cart_items tables. Mongo: cart doc with embedded items. Write both schemas; then answer: in which is the *add-to-cart* operation simpler (Mongo positional-$ 2-step vs SQL 2 inserts — discuss transactional needs honestly).
 

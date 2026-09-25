@@ -1,4 +1,4 @@
-# ✅ Solutions — P3: Performance Lab
+# Solutions — P3: Performance Lab
 
 ## The index plan (≤ 4, on paper first — Day 17 shapes)
 

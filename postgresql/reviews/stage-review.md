@@ -1,4 +1,4 @@
-# 📋 PostgreSQL Stage Review — Security & Ops (Days 21–28)
+# PostgreSQL Stage Review — Security & Ops (Days 21–28)
 
 Run after Day 28, before the Day 29 full review.
 
@@ -16,13 +16,13 @@ Run after Day 28, before the Day 29 full review.
 
 ## Part B — Hands-On Drills
 
-🟢 **D1.** Create role `reporter` with SELECT on views only; prove base-table access is denied.
-🟢 **D2.** Full RLS sequence on a table of your choice; context switch proves isolation; FORCE trap demonstrated.
-🟡 **D3.** Backup → sabotage (drop a table) → selective restore → verify counts. Time it; that's your RTO draft.
-🟡 **D4.** Run the vitals report (connections, bloat, slow queries, disk) on your machine; interpret each line in one sentence.
-🟡 **D5.** Classify five DDL statements as instant or rewrite; verify by timing.
-🔴 **D6.** The 10-minute incident script, written from memory for "checkout timing out" — exact commands.
-🔴 **D7.** The scaling-ladder drill: assign first two rungs to (a) slow dashboard on 40M rows (b) 5k req/s read API (c) 20k rows/s ingest.
+[Beginner] **D1.** Create role `reporter` with SELECT on views only; prove base-table access is denied.
+[Beginner] **D2.** Full RLS sequence on a table of your choice; context switch proves isolation; FORCE trap demonstrated.
+[Intermediate] **D3.** Backup → sabotage (drop a table) → selective restore → verify counts. Time it; that's your RTO draft.
+[Intermediate] **D4.** Run the vitals report (connections, bloat, slow queries, disk) on your machine; interpret each line in one sentence.
+[Intermediate] **D5.** Classify five DDL statements as instant or rewrite; verify by timing.
+[Advanced] **D6.** The 10-minute incident script, written from memory for "checkout timing out" — exact commands.
+[Advanced] **D7.** The scaling-ladder drill: assign first two rungs to (a) slow dashboard on 40M rows (b) 5k req/s read API (c) 20k rows/s ingest.
 
 ## Part C — Mock Interview (recorded)
 

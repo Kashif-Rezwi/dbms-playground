@@ -1,12 +1,12 @@
 # Day 05 — Primary Keys, Identity & Sequences
 
-**Track:** PostgreSQL · **Stage:** 2 — Modeling in PG · **Difficulty:** 🟢→🟡
+**Track:** PostgreSQL · **Stage:** 2 — Modeling in PG · **Difficulty:** Beginner → Intermediate
 
-## 🎯 Goal
+## Goal
 
 Stop typing ids by hand: identity columns and sequences, and what they guarantee.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **The problem:** every table needs a PK; humans shouldn't mint them. PostgreSQL offers:
 
@@ -40,15 +40,15 @@ SELECT LASTVAL('invoice_no_seq');        -- last value this session got from any
 - Identity ≠ concurrency-safe ordering: ids arrive roughly in order, but a *lower* id can commit after a higher one. Use a timestamp column for ordering.
 - Getting the id you just made: `INSERT ... RETURNING id;`
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Surrogate keys via identity are the default of virtually every table you'll ever write. And "why are there gaps in my ids?" is a top-5 production non-mystery once you know sequences.
 
-## 💡 Mental Model
+## Mental Model
 
 > An identity column is a **queue ticket machine**: it never repeats, never reissues, and skipping numbers is fine (someone took a ticket and left). A manual sequence is a **numbered receipt pad** for cases where the number itself has business meaning.
 
-## 💻 Examples
+## Examples
 
 ```sql
 CREATE TABLE orders_pg (
@@ -63,17 +63,17 @@ INSERT INTO orders_pg (user_id) VALUES (2), (3) RETURNING id;
 SELECT MAX(id), MIN(id) FROM orders_pg;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Create `customers` (ALWAYS identity) + 3 inserts, using `RETURNING id` each time. Note the ids.
-🟢 **P2.** Deliberately insert a duplicate PK (`INSERT INTO customers (id, name)` — wait, ALWAYS forbids the column; so: insert twice via your app pattern and then try to copy a row including id into a new row via... do this: `INSERT INTO customers (name) SELECT name FROM customers;` — what ids appear?)
-🟢 **P3.** Prove the gap: BEGIN, insert (note id), ROLLBACK, insert again — which id came out? Explain.
-🟡 **P4.** Sequence drill: `CREATE SEQUENCE invoice_numbers START 1000;` — take 3 values; check `CURRVAL` and one `LASTVAL`.
-🟡 **P5. ⭐ Predict first:** three sessions each do `INSERT ... RETURNING id` simultaneously. Can two get the same id? Can ids commit out of order? Explain both answers before arguing with anyone.
-🟡 **P6. From memory:** a `posts` table DDL: identity id, author text, body text, created_at default now.
-🔴 **P7.** Migration thinking: you inherit a table with `SERIAL` and want identity semantics. Look up `ALTER TABLE ... ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;` — write the command for a table you create with plain INT first, apply, and verify auto-fill now works. What happens to existing rows?
+[Beginner] **P1.** Create `customers` (ALWAYS identity) + 3 inserts, using `RETURNING id` each time. Note the ids.
+[Beginner] **P2.** Deliberately insert a duplicate PK (`INSERT INTO customers (id, name)` — wait, ALWAYS forbids the column; so: insert twice via your app pattern and then try to copy a row including id into a new row via... do this: `INSERT INTO customers (name) SELECT name FROM customers;` — what ids appear?)
+[Beginner] **P3.** Prove the gap: BEGIN, insert (note id), ROLLBACK, insert again — which id came out? Explain.
+[Intermediate] **P4.** Sequence drill: `CREATE SEQUENCE invoice_numbers START 1000;` — take 3 values; check `CURRVAL` and one `LASTVAL`.
+[Intermediate] **P5. Predict first:** three sessions each do `INSERT ... RETURNING id` simultaneously. Can two get the same id? Can ids commit out of order? Explain both answers before arguing with anyone.
+[Intermediate] **P6. From memory:** a `posts` table DDL: identity id, author text, body text, created_at default now.
+[Advanced] **P7.** Migration thinking: you inherit a table with `SERIAL` and want identity semantics. Look up `ALTER TABLE ... ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;` — write the command for a table you create with plain INT first, apply, and verify auto-fill now works. What happens to existing rows?
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: "duplicate key value violates unique constraint" on a table that
@@ -89,31 +89,31 @@ SELECT MAX(id), MIN(id) FROM orders_pg;
 -- now inserts fail with PK collisions. Sequence didn't move. Fix it.
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Apply to the shared data: rebuild `users` as `users_pg` (identity id + your Day 3 type opinions) and write the SQL-track "users with no orders" pattern against `users_pg` — same query shape, engine-native ids. Then: how would you migrate the *existing* ecommerce `users` ids into `users_pg` while preserving them? (Hint: OVERRIDING SYSTEM VALUE.)
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. WAL — what does it guarantee?
 2. One process per connection — and the consequence for connection counts?
 3. SQL: surrogate vs natural keys.
 4. SQL: what does a FK constraint enforce?
 
-## 🧠 Recall
+## Recall
 
 1. Identity ALWAYS vs BY DEFAULT — when would you allow the latter?
 2. Why do gaps happen, and why is that fine?
 3. What does RETURNING give you?
 4. Why must id order not be trusted as event order?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How do you generate primary keys in PostgreSQL?" *(Identity; SERIAL legacy; why not UUID/random? — say trade-offs.)*
 2. "Why are there gaps in my id sequence?" *(Failed inserts consume numbers — by design.)*
 3. "Why shouldn't you use id order as creation order?" *(Commit order ≠ allocation order.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand identity, SERIAL, sequences, RETURNING
 - [ ] Completed P1–P7 (P5 reasoned before testing)

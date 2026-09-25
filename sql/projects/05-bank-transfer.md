@@ -1,4 +1,4 @@
-# 🏗️ Project 5 — Bank Transfer Simulation
+# Project 5 — Bank Transfer Simulation
 
 **Milestone:** SQL Stage 5 (after Day 21) · **Time:** ~60–90 min · **Dataset:** your own
 
@@ -44,12 +44,12 @@ Write each as an explicit transaction:
 
 None — but predict: which table grows fastest over years, and which query (5) gets slowest first? Why? (Answer in the memo.)
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 9. **Idempotency**: run the same transfer twice "by accident" — what happens to money? Design a way to prevent double-execution (a unique key? a status column? argue your choice)
 10. **Concurrent transfer preview**: open two psql tabs; in tab 1 BEGIN and debit account 1 (don't commit); in tab 2 try to debit the same account — what happens? (Don't force it — observe, ROLLBACK, and note it as a PG-track teaser)
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 11. Write the transfer as ONE statement: `UPDATE accounts SET balance = balance - X WHERE id = A` ... no — the real challenge: a single UPDATE affecting both accounts using a CASE. Then discuss: is this *more* atomic, or just fewer keystrokes?
 
@@ -63,4 +63,4 @@ A transfer system where money mathematically cannot vanish — with the experime
 - What's the difference between the CHECK firing (query 2) and the FK firing (query 3)? Which ACID letter is on display in each?
 - Why does the transfers log exist? What business question does it answer that balances can't?
 
-> ✅ Done? [solutions/05-bank-transfer.md](solutions/05-bank-transfer.md)
+> Done? [solutions/05-bank-transfer.md](solutions/05-bank-transfer.md)

@@ -1,4 +1,4 @@
-# ✅ Solutions — P5: Index Performance Lab
+# Solutions — P5: Index Performance Lab
 
 ## The index plan (≤3, ESR-reasoned)
 

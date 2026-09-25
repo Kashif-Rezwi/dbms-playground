@@ -1,13 +1,13 @@
 # Day 05 — INSERT: Creating Data
 
-**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** 🟢 Beginner
-**Prerequisites:** Days 01–04 · **Dataset:** `ecommerce` · **Milestone:** 🏗️ Project 1
+**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** Beginner
+**Prerequisites:** Days 01–04 · **Dataset:** `ecommerce` · **Milestone:** Project 1
 
-## 🎯 Goal
+## Goal
 
 Add rows to tables — single, multiple, with explicit columns — and understand why listing columns is non-negotiable.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 `INSERT` creates rows:
 
@@ -33,15 +33,15 @@ INSERT INTO products (id, name, category_id, price, stock, created_at) VALUES
 
 **Verification habit:** after every INSERT, `SELECT` the rows back. Trust, but verify.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 INSERT is the C of CRUD. Every signup, every order, every message lands in a database via an INSERT.
 
-## 💡 Mental Model
+## Mental Model
 
 > INSERT fills out a blank form (a new row). Listing columns is labeling each blank. If you skip a blank, the database writes its default answer — or leaves it NULL.
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- one row
@@ -56,13 +56,13 @@ INSERT INTO categories (id, name) VALUES
 SELECT * FROM categories ORDER BY id;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Insert yourself as a user (invent an id — pick 101 so future answers line up; email must be unique).
-🟢 **P2.** Insert two more users of your choosing.
-🟢 **P3.** Insert a product into category 9 (Pet Supplies) — your choice of name/price/stock/id.
-🟢 **P4.** Verify all three inserts with SELECTs.
-🟡 **P5. ⭐ Predict first:** what exactly happens?
+[Beginner] **P1.** Insert yourself as a user (invent an id — pick 101 so future answers line up; email must be unique).
+[Beginner] **P2.** Insert two more users of your choosing.
+[Beginner] **P3.** Insert a product into category 9 (Pet Supplies) — your choice of name/price/stock/id.
+[Beginner] **P4.** Verify all three inserts with SELECTs.
+[Intermediate] **P5. Predict first:** what exactly happens?
 
 ```sql
 INSERT INTO users (name, email, city) VALUES ('NoID Person', 'noid@example.com', 'Quetta');
@@ -70,12 +70,12 @@ INSERT INTO users (name, email, city) VALUES ('NoID Person', 'noid@example.com',
 
 Write your prediction, run it, read the *whole* error message, explain what rule fired.
 
-🟡 **P6.** Insert an order for your user (status `'pending'`, ordered today — use `CURRENT_DATE`). Now *update your prediction skills*: before verifying, what columns did you not provide, and what are they now?
+[Intermediate] **P6.** Insert an order for your user (status `'pending'`, ordered today — use `CURRENT_DATE`). Now *update your prediction skills*: before verifying, what columns did you not provide, and what are they now?
 
-🟡 **P7. From memory:** insert a review for the product you created in P3, written by your user, rating 4.
-🔴 **P8.** Insert a product that violates a constraint on purpose (e.g., negative price). Read the error. Which constraint name appears? Now write one sentence explaining what a CHECK constraint does.
+[Intermediate] **P7. From memory:** insert a review for the product you created in P3, written by your user, rating 4.
+[Advanced] **P8.** Insert a product that violates a constraint on purpose (e.g., negative price). Read the error. Which constraint name appears? Now write one sentence explaining what a CHECK constraint does.
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1 (syntax: wrong keyword order)
@@ -91,35 +91,35 @@ INSERT INTO users (id, name, email, city, is_active, joined_at)
 VALUES (1, 'Duplicate ID', 'dupe@example.com', 'Sialkot', TRUE, '2025-02-02');
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Full mini-flow: **insert** a new user, **verify** with a filtered SELECT (WHERE email = yours), then show **only** the users who joined in 2025, **sorted** newest first, **top 3**. (INSERT + SELECT + WHERE + ORDER BY + LIMIT in one chain.)
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Predict-before-run: what does `SELECT DISTINCT status FROM orders` return?
 2. Write from memory: top 2 priciest in-stock products.
 3. What's the NULL trap in WHERE?
 4. Does ORDER BY change the table? Does INSERT?
 
-## 🧠 Recall
+## Recall
 
 1. Why must you always list columns in an INSERT?
 2. What happens to columns you don't list?
 3. How do you insert 5 rows in one statement?
 4. What did you do after every insert, and why?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "What's the difference between listing columns and not listing them in an INSERT?"
 2. "How do you insert multiple rows efficiently?" *(One statement, many VALUES tuples.)*
 3. "What happens if an INSERT violates a primary key or unique constraint?"
 
-## 🏗️ Mini Project — 🎉 You've finished Stage 1!
+## Mini Project — You've finished Stage 1!
 
 Build **[P1: Task Manager Database](../projects/01-task-manager.md)** — create a task table, insert tasks, and read them back with filters and sorting. Attempt it before opening `solutions/`.
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand INSERT, column lists, defaults, multi-row
 - [ ] Completed P1–P8

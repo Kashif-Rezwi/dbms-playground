@@ -1,12 +1,12 @@
 # Day 20 — $group + Accumulators
 
-**Track:** MongoDB · **Stage:** 6 — Aggregation · **Difficulty:** 🟡
+**Track:** MongoDB · **Stage:** 6 — Aggregation · **Difficulty:** Intermediate
 
-## 🎯 Goal
+## Goal
 
 Aggregate per group — the GROUP BY of the pipeline — with the accumulator toolbox and the one stage-order trap.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **$group** partitions documents by a key expression and runs accumulators per group:
 
@@ -36,15 +36,15 @@ db.orders.aggregate([
 
 **$push is a mini-warehouse** — building per-group arrays (e.g., all of a user's order totals) — the pipeline-native way to re-collect what embedding would have pre-joined.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 "Revenue per user", "average rating per product", "orders per city per month" — every analytics question is $match + $group + $sort. It's the direct GROUP BY analog — but composable with everything else.
 
-## 💡 Mental Model
+## Mental Model
 
 > $group is the **sorting office** — again! Documents arrive, get sorted into labeled boxes (`_id`), each box gets stamped with its totals (accumulators). $push staples receipts into the box. HAVING's analog: quality-check *boxes* after stamping. Rule reminder: throw away bad letters ($match) BEFORE the office, not after.
 
-## 💻 Examples
+## Examples
 
 ```javascript
 // revenue per status
@@ -69,18 +69,18 @@ db.orders.aggregate([
 ])
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Revenue per order status (example above — type it yourself). Predict the top status's revenue first.
-🟢 **P2.** Products per category_id (count) — then the top 2 categories by count.
-🟢 **P3.** Average rating per product — top 3 products. (Hint: reviews collection.)
-🟡 **P4.** Users with ≥ 2 orders — the $group + post-$match HAVING pattern. Predict who (users 1, 2, 3 have 2 orders each... verify!).
-🟡 **P5. ⭐ Predict first:** what's `_id` in the output of `{$group: {_id: null, total: {$sum: '$total_amount'}}}` on non-cancelled orders? (One group, whole collection: `{ _id: null, total: ... }` — predict the number too: 60595.5+... compute from the seed data first!)
-🟡 **P6.** $push collection: each user's order totals as an array + lifetime sum — then explain how this compares to embedding orders on the user (a *computed* view vs a *stored* design — the computed pattern's whole argument).
-🔴 **P7.** $addToSet vs $push, felt: group orders by status with both `statuses: {$push: '$user_id'}` and `uniques: {$addToSet: '$user_id'}`... on orders grouped by status — who differs? (Users appearing multiple times.)
-🔴 **P8.** From memory: $match-before vs $match-after — which is WHERE, which is HAVING, and why must the doc-level one go first?
+[Beginner] **P1.** Revenue per order status (example above — type it yourself). Predict the top status's revenue first.
+[Beginner] **P2.** Products per category_id (count) — then the top 2 categories by count.
+[Beginner] **P3.** Average rating per product — top 3 products. (Hint: reviews collection.)
+[Intermediate] **P4.** Users with ≥ 2 orders — the $group + post-$match HAVING pattern. Predict who (users 1, 2, 3 have 2 orders each... verify!).
+[Intermediate] **P5. Predict first:** what's `_id` in the output of `{$group: {_id: null, total: {$sum: '$total_amount'}}}` on non-cancelled orders? (One group, whole collection: `{ _id: null, total: ... }` — predict the number too: 60595.5+... compute from the seed data first!)
+[Intermediate] **P6.** $push collection: each user's order totals as an array + lifetime sum — then explain how this compares to embedding orders on the user (a *computed* view vs a *stored* design — the computed pattern's whole argument).
+[Advanced] **P7.** $addToSet vs $push, felt: group orders by status with both `statuses: {$push: '$user_id'}` and `uniques: {$addToSet: '$user_id'}`... on orders grouped by status — who differs? (Users appearing multiple times.)
+[Advanced] **P8.** From memory: $match-before vs $match-after — which is WHERE, which is HAVING, and why must the doc-level one go first?
 
-## 🐛 Debugging
+## Debugging
 
 ```javascript
 // Bug 1: $group without _id — error: "a group specification must include
@@ -92,31 +92,31 @@ db.orders.aggregate([
 // Verify each.
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The full pipeline, everything so far: **"top 3 users by delivered revenue, with their order count and first order date"** — $match (delivered) → $group (sum, count, $min) → $sort → $limit → $project (rename _id → user_id). Predict the top user first (user 1 or 3? — check the seed!). This is Project 6's opening move.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Pipeline rule #1 + reason?
 2. What does every pipeline return (shape)?
 3. $project's expression superpower?
 4. Covered queries — what breaks them?
 
-## 🧠 Recall
+## Recall
 
 1. What is `_id` in $group — and what does null do?
 2. Name all seven accumulators.
 3. WHERE vs HAVING in pipeline terms?
 4. What does $push build, and what stored design is it the computed alternative to?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How do you write a GROUP BY in MongoDB?" *( $match → $group → $sort; _id is the key.)*
 2. "How do you filter on aggregate results?" *(Post-$group $match = HAVING.)*
 3. "How would you collect per-group values into arrays?" *( $push / $addToSet.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand $group, _id, accumulators, WHERE vs HAVING positioning
 - [ ] Completed P1–P8 (P5 predicted first)

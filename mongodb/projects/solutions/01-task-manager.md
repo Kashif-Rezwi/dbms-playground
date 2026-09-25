@@ -1,4 +1,4 @@
-# ✅ Solutions — P1: Task Manager (Mongo)
+# Solutions — P1: Task Manager (Mongo)
 
 ## Reference shape (yours may differ — judge the *reasoning*)
 

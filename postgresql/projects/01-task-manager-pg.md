@@ -1,4 +1,4 @@
-# 🏗️ P1 — Task Manager, the PostgreSQL Way
+# P1 — Task Manager, the PostgreSQL Way
 
 **Milestone:** PG Stage 2 (after Day 7) · **Time:** ~60 min
 
@@ -33,12 +33,12 @@ Same app as before — but this time you're doing it *properly*, as if it will l
 9. Each task with its note count (including zero-note tasks).
 10. Overdue report: `doing` tasks older than 14 days, with a `days_stuck` computed column.
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 11. A `stale` view (todo/doing + older than 30 days) — then a query on the view, not the table.
 12. Delete a task with notes; observe your ON DELETE choice; explain what a real product should do instead (soft delete).
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 13. `updated_at` maintenance: add the column + trigger (peek at Day 10's first example — you'll formally learn it soon) and prove it works.
 
@@ -52,4 +52,4 @@ A schema where "bad data" is *structurally impossible* — with the comments sho
 - What does identity ALWAYS protect you from that Day 5's manual ids didn't?
 - One sentence per constraint: what bug does it kill?
 
-> ✅ [solutions/01-task-manager-pg.md](solutions/01-task-manager-pg.md)
+> [solutions/01-task-manager-pg.md](solutions/01-task-manager-pg.md)

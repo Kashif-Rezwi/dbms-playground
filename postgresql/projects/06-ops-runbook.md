@@ -1,4 +1,4 @@
-# 🏗️ P6 — Ops Runbook
+# P6 — Ops Runbook
 
 **Milestone:** PG Stage 6 (after Day 26, finished Day 28) · **Time:** ~2–3 hours total · **No solutions file — this IS the deliverable**
 

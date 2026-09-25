@@ -1,4 +1,4 @@
-# ✅ Solutions — P2: Book Catalog
+# Solutions — P2: Book Catalog
 
 ## Reference seed (abridged — yours will differ)
 

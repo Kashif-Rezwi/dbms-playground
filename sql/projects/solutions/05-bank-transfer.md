@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 5: Bank Transfer Simulation
+# Solutions — Project 5: Bank Transfer Simulation
 
 ## Reference schema
 

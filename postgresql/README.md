@@ -1,4 +1,4 @@
-# 🐘 PostgreSQL Track — The Database System
+# PostgreSQL Track — The Database System
 
 > **PostgreSQL is not "SQL again."** SQL (previous track) was the *language*. This track is the *engine*: how the server is organized, how it models and enforces data, how it plans and executes queries, and how it behaves under concurrency, security, and production pressure.
 
@@ -14,7 +14,7 @@ Days 21–26   Security & ops: roles, RLS, backups, tuning, VACUUM, production
 Days 27–30   Production thinking: replication, pooling, CAPSTONE
 ```
 
-**Prerequisites:** the SQL track (Days 1–24 minimum). Each day has a 🔁 recall section that keeps SQL alive; new *system* concepts are taught from zero.
+**Prerequisites:** the SQL track (Days 1–24 minimum). Each day has a recall section that keeps SQL alive; new *system* concepts are taught from zero.
 
 ## How to Run the Lessons
 

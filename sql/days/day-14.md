@@ -1,13 +1,13 @@
 # Day 14 — Subqueries & Correlated Subqueries
 
-**Track:** SQL · **Stage:** 3 — Relationships · **Difficulty:** 🟡→🔴
-**Prerequisites:** Days 01–13 · **Dataset:** `ecommerce` · **Milestone:** 🏗️ Project 3
+**Track:** SQL · **Stage:** 3 — Relationships · **Difficulty:** Intermediate → Advanced
+**Prerequisites:** Days 01–13 · **Dataset:** `ecommerce` · **Milestone:** Project 3
 
-## 🎯 Goal
+## Goal
 
 Run queries inside queries: scalar subqueries, `IN (subquery)`, and correlated subqueries — and know when a subquery beats a join.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 A **subquery** is a query nested inside another. Three flavors by *what it returns*:
 
@@ -50,17 +50,17 @@ SELECT name FROM users WHERE id IN (SELECT user_id FROM orders);
 
 Rule of thumb: need *columns* from the other table → JOIN. Only need a *test* ("has ordered" / "costs more than average") → subquery is often clearer.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Some questions are naturally nested: "above average", "more than the company-wide max", "in the set of X". Subqueries keep complex logic readable without flattening it into a mega-join.
 
-## 💡 Mental Model
+## Mental Model
 
 > A subquery is a **question inside a question**. An uncorrelated one answers first, once, and hands the answer up. A correlated one is asked *fresh for every row* — "compared to *your* department, how are you doing?"
+>
+> The cost version: a correlated subquery is a **librarian running to the shelves once per row** — powerful, but notice the running.
 
-## 💡 Mental Model 2 (cost): a correlated subquery is a **librarian running to the shelves once per row** — powerful, but notice the running.
-
-## 💻 Examples
+## Examples
 
 ```sql
 -- scalar: products vs the catalog average
@@ -79,25 +79,25 @@ WHERE p.price > (SELECT AVG(p2.price) FROM products p2
                  WHERE p2.category_id = p.category_id);
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Products priced above the overall average (scalar subquery).
-🟢 **P2.** Users who have cancelled at least one order (list subquery).
-🟢 **P3.** Categories whose average price is above the overall average — grouped query *inside* a comparison. Predict which categories before running.
-🟡 **P4.** Products whose stock is above the average stock **of their own category** (correlated).
-🟡 **P5.** Orders whose total is greater than **every** cancelled order's total (`> ALL`).
-🟡 **P6. ⭐ Predict first** — exact rows:
+[Beginner] **P1.** Products priced above the overall average (scalar subquery).
+[Beginner] **P2.** Users who have cancelled at least one order (list subquery).
+[Beginner] **P3.** Categories whose average price is above the overall average — grouped query *inside* a comparison. Predict which categories before running.
+[Intermediate] **P4.** Products whose stock is above the average stock **of their own category** (correlated).
+[Intermediate] **P5.** Orders whose total is greater than **every** cancelled order's total (`> ALL`).
+[Intermediate] **P6. Predict first** — exact rows:
 
 ```sql
 SELECT name FROM users
 WHERE id IN (SELECT user_id FROM orders WHERE status = 'pending');
 ```
 
-🟡 **P7. From memory:** products cheaper than the Sports category's average price.
-🔴 **P8.** Reviews whose rating is above the **average rating of the same product** (correlated, two tables). Predict roughly which reviews these would be.
-🔴 **P9.** Rewrite Day 12's "users with no orders" using `NOT IN` instead of LEFT JOIN. Is `NOT IN` safe here? (`\d orders` — `user_id` is NOT NULL, so yes *here*. Say why it's safe, and when it wouldn't be.)
+[Intermediate] **P7. From memory:** products cheaper than the Sports category's average price.
+[Advanced] **P8.** Reviews whose rating is above the **average rating of the same product** (correlated, two tables). Predict roughly which reviews these would be.
+[Advanced] **P9.** Rewrite Day 12's "users with no orders" using `NOT IN` instead of LEFT JOIN. Is `NOT IN` safe here? (`\d orders` — `user_id` is NOT NULL, so yes *here*. Say why it's safe, and when it wouldn't be.)
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: IN needs a column, the subquery returns a table
@@ -113,35 +113,35 @@ SELECT name FROM users
 WHERE joined_at > (SELECT ordered_at FROM orders);
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The pricing report: **name, price, category average, overall average** in one row — via a correlated subquery *in the SELECT list* (yes, subqueries can live there!). Then filter to products above their category average.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Write from memory: users who never wrote a review (LEFT JOIN way).
 2. What's the NULL trap in NOT IN?
 3. When do you need aliases in a join? (Two cases now.)
 4. LEFT vs INNER JOIN — one sentence.
 
-## 🧠 Recall
+## Recall
 
 1. What are the three subquery flavors by return type?
 2. What makes a subquery *correlated* — and what does that cost?
 3. `IN` vs JOIN: when would you prefer each?
 4. What does `> ALL` mean? `> ANY`?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "What is a correlated subquery and how does it differ from a normal one?"
 2. "When would you use a subquery instead of a JOIN?"
 3. "Find employees earning above their department average — walk me through it." *(You did exactly this on products today.)*
 
-## 🏗️ Mini Project — Stage 3 complete!
+## Mini Project — Stage 3 complete!
 
 Build **[P3: Student Course System](../projects/03-student-courses.md)** — students, courses, enrollments; relationships + joins + subqueries, with design questions. Attempt before solutions.
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand scalar/list/correlated subqueries
 - [ ] Completed P1–P9 (P6 predicted first)

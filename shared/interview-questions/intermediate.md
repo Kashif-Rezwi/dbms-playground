@@ -1,4 +1,4 @@
-# 🎤 Interview Questions — Intermediate
+# Interview Questions — Intermediate
 
 > Requires the deeper layers of the tracks. Follow-ups are the bar.
 

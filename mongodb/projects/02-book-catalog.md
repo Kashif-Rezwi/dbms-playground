@@ -1,4 +1,4 @@
-# 🏗️ P2 — Book Catalog
+# P2 — Book Catalog
 
 **Milestone:** Mongo Days 6–8 · **Time:** ~60 min
 
@@ -21,13 +21,13 @@ Insert ~12 books with: title, author(s) (array — some single, some multi-autho
 7. Authors of more than one book (distinct + count, or your own approach — predict who first)
 8. Everything EXCEPT price (exclude-mode projection)
 
-## Challenge ⭐
+## Challenge
 
 9. One query, everything combined: in-stock, genre X or Y ($in), under a price, showing title+author only, sorted by year desc, limit 4
 10. The covered-query preview: create `{ genre: 1, title: 1 }` index; query books by genre projecting title — check explain for docsExamined (a Day 18 preview — just find the number)
 
-## Bonus 🔴
+## Bonus
 
 11. A mixed-type sabotage: update one book's year to the string `'1999'`; now sort by year ascending — where does it land and why? (Day 8 Bug 2, witnessed.) Fix it back.
 
-> ✅ [solutions/02-book-catalog.md](solutions/02-book-catalog.md)
+> [solutions/02-book-catalog.md](solutions/02-book-catalog.md)

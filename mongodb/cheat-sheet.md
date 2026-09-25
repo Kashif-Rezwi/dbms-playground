@@ -1,4 +1,4 @@
-# 🍃 MongoDB Cheat Sheet
+# MongoDB Cheat Sheet
 
 *Shell syntax (mongosh / Node driver). JavaScript — objects and arrays everywhere.*
 

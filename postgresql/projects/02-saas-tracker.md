@@ -1,4 +1,4 @@
-# 🏗️ P2 — SaaS Task Tracker (Triggers & Consistency)
+# P2 — SaaS Task Tracker (Triggers & Consistency)
 
 **Milestone:** PG Stage 3 (after Day 10) · **Time:** ~90 min · **Dataset:** `saas`
 
@@ -22,12 +22,12 @@ The team keeps finding: tasks updated without updated_at changing, nobody can an
 5. Counter reconciliation: projects where `open_task_count` ≠ the live count (computed via a subquery) — must return zero rows *until* you sabotage it (see 3).
 6. Per-project: stored counter vs live count side by side, with a `drift` column.
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 7. Conditional audit: log only *status* changes (compare OLD.status IS DISTINCT FROM NEW.status — Day 12's tool!). Verify title-only updates don't spam the audit.
 8. The trigger-cost memo: insert 10k tasks in one statement with and without triggers; measure (`\timing`). Two sentences: when is this cost justified?
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 9. Cross-table consistency: an `org_last_activity` column on `organizations` bumped by triggers when *any* task in any of its projects changes. (You'll need a lookup from task → project → org in the trigger function. Now count how many queries that costs per write — and write the honest verdict.)
 
@@ -37,4 +37,4 @@ The team keeps finding: tasks updated without updated_at changing, nobody can an
 - What did the sabotage teach you about triggers' limits?
 - Your honest rule for "trigger vs application code" — 2 lines.
 
-> ✅ [solutions/02-saas-tracker.md](solutions/02-saas-tracker.md)
+> [solutions/02-saas-tracker.md](solutions/02-saas-tracker.md)

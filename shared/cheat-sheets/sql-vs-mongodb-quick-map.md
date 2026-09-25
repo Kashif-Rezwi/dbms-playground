@@ -1,4 +1,4 @@
-# ⚡ SQL ↔ MongoDB Quick Map (for the bilingual brain)
+# SQL ↔ MongoDB Quick Map (for the bilingual brain)
 
 > A translation card, not an equivalence claim. "Roughly" is the honest word — read the caveat column.
 

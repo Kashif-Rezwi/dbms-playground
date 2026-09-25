@@ -1,4 +1,4 @@
-# 📋 MongoDB Stage Review — Indexes & Pipelines (Days 16–22)
+# MongoDB Stage Review — Indexes & Pipelines (Days 16–22)
 
 Run after Day 22 (before Day 23). No notes until written.
 
@@ -14,13 +14,13 @@ Run after Day 22 (before Day 23). No notes until written.
 
 ## Part B — Hands-On Drills (dataset: `ecommerce`, reset)
 
-🟢 **D1.** The partial unique "one active subscription per user" — from memory, with proof.
-🟢 **D2.** Covered query: names of in-stock category-3 products — docsExamined = 0, shown.
-🟡 **D3.** The ESR composite: user's pending orders sorted by date — index + explain (no SORT stage).
-🟡 **D4.** Revenue per city ($lookup + $group) — prediction first.
-🟡 **D5.** Units per product ($unwind + $group) — prediction first.
-🔴 **D6.** The full chain: top 5 products by revenue with names (match → unwind → lookup → unwind → group → sort → limit).
-🔴 **D7.** The ratio audit on D4 and D6: the three numbers each; one fix; re-measured.
+[Beginner] **D1.** The partial unique "one active subscription per user" — from memory, with proof.
+[Beginner] **D2.** Covered query: names of in-stock category-3 products — docsExamined = 0, shown.
+[Intermediate] **D3.** The ESR composite: user's pending orders sorted by date — index + explain (no SORT stage).
+[Intermediate] **D4.** Revenue per city ($lookup + $group) — prediction first.
+[Intermediate] **D5.** Units per product ($unwind + $group) — prediction first.
+[Advanced] **D6.** The full chain: top 5 products by revenue with names (match → unwind → lookup → unwind → group → sort → limit).
+[Advanced] **D7.** The ratio audit on D4 and D6: the three numbers each; one fix; re-measured.
 
 ## Part C — Mock Interview (recorded)
 

@@ -1,12 +1,12 @@
 # Day 21 — Roles & Permissions
 
-**Track:** PostgreSQL · **Stage:** 6 — Security & Ops · **Difficulty:** 🟡
+**Track:** PostgreSQL · **Stage:** 6 — Security & Ops · **Difficulty:** Intermediate
 
-## 🎯 Goal
+## Goal
 
 Model people and services as roles, grant exactly what each needs, and verify access the way a real auditor would.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 PostgreSQL has **roles**, not users — a role can *be* a login (with password) and/or *group* other roles. "Users" are just login-roles.
 
@@ -41,33 +41,33 @@ GRANT SELECT, INSERT ON users TO dev_admin;
 
 ```sql
 SET ROLE app_read;          -- become it (you, the superuser, can)
-SELECT * FROM users LIMIT 1;    -- ✅
-INSERT INTO users ... ;        -- ❌ permission denied — PROVE IT
+SELECT * FROM users LIMIT 1;    --
+INSERT INTO users ... ;        -- permission denied — PROVE IT
 RESET ROLE;
 ```
 
 Or truly: `psql -d ecommerce -U app_read` (needs `pg_hba.conf` auth configured — taste it).
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Every breached app database was one over-privileged connection away from catastrophe. Least privilege isn't paranoia; it's the difference between "attacker read some reviews" and "attacker dropped the users table."
 
-## 💡 Mental Model
+## Mental Model
 
 > Roles are **badges**: groups are departments (reader-department, writer-department), logins are people carrying them. GRANT = printing a badge with named doors. INHERIT = wearing all your departments' badges at once. Least privilege = nobody carries the master key — not even you.
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Create `app_read` + grants; `SET ROLE app_read`; prove: SELECT works, INSERT fails with "permission denied". Reset.
-🟢 **P2.** Create `app_write` inheriting app_read; prove SELECT (inherited) + INSERT (direct) both work, and `CREATE TABLE` fails.
-🟡 **P3.** The audit query: list every grant in the database (`information_schema.role_table_grants` filtered to public schema) — read it like an auditor: who can touch what?
-🟡 **P4.** Default privileges proof: as superuser, create a NEW table after setting defaults; as `app_read`, select from it — works with zero new grants? (If not, you missed P1's ALTER DEFAULT PRIVILEGES.)
-🟡 **P5. ⭐ Predict first:** app_read has SELECT on all tables. You run `REVOKE SELECT ON users FROM app_read;` — then `SET ROLE app_read; SELECT count(*) FROM users;` — allowed? Predict, verify, explain (per-table revoke beats schema-wide grant).
-🟡 **P6. From memory:** the three-GRANT starter set for a read-only role (CONNECT, USAGE, SELECT + the default-privileges line).
-🔴 **P7.** Design the badge map for a real app: `analytics_bot` (SELECT on orders+payments only, NOT users), `api_service` (CRUD on orders/reviews, none on payments), `migration_tool` (DDL during deploys only). Write grants + one REVOKE line per role that surprises people.
-🔴 **P8.** The superuser audit: run `\du` on your dev instance; write down why each superuser exists, and the one-line policy for production ("two humans, break-glass procedure, no services").
+[Beginner] **P1.** Create `app_read` + grants; `SET ROLE app_read`; prove: SELECT works, INSERT fails with "permission denied". Reset.
+[Beginner] **P2.** Create `app_write` inheriting app_read; prove SELECT (inherited) + INSERT (direct) both work, and `CREATE TABLE` fails.
+[Intermediate] **P3.** The audit query: list every grant in the database (`information_schema.role_table_grants` filtered to public schema) — read it like an auditor: who can touch what?
+[Intermediate] **P4.** Default privileges proof: as superuser, create a NEW table after setting defaults; as `app_read`, select from it — works with zero new grants? (If not, you missed P1's ALTER DEFAULT PRIVILEGES.)
+[Intermediate] **P5. Predict first:** app_read has SELECT on all tables. You run `REVOKE SELECT ON users FROM app_read;` — then `SET ROLE app_read; SELECT count(*) FROM users;` — allowed? Predict, verify, explain (per-table revoke beats schema-wide grant).
+[Intermediate] **P6. From memory:** the three-GRANT starter set for a read-only role (CONNECT, USAGE, SELECT + the default-privileges line).
+[Advanced] **P7.** Design the badge map for a real app: `analytics_bot` (SELECT on orders+payments only, NOT users), `api_service` (CRUD on orders/reviews, none on payments), `migration_tool` (DDL during deploys only). Write grants + one REVOKE line per role that surprises people.
+[Advanced] **P8.** The superuser audit: run `\du` on your dev instance; write down why each superuser exists, and the one-line policy for production ("two humans, break-glass procedure, no services").
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: "permission denied for schema public" — but table grants exist.
@@ -78,31 +78,31 @@ Every breached app database was one over-privileged connection away from catastr
 -- manually grants. What was never set? (ALTER DEFAULT PRIVILEGES)
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Roles + views (Day 8): create `app_read` with SELECT on *views only* (not base tables) — a reporting role that can never see raw PII columns. Prove: view SELECT works, base-table SELECT fails. This is the standard production reporting pattern and tomorrow's RLS builds directly on it.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. What does a retryable serialization error demand from app code?
 2. The deadlock-prevention habit.
 3. Row locks — who takes them, who never does?
 4. security_invoker views (Day 8) — what do they change about permissions?
 
-## 🧠 Recall
+## Recall
 
 1. Role vs user in PostgreSQL — the actual model?
 2. The three core grants for any role? (+ default privileges)
 3. What does role inheritance (GRANT role TO role) do?
 4. Why does per-table REVOKE beat schema-wide GRANT, and where do you check?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How would you set up database access for a web app?" *(Distinct roles per job, least privilege, defaults, no superuser.)*
 2. "What's the difference between GRANT on schema vs on table vs DEFAULT PRIVILEGES?"
 3. "Why should apps never connect as the database owner/superuser?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand roles, inheritance, privilege ladder, defaults, verification
 - [ ] Completed P1–P8 (P5 predicted first)

@@ -1,4 +1,4 @@
-# 🏢 SaaS Platform — ER Diagram
+# SaaS Platform — ER Diagram
 
 ```mermaid
 erDiagram

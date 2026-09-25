@@ -1,6 +1,6 @@
-# 🏗️ PG Capstone — Production-Grade Schema + Ops (Day 30)
+# PG Capstone — Production-Grade Schema + Ops (Day 30)
 
-**Difficulty:** 🔴 · Full two-day effort (Day 30 + rehearsal time)
+**Difficulty:** Advanced · Full two-day effort (Day 30 + rehearsal time)
 
 ## Objective
 

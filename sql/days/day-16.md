@@ -1,13 +1,13 @@
 # Day 16 — Window Functions
 
-**Track:** SQL · **Stage:** 4 — Intermediate Querying · **Difficulty:** 🔴 Advanced
+**Track:** SQL · **Stage:** 4 — Intermediate Querying · **Difficulty:** Advanced
 **Prerequisites:** Days 01–15 · **Dataset:** `saas`
 
-## 🎯 Goal
+## Goal
 
 Compute values "per row, looking across related rows" — rankings and running totals — and clearly separate window functions from GROUP BY. This is the one SQL feature that feels like a superpower once it clicks.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **The difference from GROUP BY** — the crux:
 
@@ -44,15 +44,15 @@ DENSE_RANK() OVER (ORDER BY created_at)             -- 1,2,2,3 — ties share, n
 SUM(amount) OVER (ORDER BY issued_at)              -- cumulative sum down the rows
 ```
 
-## 🔍 Why It Matters
+## Why It Matters
 
 "Top 3 per group" (top 3 tasks per project), running revenue, "rank products by sales within category", previous/current row comparisons — window functions do what previously required ugly subqueries. A favorite mid-level interview topic.
 
-## 💡 Mental Model
+## Mental Model
 
 > GROUP BY is a **trash compactor** (many rows → one). A window function is a **stamping machine**: every row passes through unchanged, but each gets stamped with an answer computed from its neighborhood — "you're #2 in your project", "your project has 7 tasks", "everything so far totals 490".
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- every task + how many tasks its project has
@@ -71,14 +71,14 @@ SELECT org_id, amount,
 FROM invoices;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Every task with its project's task count (COUNT OVER PARTITION).
-🟢 **P2.** Every task with `ROW_NUMBER()` by `created_at` (whole-table ordering).
-🟡 **P3.** Tasks numbered **within each project** by created date: `task_row` = ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY created_at).
-🟡 **P4. ⭐ Predict first:** RANK vs DENSE_RANK vs ROW_NUMBER on invoices ordered by `amount DESC` — write all three columns' values for the first 4 rows *before running*. Which invoice amounts tie?
-🟡 **P5.** Running total of invoice amounts by issue date (whole table).
-🟡 **P6.** `top 3 tasks per project by created_at` — the classic:
+[Beginner] **P1.** Every task with its project's task count (COUNT OVER PARTITION).
+[Beginner] **P2.** Every task with `ROW_NUMBER()` by `created_at` (whole-table ordering).
+[Intermediate] **P3.** Tasks numbered **within each project** by created date: `task_row` = ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY created_at).
+[Intermediate] **P4. Predict first:** RANK vs DENSE_RANK vs ROW_NUMBER on invoices ordered by `amount DESC` — write all three columns' values for the first 4 rows *before running*. Which invoice amounts tie?
+[Intermediate] **P5.** Running total of invoice amounts by issue date (whole table).
+[Intermediate] **P6.** `top 3 tasks per project by created_at` — the classic:
 
 ```sql
 WITH numbered AS (
@@ -90,11 +90,11 @@ SELECT * FROM numbered WHERE rn <= 3;
 
 Explain why you *needed* the CTE (hint: WHERE can't see window results — they compute after WHERE).
 
-🟡 **P7. From memory:** every user task count per assignee (COUNT OVER PARTITION by assignee_id, keep NULLs visible).
-🔴 **P8.** `AVG(amount) OVER (PARTITION BY org_id)` next to each invoice's amount, filtered... wait — no filter! Keep all rows, and explain what the average column means for each row.
-🔴 **P9.** Combine Day 14's correlated subquery instinct: redo P1 with a correlated subquery instead of a window function. Which is clearer? Which keeps all rows more naturally?
+[Intermediate] **P7. From memory:** every user task count per assignee (COUNT OVER PARTITION by assignee_id, keep NULLs visible).
+[Advanced] **P8.** `AVG(amount) OVER (PARTITION BY org_id)` next to each invoice's amount, filtered... wait — no filter! Keep all rows, and explain what the average column means for each row.
+[Advanced] **P9.** Combine Day 14's correlated subquery instinct: redo P1 with a correlated subquery instead of a window function. Which is clearer? Which keeps all rows more naturally?
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: WHERE can't use window results — what error?
@@ -110,31 +110,31 @@ FROM tasks;
 SELECT project_id, COUNT(*) FROM tasks GROUP BY project_id;
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The workload report, full pipeline: CTE `numbered` (row_number per project) → CTE `top3` (rn <= 3) → join to `projects` for names → only active projects → order by project name, created_at. Window + CTE + join + filter + sort in one query.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. GROUP BY vs HAVING — one line each.
 2. Write from memory: org name + overdue invoice total (CTE + join).
 3. What's the difference between LEFT and INNER when the right side has no match?
 4. What are a recursive CTE's two parts?
 
-## 🧠 Recall
+## Recall
 
 1. Window function vs GROUP BY — input rows vs output rows?
 2. What does PARTITION BY do? What if you omit it?
 3. ROW_NUMBER vs RANK vs DENSE_RANK — ties, and gaps?
 4. Why can't WHERE filter on a window result — what do you use instead?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How would you get the top 3 rows per group?" *(The #1 window-function interview question — say "row_number + CTE + filter".)*
 2. "Difference between RANK and DENSE_RANK?"
 3. "Running total in one query — how?" *(SUM OVER ORDER BY.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand OVER, PARTITION BY, rankings, running totals
 - [ ] Completed P1–P9 (P4 all three columns predicted first)

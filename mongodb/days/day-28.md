@@ -21,13 +21,13 @@
 
 ## Part B — Hands-On Drills (dataset: `ecommerce`, reset first)
 
-🟢 **D1.** Insert a product with tags + nested specs; find by tag and by dot-notation; update via positional... (scratch doc) — the full cycle.
-🟢 **D2.** A query combining: $in, $gte range, and an array-contains condition on products.
-🟡 **D3.** "One active subscription per user" — the partial unique index, from memory, with proof.
-🟡 **D4.** The top-3-users-by-delivered-revenue pipeline — from memory, prediction first.
-🟡 **D5.** Products never ordered — pipeline ($lookup + $size 0) AND app-side (ids diff); both, verified equal.
-🔴 **D6.** A retry-wrapped session transaction: transfer + log row + abort path — from memory.
-🔴 **D7.** The explain-ratio audit of D4's pipeline + one index improvement, with numbers.
+[Beginner] **D1.** Insert a product with tags + nested specs; find by tag and by dot-notation; update via positional... (scratch doc) — the full cycle.
+[Beginner] **D2.** A query combining: $in, $gte range, and an array-contains condition on products.
+[Intermediate] **D3.** "One active subscription per user" — the partial unique index, from memory, with proof.
+[Intermediate] **D4.** The top-3-users-by-delivered-revenue pipeline — from memory, prediction first.
+[Intermediate] **D5.** Products never ordered — pipeline ($lookup + $size 0) AND app-side (ids diff); both, verified equal.
+[Advanced] **D6.** A retry-wrapped session transaction: transfer + log row + abort path — from memory.
+[Advanced] **D7.** The explain-ratio audit of D4's pipeline + one index improvement, with numbers.
 
 ## Part C — Mock Interview (recorded, out loud)
 

@@ -1,4 +1,4 @@
-# ✅ Solutions — P2: SaaS Task Tracker
+# Solutions — P2: SaaS Task Tracker
 
 ## 1. updated_at discipline
 

@@ -1,13 +1,13 @@
 # Day 24 — Optimization Patterns
 
-**Track:** SQL · **Stage:** 5 — Transactions + Performance · **Difficulty:** 🔴 Advanced
-**Prerequisites:** Days 01–23 · **Dataset:** `perf_lab` · **Milestone:** 🏗️ Project 6
+**Track:** SQL · **Stage:** 5 — Transactions + Performance · **Difficulty:** Advanced
+**Prerequisites:** Days 01–23 · **Dataset:** `perf_lab` · **Milestone:** Project 6
 
-## 🎯 Goal
+## Goal
 
 Learn the recurring causes of slow queries and their fixes — and prove several with measurements.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **Pattern 1 — Filter early.** The less data flows through joins/aggregates, the faster everything after. Push conditions as close to the source tables as possible (a WHERE inside a subquery beats a WHERE outside a join of everything).
 
@@ -40,15 +40,15 @@ Fix: transform the *constant* instead of the column, or make the index match the
 
 **The workflow for ANY slow query:** measure (Day 23) → identify expensive node → match a pattern → fix → re-measure.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 These five or six patterns cover most real-world "why is this slow" cases. Knowing them turns optimization from luck into method.
 
-## 💡 Mental Model
+## Mental Model
 
 > A query is a **factory conveyor**: rows enter, get filtered, joined, sorted, packed. Optimization = removing work from the belt — reject defective items at the door (filter early), carry fewer boxes (fewer columns), don't walk the belt to slot 190000 (keyset), don't put items in disguise machines at check-in (functions on columns).
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- EXISTS instead of COUNT for existence
@@ -72,13 +72,13 @@ ORDER BY created_at DESC, id DESC
 LIMIT 10;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Time `SELECT * FROM big_orders LIMIT 100000` vs `SELECT id FROM big_orders LIMIT 100000`. Explain the gap.
-🟢 **P2.** `SELECT EXISTS (SELECT 1 FROM big_orders WHERE user_id = 417);` vs `SELECT COUNT(*) ... WHERE user_id = 417;` — compare plans. Which can stop early?
-🟡 **P3.** Measure OFFSET degradation: time `LIMIT 10 OFFSET 1000`, `OFFSET 100000`, `OFFSET 190000` on big_orders ordered by id. Plot ms vs offset in your notes.
-🟡 **P4.** Convert to keyset: "next 10 orders after id 150000". Compare timing with OFFSET at the same depth.
-🟡 **P5. ⭐ Predict first:** which is faster and why —
+[Beginner] **P1.** Time `SELECT * FROM big_orders LIMIT 100000` vs `SELECT id FROM big_orders LIMIT 100000`. Explain the gap.
+[Beginner] **P2.** `SELECT EXISTS (SELECT 1 FROM big_orders WHERE user_id = 417);` vs `SELECT COUNT(*) ... WHERE user_id = 417;` — compare plans. Which can stop early?
+[Intermediate] **P3.** Measure OFFSET degradation: time `LIMIT 10 OFFSET 1000`, `OFFSET 100000`, `OFFSET 190000` on big_orders ordered by id. Plot ms vs offset in your notes.
+[Intermediate] **P4.** Convert to keyset: "next 10 orders after id 150000". Compare timing with OFFSET at the same depth.
+[Intermediate] **P5. Predict first:** which is faster and why —
 
 ```sql
 SELECT COUNT(*) FROM big_orders WHERE ordered_at >= DATE '2025-06-01';
@@ -86,11 +86,11 @@ SELECT COUNT(*) FROM big_orders WHERE ordered_at - DATE '2025-01-01' > 150;
 ```
 
 Then measure. Which can use an index on `ordered_at`?
-🟡 **P6. From memory:** rewrite `WHERE UPPER(city) = 'KARACHI'` so it can use an index.
-🔴 **P7.** Correlated-vs-window showdown: "each order with the average total of its user's orders." Write both versions (correlated subquery in SELECT; `AVG() OVER (PARTITION BY user_id)`). EXPLAIN ANALYZE both. Which wins? Why?
-🔴 **P8.** Over-fetch audit: for "top 5 products by revenue", check the plan for how much data flows *before* the LIMIT. Would a CTE-with-limit rewrite be equivalent? (Careful: LIMIT before GROUP BY changes semantics — when is it safe?)
+[Intermediate] **P6. From memory:** rewrite `WHERE UPPER(city) = 'KARACHI'` so it can use an index.
+[Advanced] **P7.** Correlated-vs-window showdown: "each order with the average total of its user's orders." Write both versions (correlated subquery in SELECT; `AVG() OVER (PARTITION BY user_id)`). EXPLAIN ANALYZE both. Which wins? Why?
+[Advanced] **P8.** Over-fetch audit: for "top 5 products by revenue", check the plan for how much data flows *before* the LIMIT. Would a CTE-with-limit rewrite be equivalent? (Careful: LIMIT before GROUP BY changes semantics — when is it safe?)
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1 (performance): why will app page 20,000 be slow?
@@ -104,35 +104,35 @@ SELECT * FROM big_orders WHERE user_id = 417 AND status = 'delivered';
 -- Correct but wasteful for a yes/no question. Rewrite it.
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The report that uses everything: "each user's total delivered revenue, top 10, with rank" — write the naive version, EXPLAIN ANALYZE, optimize with CTE pre-aggregation, re-measure, and write a before/after report. This is exactly Project 6's workflow.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. EXPLAIN vs EXPLAIN ANALYZE — one line + the write caveat.
 2. What is selectivity?
 3. Two costs of any index?
 4. The 5-step diagnostic method — from memory.
 
-## 🧠 Recall
+## Recall
 
 1. Name four optimization patterns with one line each.
 2. Why does deep OFFSET get slow, and what's the fix?
 3. Why do functions on columns break index use?
 4. When is `SELECT *` actually fine?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How would you speed up a slow query?" *(Measure, then patterns — name two.)*
 2. "How does keyset pagination work and when do you need it?"
 3. "Why is `WHERE YEAR(created_at) = 2025` slower than a range query, and how do you fix it?"
 
-## 🏗️ Mini Project — Stage 5 complete!
+## Mini Project — Stage 5 complete!
 
 Build **[P6: Query Performance Lab](../projects/06-performance-lab.md)** — a slow-query investigation from start to finish, with a written report. Attempt before solutions.
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand the optimization patterns
 - [ ] Measured every before/after (numbers in notes)

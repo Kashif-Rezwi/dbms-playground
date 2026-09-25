@@ -1,4 +1,4 @@
-# ✅ Solutions — P3: Social Feed Queries
+# Solutions — P3: Social Feed Queries
 
 > Counts verified against the seed file — predict yours BEFORE comparing!
 

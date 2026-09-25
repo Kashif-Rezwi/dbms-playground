@@ -1,6 +1,6 @@
-# 🏗️ SQL Track Final Capstone — "LocalEvents" Ticket Platform
+# SQL Track Final Capstone — "LocalEvents" Ticket Platform
 
-**Milestone:** SQL Days 29–30 · **Time:** 2 days · **Difficulty:** 🔴 · **Everything you've learned**
+**Milestone:** SQL Days 29–30 · **Time:** 2 days · **Difficulty:** Advanced · **Everything you've learned**
 
 ## Objective
 
@@ -16,7 +16,7 @@ LocalEvents sells tickets for local concerts/workshops. Requirements:
 - A seat can't be sold twice; cancelled bookings free their seats
 - **Payments** attach to bookings (method, amount = sum of seat prices — must match)
 
-## Part 1 — Design (Day 29 morning) — 🏗️ no solution exists
+## Part 1 — Design (Day 29 morning) — no solution exists
 
 1. Draw the **ER diagram** (Mermaid, in your `sql/projects/capstone-work/` folder)
 2. Write the DDL: tables, PKs, FKs, CHECKs, UNIQUEs — every constraint earns its keep
@@ -71,4 +71,4 @@ Record yourself answering, no notes:
 - [ ] Perf report has real numbers and ≤ 3 justified indexes
 - [ ] Defense recording done — follow-ups survivable?
 
-> 🎓 **This is the SQL track's finish line.** The PostgreSQL track makes you dangerous on the engine behind it; the MongoDB track broadens your modeling instincts.
+> **This is the SQL track's finish line.** The PostgreSQL track makes you dangerous on the engine behind it; the MongoDB track broadens your modeling instincts.

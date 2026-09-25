@@ -1,4 +1,4 @@
-# 🛒 E-Commerce — ER Diagram
+# E-Commerce — ER Diagram
 
 ```mermaid
 erDiagram

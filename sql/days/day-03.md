@@ -1,13 +1,13 @@
 # Day 03 — WHERE: Filtering Rows
 
-**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** 🟢 Beginner
+**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** Beginner
 **Prerequisites:** Days 01–02 · **Dataset:** `ecommerce`
 
-## 🎯 Goal
+## Goal
 
 Filter rows with comparison and logical operators, and understand how NULL behaves in conditions.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 `WHERE` filters **rows** (SELECT chooses **columns**, WHERE chooses **rows**). For each row, the condition is evaluated: true → the row appears; false or unknown → it's gone.
 
@@ -28,19 +28,19 @@ WHERE NOT is_active                    -- negation
 **The NULL trap — memorize this:** NULL means "unknown". Any comparison with NULL is *unknown*, not true — so `city = NULL` and even `NULL = NULL` are never true. Test NULL with `IS NULL` / `IS NOT NULL`:
 
 ```sql
-SELECT * FROM users WHERE bio IS NULL;   -- ✅
-SELECT * FROM users WHERE bio = NULL;    -- ❌ returns zero rows, silently!
+SELECT * FROM users WHERE bio IS NULL;   --
+SELECT * FROM users WHERE bio = NULL;    -- returns zero rows, silently!
 ```
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Real queries are almost never "give me everything". They're "give me *these* rows": this user's orders, in-stock products, active accounts. WHERE is the most-used clause in SQL.
 
-## 💡 Mental Model
+## Mental Model
 
 > WHERE is a **bouncer with a clipboard**: every row lines up, the bouncer checks the condition, only rows that pass get into the result. NULL means the row *forgot its ID* — it can't pass even the "let everyone named NULL in" check. There's a special door: `IS NULL`.
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- comparison
@@ -59,24 +59,24 @@ SELECT name FROM users WHERE NOT is_active;
 SELECT name FROM users WHERE bio IS NULL;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Products with `stock = 0` (name and stock only).
-🟢 **P2.** Orders with status `'pending'` — all columns.
-🟢 **P3.** Products priced **under 1000** (name, price).
-🟢 **P4.** Users who are **inactive** (name).
-🟡 **P5.** Products that cost more than 2000 **and** are in category 5 (Sports). Columns: name, price, category_id.
-🟡 **P6.** Users from Karachi **or** Islamabad, who are active. (Two ways: OR and IN — IN arrives tomorrow, OR is enough today.)
-🟡 **P7. ⭐ Predict first**: write down exactly how many rows this returns *before* running:
+[Beginner] **P1.** Products with `stock = 0` (name and stock only).
+[Beginner] **P2.** Orders with status `'pending'` — all columns.
+[Beginner] **P3.** Products priced **under 1000** (name, price).
+[Beginner] **P4.** Users who are **inactive** (name).
+[Intermediate] **P5.** Products that cost more than 2000 **and** are in category 5 (Sports). Columns: name, price, category_id.
+[Intermediate] **P6.** Users from Karachi **or** Islamabad, who are active. (Two ways: OR and IN — IN arrives tomorrow, OR is enough today.)
+[Intermediate] **P7. Predict first**: write down exactly how many rows this returns *before* running:
 
 ```sql
 SELECT name FROM users WHERE is_active = TRUE AND city = 'Karachi';
 ```
 
-🟡 **P8. From memory:** products in category 3 (Books) with stock greater than 10. No notes.
-🔴 **P9.** Write a single query returning users whose city is Karachi, Lahore, **or** Multan, and who are inactive. Now write its opposite (same cities, active). Compare row counts.
+[Intermediate] **P8. From memory:** products in category 3 (Books) with stock greater than 10. No notes.
+[Advanced] **P9.** Write a single query returning users whose city is Karachi, Lahore, **or** Multan, and who are inactive. Now write its opposite (same cities, active). Compare row counts.
 
-## 🐛 Debugging
+## Debugging
 
 Each of these is broken. For each: what's wrong, why, fix, verify.
 
@@ -93,31 +93,31 @@ SELECT name FROM users WHERE bio = NULL;
 
 *(Bug 2 is the classic: a row can never have two values for one column — `OR` was meant.)*
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Yesterday you computed `stock_value = price * stock`. Now write: **products whose stock value exceeds 50,000**, showing name, price, stock, and the computed stock value. (Filter on a computed column — WHERE can use expressions too.)
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. What does `AS` do?
 2. What are the two questions SELECT answers? Which clause answers "which rows"?
 3. What does the ER diagram say about orders and users — one-to-what?
 4. Write from memory: select name and email from users.
 
-## 🧠 Recall
+## Recall
 
 1. Which rows survive a WHERE clause?
 2. Why does `= NULL` return nothing — even if NULLs exist?
 3. Difference between `AND` and `OR` — with a one-row example.
 4. What happens if you write `WHERE` twice in one query?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How would you filter rows matching multiple conditions?"
 2. "How do you check for NULL values, and why doesn't `= NULL` work?" *(A top-5 beginner interview trap.)*
 3. "What's the logical difference between these two: `A AND B` vs `A OR B`?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand WHERE, operators, NULL behavior
 - [ ] Completed P1–P9 (prediction written first for P7)

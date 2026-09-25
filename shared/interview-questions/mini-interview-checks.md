@@ -1,4 +1,4 @@
-# 🎤 Mini Interview Checks — Stage Simulation Scripts
+# Mini Interview Checks — Stage Simulation Scripts
 
 > The 5-minute end-of-stage simulations (spec §29). Do these OUT LOUD — a friend, a recorder, a duck. Difficulty climbs by design.
 

@@ -1,4 +1,4 @@
-# 🛟 psql Survival Guide — the 20 commands that carry the track
+# psql Survival Guide — the 20 commands that carry the track
 
 `psql` is PostgreSQL's command-line client. All lessons assume it. Learn these and you'll never feel lost.
 

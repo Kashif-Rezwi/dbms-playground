@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 6: Query Performance Lab
+# Solutions — Project 6: Query Performance Lab
 
 > Your numbers depend on hardware — expect the *shapes* below. Times shown are typical laptop-scale.
 

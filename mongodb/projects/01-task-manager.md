@@ -1,4 +1,4 @@
-# 🏗️ P1 — Task Manager (Mongo CRUD)
+# P1 — Task Manager (Mongo CRUD)
 
 **Milestone:** Mongo Days 1–5 · **Time:** ~60 min
 
@@ -32,13 +32,13 @@ Design your own task document shape, but it must support:
 9. The nested read: find tasks by `'meta.source'`
 10. deleteOne with the preview ritual; soft-delete one task via `hidden: true` and list visible ones
 
-## Challenge ⭐
+## Challenge
 
 11. A one-doc "summary" query: count of tasks by status — three countDocuments calls is fine today (aggregation comes Day 20 — note what's coming)
 12. Design: should `done_count` be stored (denormalized) or computed? Argue 3 lines with the computed-pattern trade.
 
-## Bonus 🔴
+## Bonus
 
 13. Add a validator to your collection (required title + status enum) — prove a bad insert fails.
 
-> ✅ [solutions/01-task-manager.md](solutions/01-task-manager.md)
+> [solutions/01-task-manager.md](solutions/01-task-manager.md)

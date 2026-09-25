@@ -1,13 +1,13 @@
 # Day 01 — What Is a Database? Tables, Rows, Columns
 
-**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** 🟢 Beginner
+**Track:** SQL · **Stage:** 1 — Foundation · **Difficulty:** Beginner
 **Prerequisites:** None · **Dataset:** `ecommerce` (load it: `./scripts/seed/seed-postgres.sh ecommerce`)
 
-## 🎯 Goal
+## Goal
 
 Understand what a database *is*, what a DBMS does, and what tables/rows/columns are — by looking at real ones.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **A database is an organized, persistent collection of data.** A program (like your editor) loses its data when it stops; a database keeps it. *Organized* means the data has structure the database can enforce and query efficiently.
 
@@ -29,15 +29,15 @@ Table: users
 └────┴──────────────┴────────────────────┴──────────┘
 ```
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Why not just use a file (JSON/CSV)? Because the moment two things read/write the same data at once, files break. A DBMS exists to make shared, durable, structured data *safe and fast*. Nearly every real app you build will have a database behind it.
 
-## 💡 Mental Model
+## Mental Model
 
 > A database is a **library** (organized, persistent, has rules); a DBMS is the **librarian** (finds things fast, enforces the rules, lets many people in at once). SQL is the *language you use to talk to the librarian*.
 
-## 📖 Core Concepts
+## Core Concepts
 
 - **Database** — organized, persistent data
 - **DBMS** — software managing the data (PostgreSQL)
@@ -46,7 +46,7 @@ Why not just use a file (JSON/CSV)? Because the moment two things read/write the
 - **Column** — one property of every row, with a type
 - **Query** — a request for data, written in SQL
 
-## 💻 Examples
+## Examples
 
 Connect and look around. In your terminal:
 
@@ -65,15 +65,15 @@ SELECT name, city FROM users;  -- show only these two columns
 
 Notice: `users` has a rule (`email` is UNIQUE) and a type on every column. The DBMS *enforces* these — you'll test that soon.
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** List all tables. Then describe `orders`, `products`, and `reviews` (`\d orders`). For each, write down: how many columns, and what types you see (`int`, `text`, `numeric`, `date`, `bool`).
+[Beginner] **P1.** List all tables. Then describe `orders`, `products`, and `reviews` (`\d orders`). For each, write down: how many columns, and what types you see (`int`, `text`, `numeric`, `date`, `bool`).
 
-🟢 **P2.** Look at `shared/datasets/ecommerce.sql` (the seed file). Match each `CREATE TABLE` to what `\d` showed you.
+[Beginner] **P2.** Look at `shared/datasets/ecommerce.sql` (the seed file). Match each `CREATE TABLE` to what `\d` showed you.
 
-🟢 **P3.** Open `shared/diagrams/ecommerce-er.md` and find the arrows. Each arrow reads "*one* → *many*": one user has many orders. Say out loud what these mean: users→orders, orders→order_items, products→order_items.
+[Beginner] **P3.** Open `shared/diagrams/ecommerce-er.md` and find the arrows. Each arrow reads "*one* → *many*": one user has many orders. Say out loud what these mean: users→orders, orders→order_items, products→order_items.
 
-🟡 **P4. ⭐ Predict first** (write your answer, *then* run it):
+[Intermediate] **P4. Predict first** (write your answer, *then* run it):
 
 ```sql
 SELECT * FROM categories;
@@ -81,9 +81,9 @@ SELECT * FROM categories;
 
 How many rows? What columns? (Hint: check the seed file.)
 
-🟡 **P5.** Compare `SELECT * FROM users;` with `SELECT name, city FROM users;`. In one sentence: what did `*` do?
+[Intermediate] **P5.** Compare `SELECT * FROM users;` with `SELECT name, city FROM users;`. In one sentence: what did `*` do?
 
-## 🐛 Debugging
+## Debugging
 
 This query fails. Run it and read the error carefully:
 
@@ -93,15 +93,15 @@ SELECT * FROM user;
 
 **Questions:** What exactly does the error say? What is wrong? What are the two ways to fix it? *(Check `\dt` — is there a table called `user`?)*
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Not much to combine yet — instead, do this: using `\d` and the ER diagram, trace the path from an `order` to a `user` to a `city`. Which column connects `orders` to `users`? Write your answer as a sentence.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 First day — nothing to recall. Instead, warm up your *prediction* habit: before running any query in this course, always say the expected result out loud first.
 
-## 🧠 Recall
+## Recall
 
 Without notes, answer:
 
@@ -110,13 +110,13 @@ Without notes, answer:
 3. Why not just store data in a JSON file?
 4. Is SQL a database? What is it?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "What is a DBMS and why do we need one?" *(Expect follow-up: why not files?)*
 2. "Explain tables, rows, and columns like I've never seen a database."
 3. "What does it mean that a schema is *enforced* by the database?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand concept: database, DBMS, table, row, column
 - [ ] Ran all examples, described 3+ tables with `\d`

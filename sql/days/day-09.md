@@ -1,13 +1,13 @@
 # Day 09 — Aggregates: COUNT, SUM, AVG, MIN, MAX
 
-**Track:** SQL · **Stage:** 2 — CRUD + Querying · **Difficulty:** 🟢 Beginner
+**Track:** SQL · **Stage:** 2 — CRUD + Querying · **Difficulty:** Beginner
 **Prerequisites:** Days 01–08 · **Dataset:** `ecommerce` (reset first)
 
-## 🎯 Goal
+## Goal
 
 Collapse many rows into single numbers — and understand what an aggregate *does* to a result set.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 An **aggregate function** takes many rows in and returns **one value**:
 
@@ -38,15 +38,15 @@ SELECT AVG(price) FROM products WHERE category_id = 1;   -- avg price of Electro
 
 - `ROUND(AVG(x), 2)` tames long decimals
 
-## 🔍 Why It Matters
+## Why It Matters
 
 "Total revenue this month", "how many users", "cheapest product" — every dashboard, every report, every "statistics" page is aggregate functions. Business questions are aggregate questions.
 
-## 💡 Mental Model
+## Mental Model
 
 > An aggregate is a **trash compactor**: 16 rows go in, 1 box comes out. You can't keep an original label (a `name`) glued to the box — unless you sort things into *groups of boxes* first (that's GROUP BY, tomorrow).
 
-## 💻 Examples
+## Examples
 
 ```sql
 SELECT COUNT(*) FROM users;
@@ -60,25 +60,25 @@ SELECT COUNT(*) FROM products WHERE stock = 0;                       -- out of s
 SELECT SUM(quantity * unit_price) FROM order_items;                  -- gross merchandise value
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** How many products are in the catalog?
-🟢 **P2.** Total stock across all products (SUM of stock).
-🟢 **P3.** Average price of category 5 (Sports) — rounded to 2 decimals.
-🟢 **P4.** Cheapest and most expensive product prices (one query, two aggregates).
-🟡 **P5.** Total value of all *delivered* orders.
-🟡 **P6.** Number of reviews, and the average rating, where rating >= 3.
-🟡 **P7. ⭐ Predict first** (write the number down before running):
+[Beginner] **P1.** How many products are in the catalog?
+[Beginner] **P2.** Total stock across all products (SUM of stock).
+[Beginner] **P3.** Average price of category 5 (Sports) — rounded to 2 decimals.
+[Beginner] **P4.** Cheapest and most expensive product prices (one query, two aggregates).
+[Intermediate] **P5.** Total value of all *delivered* orders.
+[Intermediate] **P6.** Number of reviews, and the average rating, where rating >= 3.
+[Intermediate] **P7. Predict first** (write the number down before running):
 
 ```sql
 SELECT COUNT(*) FROM orders WHERE status <> 'cancelled';
 ```
 
-🟡 **P8. From memory:** count of users joined in 2024.
-🔴 **P9.** One query, four numbers: for products in category 1 — the count, average price, min price, and max price. What is the column header for each?
-🔴 **P10.** Revenue if every out-of-stock item were restocked to 1 and sold at current price. (Silly, but it forces: COUNT + price. One aggregate query.)
+[Intermediate] **P8. From memory:** count of users joined in 2024.
+[Advanced] **P9.** One query, four numbers: for products in category 1 — the count, average price, min price, and max price. What is the column header for each?
+[Advanced] **P10.** Revenue if every out-of-stock item were restocked to 1 and sold at current price. (Silly, but it forces: COUNT + price. One aggregate query.)
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: what is wrong and what error do you get?
@@ -91,31 +91,31 @@ SELECT COUNT(is_active) FROM users WHERE is_active = FALSE;
 SELECT AVG(price) FROM products WHERE category_id <> 5;
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Business questions need filters + aggregates: **average rating of products that cost more than 2000** (join reviews to prices? not yet — reviews don't carry price. Instead: average price of *reviewed* products is Day 11+ territory). Do this instead: **total quantity sold** across all `order_items` for `quantity >= 2` — then repeat with `BETWEEN` on `unit_price` (Day 8 + today). Predict both numbers first.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. What do `%` and `_` mean in LIKE?
 2. Why does `COUNT(col)` differ from `COUNT(*)`? (You proved it on Day 7.)
 3. Write from memory: candidates with 2–6 years experience in cities containing 'o'.
 4. What does EXISTS answer?
 
-## 🧠 Recall
+## Recall
 
 1. What does an aggregate function do to a result set — input vs output?
 2. Why is `SELECT name, MAX(price)` an error?
 3. How does WHERE interact with aggregates (which happens first)?
 4. What does AVG do with NULLs?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How would you compute the total revenue of delivered orders?"
 2. "What's the difference between COUNT(*) and COUNT(column)?"
 3. "Why can't you select a normal column next to an aggregate without GROUP BY?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand all five aggregates + NULL behavior
 - [ ] Completed P1–P10 (P7 predicted first)

@@ -1,4 +1,4 @@
-# 🏗️ Project 6 — Query Performance Lab
+# Project 6 — Query Performance Lab
 
 **Milestone:** SQL Stage 5 (after Day 24) · **Time:** ~90 min · **Dataset:** `perf_lab` (`./scripts/utilities/load-large-postgres.sh`)
 
@@ -58,12 +58,12 @@ The whole point — targets to aim for (hardware varies; the *ratio* matters):
 - Q3: OFFSET 199990 should take noticeably longer than keyset at the same depth — measure the gap
 - Q2: a measurable improvement either way
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 1. Add a fifth query of your own: something you predict is slow, prove it, fix it, document it
 2. The write-tax audit: with all your indexes in place, time a bulk `INSERT INTO big_orders` of 1000 rows (use generate_series), then DROP the indexes and time it again. Report the tax.
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 3. The "planner won't use my index" mystery: create an index on `big_orders.status` and EXPLAIN `WHERE status = 'delivered'`. Why is Seq Scan *correct* here? (Selectivity!) Document the explanation — this is the answer that separates juniors from mids.
 
@@ -77,4 +77,4 @@ A performance report with real numbers, four (or six) fixed queries, and the ref
 - Which "fix" didn't help much — and what does that teach you about guessing?
 - What would you check *first* next time someone says "the database is slow"? (Your honest one-sentence method.)
 
-> ✅ Done? [solutions/06-performance-lab.md](solutions/06-performance-lab.md)
+> Done? [solutions/06-performance-lab.md](solutions/06-performance-lab.md)

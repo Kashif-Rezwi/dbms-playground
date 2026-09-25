@@ -1,4 +1,4 @@
-# 🎤 Interview Questions — Beginner
+# Interview Questions — Beginner
 
 > Not memorization prompts — understanding tests. After each, the *follow-ups* are the real interview. If you can answer those without notes, you own it. All are covered by the tracks — day references in brackets.
 

@@ -1,4 +1,4 @@
-# ⚡ SQL Cheat Sheet
+# SQL Cheat Sheet
 
 Quick reference — for *revision after practice*, not a substitute for it.
 

@@ -1,4 +1,4 @@
-# 📋 Stage Review 3 — Performance & Transactions (SQL Days 21–27)
+# Stage Review 3 — Performance & Transactions (SQL Days 21–27)
 
 Do this *after* Day 27, before the Day 28 final review.
 
@@ -16,12 +16,12 @@ Do this *after* Day 27, before the Day 28 final review.
 
 ## Part B — Query Drills (dataset: `perf_lab` + `ecommerce`)
 
-🟡 1. On `perf_lab`: EXPLAIN ANALYZE `WHERE user_id = 417`. Name the node, estimated vs actual rows.
-🟡 2. Drop that index; re-run; recreate; re-run. Write all three timings.
-🟡 3. Write the keyset version of "page 4 of 10" for `big_orders` ordered by `ordered_at`.
-🟡 4. On `ecommerce`: a transaction that inserts an order + item, then deliberately fails on a CHECK (negative quantity), proving nothing survived.
-🔴 5. "Top 5 users by delivered revenue on perf_lab" — naive version, EXPLAIN ANALYZE, one index, one rewrite, before/after report.
-🔴 6. Design judgment: for each, index it, denormalize it, or leave it — defend in one line each:
+[Intermediate] 1. On `perf_lab`: EXPLAIN ANALYZE `WHERE user_id = 417`. Name the node, estimated vs actual rows.
+[Intermediate] 2. Drop that index; re-run; recreate; re-run. Write all three timings.
+[Intermediate] 3. Write the keyset version of "page 4 of 10" for `big_orders` ordered by `ordered_at`.
+[Intermediate] 4. On `ecommerce`: a transaction that inserts an order + item, then deliberately fails on a CHECK (negative quantity), proving nothing survived.
+[Advanced] 5. "Top 5 users by delivered revenue on perf_lab" — naive version, EXPLAIN ANALYZE, one index, one rewrite, before/after report.
+[Advanced] 6. Design judgment: for each, index it, denormalize it, or leave it — defend in one line each:
    - "Find user by email" on a 50M-row users table
    - "Product's review avg on page view" with 1000s of reviews
    - "Monthly active users" report run once a day

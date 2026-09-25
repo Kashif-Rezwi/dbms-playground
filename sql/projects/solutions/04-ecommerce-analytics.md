@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 4: E-Commerce Analytics
+# Solutions — Project 4: E-Commerce Analytics
 
 > The dataset is the shared `ecommerce` — so these answers are *checkable*. Predictions first!
 

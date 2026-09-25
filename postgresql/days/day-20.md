@@ -1,12 +1,12 @@
 # Day 20 — Locks & Deadlocks
 
-**Track:** PostgreSQL · **Stage:** 5 — Transactions & Concurrency · **Difficulty:** 🔴 · **Milestone:** Project 4
+**Track:** PostgreSQL · **Stage:** 5 — Transactions & Concurrency · **Difficulty:** Advanced · **Milestone:** Project 4
 
-## 🎯 Goal
+## Goal
 
 Understand the lock table — row locks, table locks, deadlocks — and diagnose a blocked session like an operator.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **Under MVCC, plain reads never lock. What locks:**
 
@@ -41,26 +41,26 @@ WHERE pid = <blocked_pid>;
 SELECT pg_terminate_backend(<blocker_pid>);  -- the hammer (last resort)
 ```
 
-## 🔍 Why It Matters
+## Why It Matters
 
 "Everything is slow" incidents are usually a blocked queue behind one transaction. Knowing `pg_stat_activity → pg_blocking_pids → fix or kill` is the actual on-call skill.
 
-## 💡 Mental Model
+## Mental Model
 
 > Row locks are **stall doors in a corridor** (one writer per stall). MVCC means *walkers* (readers) never queue. Deadlock = two people each holding a door, each waiting for the other's — the manager (deadlock detector) picks a victim and walks one out (rollback). Consistent ordering = everyone always claims stalls left-to-right, so no cycle can form.
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** S1: `BEGIN; UPDATE users SET city='X' WHERE id=1;` (hold) — S2: `UPDATE users SET city='Y' WHERE id=1;` → **blocked**. In a third session, run the `pg_stat_activity` query; find the blocked PID and `pg_blocking_pids`. Commit S1; watch S2 finish.
-🟢 **P2.** Same setup, but S2 first runs `SET lock_timeout='2s';` — error instead of hang. When is a short timeout the right call? (UX paths, migrations.)
-🟡 **P3.** **Reproduce a real deadlock:** S1 locks user 1 then user 2; S2 locks user 2 then user 1 (stagger the seconds — run one statement at a time per session). One session gets `deadlock detected`. Identify the victim and explain why the app must retry it.
-🟡 **P4.** **Prevention:** redo the same interleaving with both sessions doing `SELECT ... ORDER BY id FOR UPDATE` first — no deadlock. One line: why did ordering kill the cycle?
-🟡 **P5. ⭐ Predict first:** S1 holds a row lock on user 1 (uncommitted UPDATE). S2 runs (a) plain `SELECT * FROM users WHERE id=1;` (b) `UPDATE ... WHERE id=1` (c) `ALTER TABLE users ADD COLUMN x int;`. Which block, which don't? Verify all three.
-🟡 **P6. From memory:** the diagnostic query sequence for a blocked session (activity → blocker → locks).
-🔴 **P7.** Advisory lock taste: `SELECT pg_advisory_lock(99);` in S1; S2 same call → blocks; S1 `pg_advisory_unlock_all();` — S2 proceeds. One use case in two lines (e.g., single-flight cron jobs — `pg_try_advisory_lock` returning false = "another worker has it").
-🔴 **P8.** The DDL freeze: S1 `BEGIN; SELECT * FROM users FOR UPDATE;` (hold rows) — S2 `ALTER TABLE users ...` → blocked. Why do DDL and row locks conflict at the *table* level? What does this mean for migrations on live systems? (Day 26 preview: keep transactions short; run migrations with lock_timeout.)
+[Beginner] **P1.** S1: `BEGIN; UPDATE users SET city='X' WHERE id=1;` (hold) — S2: `UPDATE users SET city='Y' WHERE id=1;` → **blocked**. In a third session, run the `pg_stat_activity` query; find the blocked PID and `pg_blocking_pids`. Commit S1; watch S2 finish.
+[Beginner] **P2.** Same setup, but S2 first runs `SET lock_timeout='2s';` — error instead of hang. When is a short timeout the right call? (UX paths, migrations.)
+[Intermediate] **P3.** **Reproduce a real deadlock:** S1 locks user 1 then user 2; S2 locks user 2 then user 1 (stagger the seconds — run one statement at a time per session). One session gets `deadlock detected`. Identify the victim and explain why the app must retry it.
+[Intermediate] **P4.** **Prevention:** redo the same interleaving with both sessions doing `SELECT ... ORDER BY id FOR UPDATE` first — no deadlock. One line: why did ordering kill the cycle?
+[Intermediate] **P5. Predict first:** S1 holds a row lock on user 1 (uncommitted UPDATE). S2 runs (a) plain `SELECT * FROM users WHERE id=1;` (b) `UPDATE ... WHERE id=1` (c) `ALTER TABLE users ADD COLUMN x int;`. Which block, which don't? Verify all three.
+[Intermediate] **P6. From memory:** the diagnostic query sequence for a blocked session (activity → blocker → locks).
+[Advanced] **P7.** Advisory lock taste: `SELECT pg_advisory_lock(99);` in S1; S2 same call → blocks; S1 `pg_advisory_unlock_all();` — S2 proceeds. One use case in two lines (e.g., single-flight cron jobs — `pg_try_advisory_lock` returning false = "another worker has it").
+[Advanced] **P8.** The DDL freeze: S1 `BEGIN; SELECT * FROM users FOR UPDATE;` (hold rows) — S2 `ALTER TABLE users ...` → blocked. Why do DDL and row locks conflict at the *table* level? What does this mean for migrations on live systems? (Day 26 preview: keep transactions short; run migrations with lock_timeout.)
 
-## 🐛 Debugging — The Incident Drill
+## Debugging — The Incident Drill
 
 ```sql
 -- Incident: "app hangs entirely." Your runbook, in order:
@@ -72,31 +72,31 @@ SELECT pg_terminate_backend(<blocker_pid>);  -- the hammer (last resort)
 -- Practice the whole runbook on the P1 setup.
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 **[P4: Bank Transfer, Concurrency Edition](../projects/04-bank-concurrency.md)** — your SQL-track P5 rebuilt with: atomic arithmetic, `FOR UPDATE` with ordering, a reproduced deadlock and its fix, SERIALIZABLE-with-retry for one path, and the incident runbook applied. Two-session work; attempt before solutions.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Which four anomalies did you reproduce at which levels?
 2. What must an app do with a retryable error?
 3. MVCC — why don't plain readers lock?
 4. What does REPEATABLE READ's snapshot fix?
 
-## 🧠 Recall
+## Recall
 
 1. Which operations take row locks? Which never do?
 2. How does PostgreSQL resolve a deadlock, and who retries?
 3. The deadlock-prevention habit in one line.
 4. Your 4-step blocked-session runbook.
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "A query hangs in production — walk me through your diagnosis." *(pg_stat_activity → blocking_pids → root → fix/kill.)*
 2. "How do you prevent deadlocks?" *(Consistent lock ordering; keep transactions short; retry logic.)*
 3. "What's an advisory lock and when is it the right tool?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand row/table/advisory locks, deadlock detection, runbook
 - [ ] Reproduced a deadlock AND prevented it with ordering

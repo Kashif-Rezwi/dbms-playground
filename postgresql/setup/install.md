@@ -1,4 +1,4 @@
-# 🐘 Installing PostgreSQL
+# Installing PostgreSQL
 
 ## Option A — macOS with Homebrew (recommended)
 

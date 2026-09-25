@@ -1,4 +1,4 @@
-# 🐘 PostgreSQL Cheat Sheet
+# PostgreSQL Cheat Sheet
 
 *PG-specific* quick reference — SQL syntax lives in [`../sql/cheat-sheet.md`](../sql/cheat-sheet.md).
 

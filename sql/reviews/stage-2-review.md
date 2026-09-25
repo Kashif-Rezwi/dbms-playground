@@ -1,4 +1,4 @@
-# 📋 Stage Review 2 — Modeling & Advanced Queries (SQL Days 11–20)
+# Stage Review 2 — Modeling & Advanced Queries (SQL Days 11–20)
 
 Do this *after* Day 20. (Days 11–15 got their warm-up check at the top of Day 16 — this review covers 16–20 plus integration of everything.)
 
@@ -15,15 +15,15 @@ Do this *after* Day 20. (Days 11–15 got their warm-up check at the top of Day 
 
 ## Part B — Query Drills (dataset: `saas`, reset first)
 
-🟢 1. Every task with its project name and assignee name (3-table join).
-🟡 2. Projects with zero tasks.
-🟡 3. Organizations and their open (non-overdue... pick: status <> 'paid') invoice totals, including orgs with none.
-🟡 4. Per-organization: task count, done count, done % (FILTER + ROUND).
-🟡 5. The top-2 tasks per project by priority... by `created_at` (row_number pattern).
-🟡 6. A CTE `late` (projects past deadline), chained into a CTE `late_tasks`, final output: project name + count of *unassigned* late tasks.
-🔴 7. Organizations whose average invoice amount is above the overall average — CTE + correlated subquery.
-🔴 8. A window report: every invoice with its running total *per organization* (SUM OVER PARTITION BY org_id ORDER BY issued_at).
-🔴 9. Design: this table violates which NF levels?
+[Beginner] 1. Every task with its project name and assignee name (3-table join).
+[Intermediate] 2. Projects with zero tasks.
+[Intermediate] 3. Organizations and their open (non-overdue... pick: status <> 'paid') invoice totals, including orgs with none.
+[Intermediate] 4. Per-organization: task count, done count, done % (FILTER + ROUND).
+[Intermediate] 5. The top-2 tasks per project by priority... by `created_at` (row_number pattern).
+[Intermediate] 6. A CTE `late` (projects past deadline), chained into a CTE `late_tasks`, final output: project name + count of *unassigned* late tasks.
+[Advanced] 7. Organizations whose average invoice amount is above the overall average — CTE + correlated subquery.
+[Advanced] 8. A window report: every invoice with its running total *per organization* (SUM OVER PARTITION BY org_id ORDER BY issued_at).
+[Advanced] 9. Design: this table violates which NF levels?
 
 ```text
 timesheets(emp_id, emp_name, dept, dept_head, week, hours_json_text)

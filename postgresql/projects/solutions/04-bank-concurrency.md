@@ -1,4 +1,4 @@
-# ✅ Solutions — P4: Bank Transfer, Concurrency Edition
+# Solutions — P4: Bank Transfer, Concurrency Edition
 
 ## Reference schema
 

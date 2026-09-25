@@ -1,4 +1,4 @@
-# 🏗️ P5 — Secure a Multi-Tenant Schema
+# P5 — Secure a Multi-Tenant Schema
 
 **Milestone:** PG Stage 6 (after Day 22) · **Time:** ~90 min · **Dataset:** `saas`
 
@@ -27,11 +27,11 @@ Three consumers need access: the **app** (CRUD, per-org), an **analytics bot** (
 8. Unset context → zero rows (fail-closed), not an error — and explain why zero-rows beats an error here (hint: errors leak *that* a policy exists and complicate apps).
 9. analytics_ro: business answers work, PII impossible (list what you verified as impossible — emails, user names...).
 
-## Challenge ⭐
+## Challenge
 
 10. The connection-pool note (Day 28 preview): write the app's per-request pattern (`set_config('app.current_org', ..., true)` inside the transaction) and explain in 3 sentences why session-level SET would leak tenants under pooling.
 
-## Bonus 🔴
+## Bonus
 
 11. A `SECURITY DEFINER` function that *legitimately* crosses tenants (e.g., a super-admin report owned by a role with BYPASSRLS), with the trade-offs stated. When is this the right escape hatch?
 
@@ -41,4 +41,4 @@ Three consumers need access: the **app** (CRUD, per-org), an **analytics bot** (
 - Index + RLS: which column did you index, and what did the EXPLAIN comparison say?
 - "Our app filters by org anyway — why RLS?" — your 3-sentence answer.
 
-> ✅ [solutions/05-multi-tenant.md](solutions/05-multi-tenant.md)
+> [solutions/05-multi-tenant.md](solutions/05-multi-tenant.md)

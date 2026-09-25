@@ -1,13 +1,13 @@
 # Day 20 — Normalization (1NF→3NF) & Denormalization
 
-**Track:** SQL · **Stage:** 4 — Intermediate Querying · **Difficulty:** 🟡 Intermediate
+**Track:** SQL · **Stage:** 4 — Intermediate Querying · **Difficulty:** Intermediate
 **Prerequisites:** Day 19 · **Dataset:** build your own today!
 
-## 🎯 Goal
+## Goal
 
 Understand why "one fact, one place" saves your database — and when breaking that rule (denormalization) is the right call.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **The problem normalization solves.** Look at this "table":
 
@@ -37,15 +37,15 @@ It *works*... until: Ayesha moves city — update **every** row she's in; you wa
 
 **Denormalization — deliberately breaking the rule.** Example: storing `posts.likes_count` instead of counting `likes` every time. It's a *trade*: faster reads / more storage / update risk (counter drift). You denormalize for read speed and accept the bookkeeping cost — never as an excuse for laziness.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Every schema you'll ever design needs this judgment. Interviews *love* "normalize this table" questions, and every real system eventually denormalizes something — knowing both sides is the skill.
 
-## 💡 Mental Model
+## Mental Model
 
 > Normalization is a **filing system**: one fact gets one folder, referenced everywhere else by pointer — you never photocopy the fact around (photocopies drift out of date). Denormalization is *deliberately keeping a photocopy on your desk* because walking to the filing room a thousand times a day costs more than the risk of the photocopy going stale.
 
-## 💻 Examples — Do It Yourself
+## Examples — Do It Yourself
 
 Create the deliberately-bad table and feel the anomalies:
 
@@ -70,23 +70,23 @@ UPDATE flat_orders SET customer_city = 'Islamabad' WHERE customer_name = 'Ayesha
 DELETE FROM flat_orders WHERE order_id = 2;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Build `flat_orders`. Run the update-anomaly UPDATE. SELECT * and point at the duplicated fact.
-🟢 **P2.** Show the delete anomaly: what knowledge about Blenders disappeared with Bilal's order?
-🟡 **P3.** **Normalize to 1NF:** design tables where every cell is atomic (orders + order_items split). Write the CREATEs and INSERTs.
-🟡 **P4.** **Normalize to 3NF:** continue — customers get their own table, products get their own. Four tables: customers, products, orders, order_items. Add PKs and FKs (Day 19!).
-🟡 **P5. ⭐ Predict first** — which normal form is violated, and which anomaly can bite?
+[Beginner] **P1.** Build `flat_orders`. Run the update-anomaly UPDATE. SELECT * and point at the duplicated fact.
+[Beginner] **P2.** Show the delete anomaly: what knowledge about Blenders disappeared with Bilal's order?
+[Intermediate] **P3.** **Normalize to 1NF:** design tables where every cell is atomic (orders + order_items split). Write the CREATEs and INSERTs.
+[Intermediate] **P4.** **Normalize to 3NF:** continue — customers get their own table, products get their own. Four tables: customers, products, orders, order_items. Add PKs and FKs (Day 19!).
+[Intermediate] **P5. Predict first** — which normal form is violated, and which anomaly can bite?
 
 ```text
 students(student_id PK, name, advisor_id, advisor_name, advisor_room)
 ```
 
-🟡 **P6.** Is the `ecommerce` schema normalized? Walk each table: 1NF? 2NF? 3NF?
-🔴 **P7.** Denormalize *on purpose*: add `likes_count` to a copy of posts (mental exercise is fine). Write the UPDATE that maintains it after inserting a like. What can go wrong over time?
-🔴 **P8.** Argue in 3 sentences: should `orders.total_amount` exist, or should it always be computed from `order_items`? Consider read speed, write cost, drift risk.
+[Intermediate] **P6.** Is the `ecommerce` schema normalized? Walk each table: 1NF? 2NF? 3NF?
+[Advanced] **P7.** Denormalize *on purpose*: add `likes_count` to a copy of posts (mental exercise is fine). Write the UPDATE that maintains it after inserting a like. What can go wrong over time?
+[Advanced] **P8.** Argue in 3 sentences: should `orders.total_amount` exist, or should it always be computed from `order_items`? Consider read speed, write cost, drift risk.
 
-## 🐛 Debugging
+## Debugging
 
 Design debugging — each design invites an anomaly. Name it:
 
@@ -102,31 +102,31 @@ CREATE TABLE playlists (id INT PRIMARY KEY, song1 TEXT, song2 TEXT, song3 TEXT);
 CREATE TABLE invoices (id INT PRIMARY KEY, client_name TEXT, client_email TEXT, amount NUMERIC);
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Full cycle: take `flat_orders` → normalize into 4 tables (P4) → write the JOIN that *reconstructs* the original flat view (orders JOIN customers JOIN order_items JOIN products) → compare row-for-row with `flat_orders`. That's the whole point: **normalized storage, denormalized views via joins**.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. PK vs FK — one line each.
 2. What does ON DELETE CASCADE do — and its risk?
 3. The "users with no orders" pattern — from memory.
 4. Constraints — name all five you know.
 
-## 🧠 Recall
+## Recall
 
 1. Name the three anomalies with one-line examples.
 2. 1NF, 2NF, 3NF — one line each.
 3. The working rule of thumb (four words)?
 4. When is denormalization correct — and what does it cost?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "What is normalization and why do we do it?" *(Anomalies + one fact one place.)*
 2. "Walk me through normalizing an orders table." *(You literally did this today.)*
 3. "When would you denormalize?" *(Read-heavy, expensive joins, counters — with drift risk named.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand anomalies, 1NF–3NF, denormalization trade-offs
 - [ ] Built flat_orders and felt every anomaly

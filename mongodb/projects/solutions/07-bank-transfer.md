@@ -1,4 +1,4 @@
-# ✅ Solutions — P7: Bank Transfer (Mongo)
+# Solutions — P7: Bank Transfer (Mongo)
 
 ## The design answer (write yours before comparing)
 

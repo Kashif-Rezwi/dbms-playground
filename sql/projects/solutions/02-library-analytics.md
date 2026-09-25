@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 2: Library Analytics
+# Solutions — Project 2: Library Analytics
 
 > Your data differs, so results differ — check *methods*, not numbers.
 

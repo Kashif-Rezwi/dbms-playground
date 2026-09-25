@@ -1,4 +1,4 @@
-# 🏗️ P7 — Bank Transfer (Mongo)
+# P7 — Bank Transfer (Mongo)
 
 **Milestone:** Mongo Day 24 · **Time:** ~75 min · **Requires:** `rs.initiate()` (Day 23)
 
@@ -28,11 +28,11 @@ For a real bank: when is B legitimate (internal transfers), when is A forced (tr
 6. Per-account flow report (transfers log aggregated — app-side or... you know $group by now: pipeline the log!)
 7. The conservation check: SUM of balances = seed total (predict the number FIRST); plus a deliberate sabotage + detection
 
-## Challenge ⭐
+## Challenge
 
 8. The ghost-reference audit: transfers referencing missing accounts — a $lookup pipeline with `{$size: 0}` (Day 22 P5's tool, applied to your own bank)
 
-## Bonus 🔴
+## Bonus
 
 9. **Write concern**: critical transfers with `w: 'majority'` — one line on what durability claim changes; and the "when would w:1 be acceptable here" answer.
 
@@ -42,4 +42,4 @@ For a real bank: when is B legitimate (internal transfers), when is A forced (tr
 - What did the stray-call demo teach about the template's fragility?
 - Compare to SQL-track P5 and PG-track P4: which paradigm made the *invariant* cheapest to enforce — and why?
 
-> ✅ [solutions/07-bank-transfer.md](solutions/07-bank-transfer.md)
+> [solutions/07-bank-transfer.md](solutions/07-bank-transfer.md)

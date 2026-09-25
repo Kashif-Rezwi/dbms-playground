@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 3: Student Course System
+# Solutions — Project 3: Student Course System
 
 > Same caveat as always: compare methods, not bytes.
 

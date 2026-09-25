@@ -1,4 +1,4 @@
-# ✅ Solutions — P1: Task Manager, the PG Way
+# Solutions — P1: Task Manager, the PG Way
 
 ## Reference schema
 

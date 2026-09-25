@@ -1,4 +1,4 @@
-# 🎤 Interview Questions — Advanced
+# Interview Questions — Advanced
 
 > The seniority markers — trade-offs named, numbers cited, opinions owned. These are also the mock-interview spines of the capstones.
 

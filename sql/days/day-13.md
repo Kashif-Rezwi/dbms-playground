@@ -1,13 +1,13 @@
 # Day 13 — SELF JOIN + Multi-Table Chains
 
-**Track:** SQL · **Stage:** 3 — Relationships · **Difficulty:** 🟡 Intermediate
+**Track:** SQL · **Stage:** 3 — Relationships · **Difficulty:** Intermediate
 **Prerequisites:** Days 11–12 · **Dataset:** `social`
 
-## 🎯 Goal
+## Goal
 
 Join a table to itself (aliases become mandatory) and chain three+ tables through a relationship path.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **SELF JOIN** — a table joined to itself. To do that, it must appear **twice under two aliases**, acting as two "copies":
 
@@ -40,15 +40,15 @@ users → orders → order_items → products    (full order detail)
 
 Each hop is one JOIN. Read joins aloud as sentences: *"join comments to users on commenter; join comments to posts on post."*
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Org charts, followers, threads, family trees — self-references are everywhere. And real questions almost never need one join; they need a *path* through 3–4 tables.
 
-## 💡 Mental Model
+## Mental Model
 
 > A self join is using the **same book twice** — open on the "followers" page and again on the "followed" page. Multi-table chains are following **red thread** from table to table: each JOIN holds one thread; follow three threads and you've connected a comment back to a city.
 
-## 💻 Examples
+## Examples
 
 ```sql
 -- follower graph with usernames
@@ -70,14 +70,14 @@ JOIN users s ON s.id = m.sender_id
 JOIN users r ON r.id = m.receiver_id;
 ```
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Follower graph with usernames, like the example (type it yourself).
-🟢 **P2.** Employee → manager names. Who has NULL manager? (Why LEFT JOIN?)
-🟢 **P3.** Message sender + receiver usernames + body (users twice).
-🟡 **P4.** Comments: commenter username + post content + comment text — the full 3-table chain.
-🟡 **P5.** Followers of 'ayesha_k' specifically — their usernames.
-🟡 **P6. ⭐ Predict first** — how many rows, and does the CEO appear?
+[Beginner] **P1.** Follower graph with usernames, like the example (type it yourself).
+[Beginner] **P2.** Employee → manager names. Who has NULL manager? (Why LEFT JOIN?)
+[Beginner] **P3.** Message sender + receiver usernames + body (users twice).
+[Intermediate] **P4.** Comments: commenter username + post content + comment text — the full 3-table chain.
+[Intermediate] **P5.** Followers of 'ayesha_k' specifically — their usernames.
+[Intermediate] **P6. Predict first** — how many rows, and does the CEO appear?
 
 ```sql
 SELECT e.name, m.name AS manager
@@ -85,11 +85,11 @@ FROM employees e
 INNER JOIN employees m ON m.id = e.manager_id;
 ```
 
-🟡 **P7. From memory:** posts per city — post content + author city (2 tables, GROUP BY).
-🔴 **P8.** Pairs of users who follow the **same person** — without duplicates of the same pair. (Self-join followers against itself: `followers f1 JOIN followers f2 ON f1.followed_id = f2.followed_id AND f1.follower_id < f2.follower_id`.) Predict one such pair first.
-🔴 **P9.** Comments on posts liked by 'junaid_s' — comment text + post content. (3 tables + likes chain.)
+[Intermediate] **P7. From memory:** posts per city — post content + author city (2 tables, GROUP BY).
+[Advanced] **P8.** Pairs of users who follow the **same person** — without duplicates of the same pair. (Self-join followers against itself: `followers f1 JOIN followers f2 ON f1.followed_id = f2.followed_id AND f1.follower_id < f2.follower_id`.) Predict one such pair first.
+[Advanced] **P9.** Comments on posts liked by 'junaid_s' — comment text + post content. (3 tables + likes chain.)
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: self-join without aliases — what error?
@@ -109,31 +109,31 @@ WHERE u.username = 'ayesha_k';
 -- Intent was "comments BY ayesha_k" — but it returns comments on HER posts only. Diagnose ON vs WHERE here.
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The influence report: **username, their total post count, and their follower count** — for users with at least 1 follower. (Two LEFT JOINs + two COUNT(o.id)s... or two separate GROUP BYs... tricky! Do it as: LEFT JOIN posts + GROUP BY for post count; LEFT JOIN followers + GROUP BY for follower count. Two queries side-by-side is honest work today; Day 15's CTEs will let you glue them.)
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. The "never ordered" pattern — write it from memory.
 2. Why `COUNT(*)` lies in LEFT JOIN counts?
 3. What does GROUP BY's boxes metaphor mean?
 4. What is the join order with WHERE — which happens first?
 
-## 🧠 Recall
+## Recall
 
 1. Why are aliases *mandatory* in a self join?
 2. What does the `<` trick in P8 accomplish?
 3. How many JOINs does a 4-table chain need?
 4. Why LEFT JOIN for employee→manager?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How do you model and query a follow/like relationship?"
 2. "How would you find each employee's manager?" *(Self join, LEFT for the top boss.)*
 3. "What's a junction table and why does many-to-many need one?" *(followers/likes — talk about it with today's experience.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand self joins, aliases, chains
 - [ ] Completed P1–P9 (P6 and P8 predicted first)

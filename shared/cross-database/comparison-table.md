@@ -1,4 +1,4 @@
-# 🔀 Cross-Database Learning — The Grand Comparison
+# Cross-Database Learning — The Grand Comparison
 
 > Do this after BOTH the PostgreSQL and MongoDB tracks (or SQL + Mongo). The goal is *not* forced equivalence — it's understanding **how two ecosystems solve the same problems differently**. Every row here, you have *lived*.
 

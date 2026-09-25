@@ -1,12 +1,12 @@
 # Day 04 — Server Architecture & Loading Data
 
-**Track:** PostgreSQL · **Stage:** 1 — Setup · **Difficulty:** 🟡
+**Track:** PostgreSQL · **Stage:** 1 — Setup · **Difficulty:** Intermediate
 
-## 🎯 Goal
+## Goal
 
 Know the server's moving parts (processes, memory, WAL) and load/verify datasets like an operator.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **The process model** — one process per connection:
 
@@ -43,25 +43,25 @@ COPY big_users FROM '/path/file.csv' WITH (FORMAT csv, HEADER true);
 COPY (SELECT * FROM users) TO '/tmp/users.csv' WITH (FORMAT csv, HEADER true);
 ```
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Every performance, concurrency, or reliability question in the rest of this track resolves to these parts. Also: `COPY` vs row-by-row INSERT is often 10–100× — the first real "operator" reflex.
 
-## 💡 Mental Model
+## Mental Model
 
 > The postmaster is a **hotel manager** assigning a butler (backend) per guest (connection). The kitchen has a hot-pass (shared_buffers). **WAL is the hotel's incident logbook, written before anything happens** — burn the kitchen down and the logbook rebuilds the last hour exactly.
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** `ps aux | grep postgres` — identify postmaster, autovacuum, walwriter, and your own backend (match your `pg_backend_pid()`). Screenshot/notes.
-🟢 **P2.** Load all four datasets (`./scripts/seed/seed-postgres.sh <name>`) and verify counts against each seed file's sanity-check comment.
-🟡 **P3.** In two psql sessions, `SELECT pg_backend_pid();` — different PIDs, both visible in ps. One line: what proves each connection is a process?
-🟡 **P4.** Work memory felt: in `perf_lab` (load it), `SET work_mem = '64kB';` then EXPLAIN ANALYZE a big `ORDER BY` — look for "Sort Method: external merge". Then `SET work_mem = '256MB';` re-run — "Sort Method: quicksort/memory". Write the timing delta.
-🟡 **P5. ⭐ Predict first:** which finishes first — a 1000-row `INSERT ... VALUES` list or `COPY` of the same rows from a CSV? Then build the CSV via `COPY TO` and prove it.
-🟡 **P6. From memory:** the command to run a .sql file into a database from the shell (two forms: psql -f, and \i inside psql).
-🔴 **P7.** WAL intuition: insert a row in one session; before you commit... it's already WAL-logged? Research with `\db` no — just explain in two sentences: why can PostgreSQL recover "uncommitted-at-crash" data boundaries exactly, and what would be lost without WAL?
+[Beginner] **P1.** `ps aux | grep postgres` — identify postmaster, autovacuum, walwriter, and your own backend (match your `pg_backend_pid()`). Screenshot/notes.
+[Beginner] **P2.** Load all four datasets (`./scripts/seed/seed-postgres.sh <name>`) and verify counts against each seed file's sanity-check comment.
+[Intermediate] **P3.** In two psql sessions, `SELECT pg_backend_pid();` — different PIDs, both visible in ps. One line: what proves each connection is a process?
+[Intermediate] **P4.** Work memory felt: in `perf_lab` (load it), `SET work_mem = '64kB';` then EXPLAIN ANALYZE a big `ORDER BY` — look for "Sort Method: external merge". Then `SET work_mem = '256MB';` re-run — "Sort Method: quicksort/memory". Write the timing delta.
+[Intermediate] **P5. Predict first:** which finishes first — a 1000-row `INSERT ... VALUES` list or `COPY` of the same rows from a CSV? Then build the CSV via `COPY TO` and prove it.
+[Intermediate] **P6. From memory:** the command to run a .sql file into a database from the shell (two forms: psql -f, and \i inside psql).
+[Advanced] **P7.** WAL intuition: insert a row in one session; before you commit... it's already WAL-logged? Research with `\db` no — just explain in two sentences: why can PostgreSQL recover "uncommitted-at-crash" data boundaries exactly, and what would be lost without WAL?
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: "out of memory" on a huge sort. Which setting is the lever, what's
@@ -73,31 +73,31 @@ Every performance, concurrency, or reliability question in the rest of this trac
 -- verification step was skipped, and what's the habit?
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 The verification habit, generalized: write a *single catalog query* that reports every table in the current database with its row count (`pg_stat_user_tables`) — the "did my load work" dashboard. Run it on all four datasets. Keep this query in your notes forever.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Money → which type, why?
 2. TIMESTAMPTZ vs TIMESTAMP?
 3. SQL: what's the top-N-per-group pattern?
 4. SQL: what does EXPLAIN ANALYZE do + write caveat?
 
-## 🧠 Recall
+## Recall
 
 1. What does WAL stand for and what does it guarantee?
 2. One process per ___ — and why that makes connections expensive?
 3. What is shared_buffers? What is work_mem (and per-what)?
 4. COPY vs INSERT — roughly how much faster, and why?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How does PostgreSQL achieve durability?" *(WAL — write-ahead, replay on crash.)*
 2. "Why can too many connections hurt a database that isn't even busy?" *(Process model, memory per connection.)*
 3. "How would you load 10 million rows fastest?" *(COPY / bulk approaches, not row-by-row inserts.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand processes, memory, WAL, COPY
 - [ ] Completed P1–P7 (P5 predicted first)

@@ -1,4 +1,4 @@
-# 💬 Social Platform — ER Diagram
+# Social Platform — ER Diagram
 
 ```mermaid
 erDiagram

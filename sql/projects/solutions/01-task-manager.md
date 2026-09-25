@@ -1,4 +1,4 @@
-# ✅ Solutions — Project 1: Task Manager
+# Solutions — Project 1: Task Manager
 
 > Compare *approaches*, not exact text — your column names may differ. Grade: does your version work and could you explain every line?
 

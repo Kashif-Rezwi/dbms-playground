@@ -1,12 +1,12 @@
 # Day 03 — Tables + PostgreSQL Data Types
 
-**Track:** PostgreSQL · **Stage:** 1 — Setup · **Difficulty:** 🟢→🟡
+**Track:** PostgreSQL · **Stage:** 1 — Setup · **Difficulty:** Beginner → Intermediate
 
-## 🎯 Goal
+## Goal
 
 Choose PostgreSQL's types with intent — especially money, timestamps, and text — instead of defaulting to TEXT for everything.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 PostgreSQL's type system is rich. The decisions you'll actually make:
 
@@ -38,31 +38,31 @@ CREATE TABLE example (
 
 **Type rules are enforced**: inserting `price = 'abc'` fails; inserting `'2025-13-45'` fails. The type *is* a constraint (SQL Day 19's point, one level deeper).
 
-## 🔍 Why It Matters
+## Why It Matters
 
 Types are your first, cheapest data-quality guarantee and a major performance lever (smaller types = more rows per page = faster scans). "It works with TEXT" is how prototypes die in production.
 
-## 💡 Mental Model
+## Mental Model
 
 > A type is a **container shape**: a `NUMERIC(8,2)` box only fits numbers with 2 decimal places; a TIMESTAMPTZ box stamps every entry in *absolute universal time* so any reader can translate it to their local clock.
 
-## 🛠️ Practice
+## Practice
 
-🟢 **P1.** Create the `example` table above (your DB of choice). Insert two rows; verify. Then deliberately insert bad values for `price`, `born_on`, `ip` — read all three errors.
-🟢 **P2.** `SELECT 0.1::float + 0.2::float;` vs `SELECT 0.1::numeric + 0.2::numeric;` — explain the output difference in one sentence. This is *why money is NUMERIC*.
-🟡 **P3.** Timezone proof: `SET timezone TO 'Asia/Karachi'; SELECT now();` then `SET timezone TO 'UTC'; SELECT now();` — same instant, different display. Now insert a `TIMESTAMP` (no tz) row with the Karachi wall-clock and select it after switching — what ambiguity did you just witness?
-🟡 **P4.** Arrays: insert `tags` with two rows, then `SELECT * FROM example WHERE 'red' = ANY(tags);` and `WHERE tags @> ARRAY['red','xl'];` (contains).
-🟡 **P5. ⭐ Predict first:** what does this return and why?
+[Beginner] **P1.** Create the `example` table above (your DB of choice). Insert two rows; verify. Then deliberately insert bad values for `price`, `born_on`, `ip` — read all three errors.
+[Beginner] **P2.** `SELECT 0.1::float + 0.2::float;` vs `SELECT 0.1::numeric + 0.2::numeric;` — explain the output difference in one sentence. This is *why money is NUMERIC*.
+[Intermediate] **P3.** Timezone proof: `SET timezone TO 'Asia/Karachi'; SELECT now();` then `SET timezone TO 'UTC'; SELECT now();` — same instant, different display. Now insert a `TIMESTAMP` (no tz) row with the Karachi wall-clock and select it after switching — what ambiguity did you just witness?
+[Intermediate] **P4.** Arrays: insert `tags` with two rows, then `SELECT * FROM example WHERE 'red' = ANY(tags);` and `WHERE tags @> ARRAY['red','xl'];` (contains).
+[Intermediate] **P5. Predict first:** what does this return and why?
 
 ```sql
 SELECT '5' + 3;
 ```
 
 *(String + number... but there's a cast. PostgreSQL coerces literal strings. What about a TEXT column + 3? Try both variants.)*
-🟡 **P6. From memory:** a `payments` table DDL with exact-money amount, method (text), paid_at (timestamp with tz), and a CHECK that amount > 0.
-🔴 **P7.** Storage reality: `SELECT pg_column_size(price_column)` for NUMERIC(8,2) vs a REAL holding 12345.67. Then size whole rows with `pg_total_relation_size` on a 100-row test table in two type-versions. Report: exact-money costs how much storage?
+[Intermediate] **P6. From memory:** a `payments` table DDL with exact-money amount, method (text), paid_at (timestamp with tz), and a CHECK that amount > 0.
+[Advanced] **P7.** Storage reality: `SELECT pg_column_size(price_column)` for NUMERIC(8,2) vs a REAL holding 12345.67. Then size whole rows with `pg_total_relation_size` on a 100-row test table in two type-versions. Report: exact-money costs how much storage?
 
-## 🐛 Debugging
+## Debugging
 
 ```sql
 -- Bug 1: the balance is ALWAYS slightly off in reports.
@@ -75,31 +75,31 @@ created_at TIMESTAMP            -- diagnose + fix (TIMESTAMPTZ + data migration 
 -- but the app "always allowed short names". What changed, what are the options?
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Rebuild a slice of `ecommerce` properly: `products_pg` with all your new opinions (NUMERIC price, TIMESTAMPTZ created_at, TEXT[] tags, stock INT + CHECK). Insert 3 rows, then run one SQL-track query (top-3 by price) against *it* — same language, better foundations.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. Schema vs database — the isolation rule.
 2. What is `search_path`?
 3. SQL: what does CHECK enforce, and when does it fire?
 4. SQL: LEFT JOIN + WHERE trap — one line.
 
-## 🧠 Recall
+## Recall
 
 1. Money → which type, and the one-sentence reason FLOAT is disqualified?
 2. TIMESTAMPTZ vs TIMESTAMP — which do real apps use and why?
 3. TEXT vs VARCHAR(n) — when does VARCHAR win?
 4. Name three "special" PG types and one use each.
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "Why shouldn't you store money as FLOAT?" *(0.1+0.2 story.)*
 2. "What's the difference between TIMESTAMP and TIMESTAMPTZ?"
 3. "How do PostgreSQL types help data quality beyond validation?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand the five big type decisions
 - [ ] Completed P1–P7 (P5 predicted first; P2's float demo understood)

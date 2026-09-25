@@ -1,13 +1,13 @@
 # Day 27 — SQL Anti-Patterns & Common Mistakes
 
-**Track:** SQL · **Stage:** 6 — Advanced Application · **Difficulty:** 🟡 Intermediate
+**Track:** SQL · **Stage:** 6 — Advanced Application · **Difficulty:** Intermediate
 **Prerequisites:** Days 01–26 · **Dataset:** `ecommerce` (reset first)
 
-## 🎯 Goal
+## Goal
 
 Collect the classic mistakes into one checklist — most of which you've already *made and fixed* in this track. Today cements the pattern recognition.
 
-## 🧠 Fundamentals — The Anti-Pattern Catalog
+## Fundamentals — The Anti-Pattern Catalog
 
 **Correctness mistakes:**
 
@@ -34,15 +34,15 @@ Collect the classic mistakes into one checklist — most of which you've already
 
 **The meta-skill:** when a query misbehaves, *which family is it?* Wrong results → correctness list. Weird-but-fast → design list. Slow → performance list (then EXPLAIN ANALYZE).
 
-## 🔍 Why It Matters
+## Why It Matters
 
 These exact mistakes appear in code reviews and interviews constantly. Recognizing them on sight is a genuine mid-level signal.
 
-## 💡 Mental Model
+## Mental Model
 
 > Anti-patterns are **potholes on your regular route**: everyone hits them once. Today you install the signposts — the goal isn't "never make mistakes", it's "recognize them within seconds".
 
-## 💻 Examples — Spot the Pothole
+## Examples — Spot the Pothole
 
 ```sql
 -- 1. Silent empty result
@@ -67,25 +67,25 @@ for user in SELECT id FROM users:                -- 1 query
 -- The fix: ONE join.
 ```
 
-## 🛠️ Practice — Diagnose on Sight
+## Practice — Diagnose on Sight
 
 Each has exactly one anti-pattern. Name it, explain the symptom, write the fix:
 
-🟢 **P1.** `SELECT COUNT(*) FROM users u LEFT JOIN reviews r ON r.user_id = u.id WHERE u.name = 'Ayesha Khan';` — right count? What if she has no reviews? Fix it.
-🟡 **P2.** The LEFT JOIN + WHERE trap (example 2). Predict the row-count change vs moving `o.status = 'delivered'` into the ON clause. Measure both.
-🟡 **P3.** `SELECT * FROM users WHERE SUBSTRING(email, 1, 6) = 'ayesha'` with an index on email — name the problem and rewrite.
-🟡 **P4. ⭐ Predict first:** rows returned by
+[Beginner] **P1.** `SELECT COUNT(*) FROM users u LEFT JOIN reviews r ON r.user_id = u.id WHERE u.name = 'Ayesha Khan';` — right count? What if she has no reviews? Fix it.
+[Intermediate] **P2.** The LEFT JOIN + WHERE trap (example 2). Predict the row-count change vs moving `o.status = 'delivered'` into the ON clause. Measure both.
+[Intermediate] **P3.** `SELECT * FROM users WHERE SUBSTRING(email, 1, 6) = 'ayesha'` with an index on email — name the problem and rewrite.
+[Intermediate] **P4. Predict first:** rows returned by
 
 ```sql
 SELECT name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'cancelled');
 ```
 
 — then check whether `orders.user_id` being NOT NULL saves this query (it does — but say exactly why).
-🔴 **P5.** Fix `bad_products`: design the normalized version (products, tags, product_tags) and write the query "products with the 'usb' tag" in *both* worlds. Feel the difference.
-🔴 **P6.** The N+1 rewrite: write the single query that replaces the pseudo-code loop — plus the window-function version listing each user's orders in one round trip.
-🔴 **P7. From memory:** write the anti-pattern catalog's *titles* from memory. Which three did you personally hit in this track? Link the day.
+[Advanced] **P5.** Fix `bad_products`: design the normalized version (products, tags, product_tags) and write the query "products with the 'usb' tag" in *both* worlds. Feel the difference.
+[Advanced] **P6.** The N+1 rewrite: write the single query that replaces the pseudo-code loop — plus the window-function version listing each user's orders in one round trip.
+[Advanced] **P7. From memory:** write the anti-pattern catalog's *titles* from memory. Which three did you personally hit in this track? Link the day.
 
-## 🐛 Debugging — The Gauntlet
+## Debugging — The Gauntlet
 
 Three snippets, three different families — diagnose, fix, verify:
 
@@ -100,31 +100,31 @@ SELECT * FROM orders WHERE ordered_at - INTERVAL '30 days' > CURRENT_DATE - INTE
 SELECT name FROM bad_products WHERE tags = 'black';
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
 Write your team's **SQL style guide**, 10 rules max, in your notes — mixing this day's catalog with your own scars ("always preview WHERE before UPDATE", "always COUNT(child.id)", "no functions on indexed columns"). The capstone asks you to apply it.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. The 6-question denormalization framework — from memory.
 2. Why is a price snapshot in order_items *history*, not duplication?
 3. What should you try before denormalizing?
 4. EXPLAIN vs EXPLAIN ANALYZE — one line.
 
-## 🧠 Recall
+## Recall
 
 1. Name the five correctness anti-patterns.
 2. Explain the LEFT JOIN + WHERE trap in one sentence.
 3. Why is `NOT IN` risky, and what's the safer idiom?
 4. What is N+1 and its fix?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "What are the most common SQL mistakes you've seen?" *(Name four with fixes — from experience, not a list.)*
 2. "A LEFT JOIN query silently loses unmatched rows — what happened?" *(WHERE on the right side.)*
 3. "What's the N+1 problem and how do you fix it?"
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Understand all three anti-pattern families
 - [ ] Completed P1–P7 (P4 predicted first)

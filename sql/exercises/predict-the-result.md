@@ -1,4 +1,4 @@
-# ⭐ Predict-the-Result Drill Pack
+# Predict-the-Result Drill Pack
 
 > Rules: write your prediction (rows, order, values) **before** running. Check the seed data files if needed. Dataset: `ecommerce` (reset before use).
 

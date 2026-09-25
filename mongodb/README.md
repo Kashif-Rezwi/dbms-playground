@@ -1,4 +1,4 @@
-# 🍃 MongoDB Track — The Document Database
+# MongoDB Track — The Document Database
 
 > **MongoDB is not "SQL with different syntax."** It's a different way of modeling data: self-contained *documents*, flexible structure, arrays and nesting as first-class citizens, embedding instead of joining. This track teaches it standalone — zero SQL assumed.
 

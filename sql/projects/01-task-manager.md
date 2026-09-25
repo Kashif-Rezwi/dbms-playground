@@ -1,4 +1,4 @@
-# 🏗️ Project 1 — Task Manager Database
+# Project 1 — Task Manager Database
 
 **Milestone:** SQL Stage 1 (after Day 5) · **Time:** ~45 min · **Dataset:** your own (`taskmanager` scratch DB or the `saas` DB)
 
@@ -46,12 +46,12 @@ Write and run:
 
 None yet — this dataset is tiny. (Deliberate: performance stages come later with big data.)
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 11. A query that returns tasks where `completed_at` is set but status is *not* `done` — then UPDATE the data to fix those inconsistencies
 12. Add a computed column to output: `days_open` = completed_at − created_at (NULL if not done)
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 13. Duplicate your table as `tasks_backup` (CREATE TABLE ... AS), DELETE everything from the original, and verify the backup still works. When would this be a *terrible* backup strategy? (Day 23 of the PG track will make you shudder.)
 
@@ -65,4 +65,4 @@ A working table with 11 rows, ten queries you wrote yourself, and opinions about
 - Which columns did you make nullable — and what does NULL *mean* for each?
 - Which query was hardest to write? Why?
 
-> ✅ Attempted fully first? Compare with [solutions/01-task-manager.md](solutions/01-task-manager.md) — and grade yourself: does your version work, even if different?
+> Attempted fully first? Compare with [solutions/01-task-manager.md](solutions/01-task-manager.md) — and grade yourself: does your version work, even if different?

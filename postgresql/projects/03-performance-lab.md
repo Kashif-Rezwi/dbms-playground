@@ -1,4 +1,4 @@
-# 🏗️ P3 — Query Performance Lab (100k+ rows)
+# P3 — Query Performance Lab (100k+ rows)
 
 **Milestone:** PG Stage 4 (after Day 17) · **Time:** ~90 min · **Dataset:** `perf_lab` (`./scripts/utilities/load-large-postgres.sh`)
 
@@ -40,12 +40,12 @@ JOIN big_orders o ON o.user_id = u.id GROUP BY u.city;
 5. **The write-tax audit** — 100k-row bulk insert with and without your indexes
 6. **Verdicts**: for any query your indexes didn't help (Q4 usually!), write *why* and what the real fix would be (pre-aggregation/materialized view — name it)
 
-## Challenge Tasks ⭐
+## Challenge Tasks
 
 7. The "ignored index" explanation: add an index on `status` and show the planner refusing it for `WHERE status='delivered'` — with the selectivity reasoning in your report.
 8. Dead-index detection: query `pg_stat_user_indexes` for zero-scan indexes in your perf_lab — did you create any? Remove them (and note the write tax reclaimed).
 
-## Bonus Challenge 🔴
+## Bonus Challenge
 
 9. The covering-index experiment: for Q2, build `(user_id, ordered_at DESC) INCLUDE (status, total_amount)` and get an Index Only Scan (after VACUUM — Day 25 preview!). Measure the difference vs the plain composite.
 
@@ -55,4 +55,4 @@ JOIN big_orders o ON o.user_id = u.id GROUP BY u.city;
 - Which query was *unfixable* by indexes alone, and what does that teach you about the strategy page's limits?
 - Your one-paragraph "how I'd index a new system" — the interview answer, written.
 
-> ✅ [solutions/03-performance-lab.md](solutions/03-performance-lab.md)
+> [solutions/03-performance-lab.md](solutions/03-performance-lab.md)

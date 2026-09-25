@@ -1,6 +1,6 @@
-# 🏗️ MongoDB Capstone — "FitTrack" (Days 29–30)
+# MongoDB Capstone — "FitTrack" (Days 29–30)
 
-**Difficulty:** 🔴 · Design decisions are the deliverable — no solution exists.
+**Difficulty:** Advanced · Design decisions are the deliverable — no solution exists.
 
 ## Objective
 

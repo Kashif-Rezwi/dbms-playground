@@ -33,11 +33,11 @@
 
 ## Part B — Hands-On Drills
 
-🟡 **D1.** Create a full table from scratch: identity PK, FK with CASCADE, CHECK, partial unique index, expression index, TIMESTAMPTZ default — one statement, no notes.
-🟡 **D2.** Diagnose a slow query on perf_lab using the FULL method: pg_stat_statements → EXPLAIN (ANALYZE, BUFFERS) → fix → numbers.
-🟡 **D3.** Two-session drill: reproduce a lost update; fix it with atomic arithmetic; then with FOR UPDATE; then observe at SERIALIZABLE.
-🟡 **D4.** RLS drill: full sequence on a table, context GUC, FORCE trap demonstrated.
-🔴 **D5.** The 5-minute systems story: your Project 6 runbook, summarized out loud — access, monitoring, migrations, incidents, maintenance, backups, replication, pooling.
+[Intermediate] **D1.** Create a full table from scratch: identity PK, FK with CASCADE, CHECK, partial unique index, expression index, TIMESTAMPTZ default — one statement, no notes.
+[Intermediate] **D2.** Diagnose a slow query on perf_lab using the FULL method: pg_stat_statements → EXPLAIN (ANALYZE, BUFFERS) → fix → numbers.
+[Intermediate] **D3.** Two-session drill: reproduce a lost update; fix it with atomic arithmetic; then with FOR UPDATE; then observe at SERIALIZABLE.
+[Intermediate] **D4.** RLS drill: full sequence on a table, context GUC, FORCE trap demonstrated.
+[Advanced] **D5.** The 5-minute systems story: your Project 6 runbook, summarized out loud — access, monitoring, migrations, incidents, maintenance, backups, replication, pooling.
 
 ## Part C — Mock Interview (recorded, out loud)
 
