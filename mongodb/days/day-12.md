@@ -1,12 +1,12 @@
 # Day 12 — Schema Design Thinking
 
-**Track:** MongoDB · **Stage:** 4 — Data Modeling · **Difficulty:** 🟡→🔴
+**Track:** MongoDB · **Stage:** 4 — Data Modeling · **Difficulty:** Intermediate → Advanced
 
-## 🎯 Goal
+## Goal
 
 Learn THE MongoDB design rule — model around *access patterns* — and the workflow that applies it.
 
-## 🧠 Fundamentals
+## Fundamentals
 
 **The single most important sentence in this track:**
 
@@ -46,24 +46,24 @@ A: name, price, stock, images, tags, maybe top-3 reviews
 
 **Schema-less ≠ thought-less:** your *shape discipline* (Day 11) is the schema. Real teams write a shape contract and enforce validators on it.
 
-## 🔍 Why It Matters
+## Why It Matters
 
 This is the whole point of document modeling. Interviews: "how would you model X in MongoDB?" — the winning answer *always* starts with "what are the access patterns?"
 
-## 💡 Mental Model
+## Mental Model
 
 > Relational design is a **library catalog** — everything has one canonical place (normalization). Document design is a **picnic basket** — pack what the meal needs (the read pattern), in one basket, arranged for eating. You don't carry the whole pantry (unbounded data), and you don't pack table settings for 40 when you'll be 4.
 
-## 🛠️ Practice — the workflow, applied
+## Practice — the workflow, applied
 
-🟢 **P1.** List the access patterns of a **blog** (rank by frequency): read post with author + top comments; author page; comment creation; tag browsing. Write them as query-shaped lines.
-🟢 **P2.** Apply steps 2–4: which pieces embed with the post, which reference? Defend each in one line (bounded? shared? read-together?).
-🟡 **P3.** Do the same for a **chat app** (patterns: open conversation = last 50 messages fast; user's conversation list; send message; unread counts). Where do messages live — embedded? Referenced? At what size do you change your mind? (The **bucket pattern** idea — split old messages to archive docs.)
-🟡 **P4. ⭐ Predict-and-justify first:** where do product **reviews** belong — inside the product doc or their own collection? Argue BOTH sides in 2 lines each, then pick with the four forces. (Most teams: own collection — unbounded + queried standalone + avg-rating aggregation lives there... but a `reviews_cache: { avg, top3 }` embedded is the hybrid!)
-🔴 **P5.** The anti-pattern clinic — name the disease (each is a real repo pattern you've seen in SQL Day 27, now in Mongo form): (a) one doc = one giant `history` array, never pruned; (b) `type: 'string'` prices sneaking in; (c) the same fact stored in two collections, updated by hope; (d) massive **arrays of references** read with N+1 app-side queries.
-🔴 **P6.** From memory: the workflow's 5 steps + the four forces table.
+[Beginner] **P1.** List the access patterns of a **blog** (rank by frequency): read post with author + top comments; author page; comment creation; tag browsing. Write them as query-shaped lines.
+[Beginner] **P2.** Apply steps 2–4: which pieces embed with the post, which reference? Defend each in one line (bounded? shared? read-together?).
+[Intermediate] **P3.** Do the same for a **chat app** (patterns: open conversation = last 50 messages fast; user's conversation list; send message; unread counts). Where do messages live — embedded? Referenced? At what size do you change your mind? (The **bucket pattern** idea — split old messages to archive docs.)
+[Intermediate] **P4. Predict-and-justify first:** where do product **reviews** belong — inside the product doc or their own collection? Argue BOTH sides in 2 lines each, then pick with the four forces. (Most teams: own collection — unbounded + queried standalone + avg-rating aggregation lives there... but a `reviews_cache: { avg, top3 }` embedded is the hybrid!)
+[Advanced] **P5.** The anti-pattern clinic — name the disease (each is a classic data-modeling mistake, now in Mongo form): (a) one doc = one giant `history` array, never pruned; (b) `type: 'string'` prices sneaking in; (c) the same fact stored in two collections, updated by hope; (d) massive **arrays of references** read with N+1 app-side queries.
+[Advanced] **P6.** From memory: the workflow's 5 steps + the four forces table.
 
-## 🐛 Debugging — Design Review
+## Debugging — Design Review
 
 ```javascript
 // Schema A: { user doc } + every order the user ever made embedded
@@ -79,31 +79,31 @@ This is the whole point of document modeling. Interviews: "how would you model X
 // (The access patterns!) What would the honest re-design do?
 ```
 
-## 🧩 Combine Concepts
+## Combine Concepts
 
-Take Day 11's shape-audit report and add its second half: the **access-pattern contract** — top 5 reads of the ecommerce dataset as literal query sketches, each annotated "embedded ✓ / needs reference". This document is Project 4's foundation and a genuine portfolio artifact.
+Take Day 11's shape-audit report and add its second half: the **access-pattern contract** — top 5 reads of the ecommerce dataset as literal query sketches, each annotated "embedded / needs reference". This document is Project 4's foundation and a genuine portfolio artifact.
 
-## 🔁 Previous Knowledge
+## Previous Knowledge
 
 1. The $exists/null matrix — from memory.
 2. What does $elemMatch guarantee?
 3. Positional `$` — refers to?
 4. The multikey index serves what?
 
-## 🧠 Recall
+## Recall
 
 1. THE rule — one sentence, from memory.
 2. The workflow's five steps.
 3. The four forces — which direction does each push?
 4. What does "shape contract" mean, and what enforces it?
 
-## 🎤 Interview Questions
+## Interview Questions
 
 1. "How do you approach data modeling in MongoDB?" *(Access patterns first — say the rule.)*
 2. "What's the equivalent of normalization in document databases?" *(There isn't one — there's read-shaping + discipline; explain the trade honestly.)*
 3. "When would you split one document's data into two collections?" *(Unbounded/shared/write-amp forces.)*
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Can state the rule + workflow + forces from memory
 - [ ] Completed P1–P6 (P4 argued before deciding)

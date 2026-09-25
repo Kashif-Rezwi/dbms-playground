@@ -1,4 +1,4 @@
-# 🏗️ P4 — Model an E-Commerce Store (Design Decisions Required)
+# P4 — Model an E-Commerce Store (Design Decisions Required)
 
 **Milestone:** Mongo Days 12–15 · **Time:** ~90 min · **The modeling stage's capstone**
 
@@ -25,13 +25,13 @@ A store needs: users, products (with categories, tags, price, stock), carts (act
 8. **The write flows**: add-to-cart (the positional-$ pattern from Day 10!), checkout (order creation + cart clear — in a transaction if your design genuinely needs one — ARGUE it), submit-review (+ the rating-summary maintenance)
 9. **The index plan**: your top reads' queries → the ESR-reasoned indexes (create them; explain-verify the top 3)
 
-## Challenge ⭐
+## Challenge
 
 10. The drift audit: change a product's price — which documents carry stale copies under YOUR design? List them and write each maintenance rule.
-11. The comparison: write 5 lines — "the SQL version of this store (P3, SQL track) needed junction tables for ___, while my design chose ___ because ___".
+11. The comparison (if you know SQL): write 5 lines — "a relational version of this store would need junction tables for ___, while my design chose ___ because ___". (No SQL background? Instead: which of my collections would be hardest to express as flat tables, and why?)
 
-## Bonus 🔴
+## Bonus
 
 12. Redesign one choice you made and argue why version 2 is better (e.g., bucket pattern for a hot path) — the mark of a real designer is knowing your own design's weak spots.
 
-> ✅ [solutions/04-model-ecommerce.md](solutions/04-model-ecommerce.md)
+> [solutions/04-model-ecommerce.md](solutions/04-model-ecommerce.md)

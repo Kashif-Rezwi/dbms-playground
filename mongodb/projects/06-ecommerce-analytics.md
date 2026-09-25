@@ -1,4 +1,4 @@
-# 🏗️ P6 — E-Commerce Analytics (Pipeline)
+# P6 — E-Commerce Analytics (Pipeline)
 
 **Milestone:** Mongo Day 22 · **Time:** ~90 min · **Dataset:** `ecommerce` (reset first)
 
@@ -17,13 +17,13 @@ The SQL-track P4 business battery, pipeline edition: joins, grouping, unwinds �
 7. **The monthly report**: month, orders, revenue — $group by {$month/$year of ordered_at} (the $dateToParts or $month trick — look up `$month: '$ordered_at'`)
 8. **Orders with their item-count** — no pipeline: just... this is the embed payoff: one read per order. Write it as a find + projection and say WHY no aggregation is needed (the modeling↔pipeline connection).
 
-## Challenge ⭐
+## Challenge
 
 9. The full chain: top 5 revenue products *with names, units, and each product's best single order* (max revenue line) — $unwind + $group twice + $lookup
-10. The SQL↔pipeline cross-check: pick queries 2 and 4; write them in SQL (from the SQL track) and compare row-for-row. Note one thing pipelines made EASIER and one thing SQL made easier.
+10. The SQL↔pipeline cross-check (if you know SQL): pick queries 2 and 4; write them in SQL and compare row-for-row. Note one thing pipelines made EASIER and one thing SQL made easier. (No SQL background? Skip — or save it for the cross-database exercises later.)
 
-## Bonus 🔴
+## Bonus
 
 11. The $facet report: ONE aggregation returning { topProducts, revenueByCity, methodTotals } — $facet runs multiple sub-pipelines. When is that the deployment-shaped answer?
 
-> ✅ [solutions/06-ecommerce-analytics.md](solutions/06-ecommerce-analytics.md)
+> [solutions/06-ecommerce-analytics.md](solutions/06-ecommerce-analytics.md)
