@@ -1,4 +1,4 @@
-# 🎮 DBMS Playground
+# DBMS Playground
 
 > A 30-day interactive database laboratory. Learn databases by **using them every single day** — not by reading about them.
 
@@ -32,7 +32,7 @@ Each daily lesson pushes you through that loop. Reading is the smallest part. Mo
 1. **One track day = one sitting (45–90 min).** Follow the standard lesson format in `STUDY-GUIDE.md`.
 2. **Progress is tracked in `PROGRESS.md`** — and it tracks *learning*, not reading: practiced? debugged? recalled? can you explain it without notes?
 3. **Projects are consolidation milestones.** After a group of related concepts, you build something with them before moving on (see `ROADMAP.md`).
-4. **Exercises are labeled by difficulty:** 🟢 Beginner · 🟡 Intermediate · 🔴 Advanced. Early days are mostly 🟢; 🔴 appears only after the foundation is built.
+4. **Exercises are labeled by difficulty:** `[Beginner]`, `[Intermediate]`, `[Advanced]`. Early days are mostly Beginner; Advanced appears only after the foundation is built.
 5. **Interview prep is built in.** Every day ends with interview questions, and every stage ends with a mini interview simulation. Understanding *is* the interview prep.
 
 ## Quick Start
@@ -52,6 +52,11 @@ brew install mongodb-community && brew services start mongodb-community
 # Reset a dataset back to its original state any time
 ./scripts/reset/reset-postgres.sh ecommerce
 ./scripts/reset/reset-mongo.sh ecommerce
+
+# Later — the performance lessons (SQL Day 22+, PG Day 13+, Mongo Day 16+)
+# use a generated 100k+ row database; load it only when a lesson says to:
+./scripts/utilities/load-large-postgres.sh    # creates perf_lab (~500k rows)
+./scripts/utilities/load-large-mongo.sh
 ```
 
 Full environment setup (including optional Docker): see `STUDY-GUIDE.md` and `postgresql/setup/`, `mongodb/setup/`.
@@ -83,10 +88,10 @@ All lessons reuse four realistic domains (details in `shared/datasets/`):
 
 | Domain | Tables / Collections |
 |---|---|
-| 🛒 **E-commerce** | users, products, categories, orders, order_items, payments, reviews |
-| 💬 **Social** | users, posts, comments, likes, followers, messages |
-| 🏢 **SaaS** | organizations, users, projects, tasks, subscriptions, invoices |
-| 💼 **Jobs** | candidates, companies, jobs, applications, skills |
+| **E-commerce** | users, products, categories, orders, order_items, payments, reviews |
+| **Social** | users, posts, comments, likes, followers, messages |
+| **SaaS** | organizations, users, projects, tasks, subscriptions, invoices |
+| **Jobs** | candidates, companies, jobs, applications, skills |
 
 Datasets grow as you progress: small (~dozens of rows) for foundation days, generated large datasets (100k+ rows) for the performance stages.
 

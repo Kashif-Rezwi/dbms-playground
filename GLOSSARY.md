@@ -1,4 +1,4 @@
-# 📖 GLOSSARY — Database Terminology, Defined Simply
+# GLOSSARY — Database Terminology, Defined Simply
 
 One or two lines per term — enough to *understand*, not memorize. Cross-linked with the day that teaches it (see `ROADMAP.md`).
 
@@ -82,6 +82,9 @@ One or two lines per term — enough to *understand*, not memorize. Cross-linked
 - **Index** — a sorted lookup structure that lets the database find rows *without* scanning the whole table. Speeds reads, slows writes, costs disk.
 - **B-tree** — the balanced tree structure behind most database indexes: ordered, so lookups are O(log n).
 - **Composite index** — an index over multiple columns; order matters: `(user_id, created_at) ≠ (created_at, user_id)`.
+- **Partial index** — an index over only the rows matching a condition (`WHERE status = 'active'`). Smaller and cheaper; the tool behind "one active subscription per user."
+- **Cursor** — a pointer into a result set that the client iterates in batches. MongoDB's `find()` returns one; psql fetches through one.
+- **Keyset pagination** — paging with `WHERE id > :last_seen ORDER BY id LIMIT n` instead of `OFFSET`; stays fast at any page depth.
 - **Covering index** — an index that contains *all* columns a query needs, so the table is never touched.
 - **Query planner** — the DBMS component that decides *how* to execute a query (which index, which join order).
 - **`EXPLAIN`** — show the plan *without running* the query. `EXPLAIN ANALYZE` runs it and shows real timings.
