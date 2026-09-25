@@ -1,14 +1,33 @@
 # Day 28 — Stage Review + Mock Interview
 
-**Track:** SQL · **Stage:** 6 — Advanced Application · **Difficulty:** 🟡 Mixed
+**Track:** SQL · **Stage:** 6 — Advanced Application · **Difficulty:** Intermediate (mixed)
 
 **Prerequisites:** Days 01–27 · No new material today — this is consolidation.
 
-## 🎯 Goal
+## Goal
 
 Prove to yourself the 27 days stuck. Written review → query drills → debugging drills → a recorded mock interview.
 
-## 📝 Part 1 — Concept Review (no notes!)
+## The Skill Map — what today must prove
+
+| Skill | Proven by | From day |
+|---|---|---|
+| Read/filter/sort/page | Drills D1–D3 | 2–4 |
+| Safe writes + verification | D3 | 5–6 |
+| NULL-aware queries | D2, debugging A | 7 |
+| Aggregation + grouping | D2, D5 | 9–10 |
+| Joins incl. "no match" | D4 | 11–13 |
+| Subqueries & CTEs | D6 | 14–15 |
+| Windows (top-N per group) | D8 | 16 |
+| Dates + revenue patterns | D5 | 17 |
+| Normalization | Mock Q5 | 20 |
+| Transactions | D9 | 21 |
+| EXPLAIN ANALYZE + index fixes | D10 | 22–24 |
+| Design defense | Mock Q5 | 26 |
+
+More questions if you want them: `../../shared/interview-questions/` (beginner → advanced, with follow-up chains) and the drill packs in `../exercises/`.
+
+## Part 1 — Concept Review (no notes!)
 
 Answer in writing, then check against the day files:
 
@@ -23,22 +42,22 @@ Answer in writing, then check against the day files:
 9. The 5-step slow-query method. (Day 23)
 10. View vs materialized view. (Day 25)
 
-## 🛠️ Part 2 — Query Drills (dataset: `ecommerce`, reset first)
+## Part 2 — Query Drills (dataset: `ecommerce`, reset first)
 
 Write each from memory. Verify. If you can't, re-read that day — that's the *system working*.
 
-🟢 **D1.** Top 3 most expensive in-stock products. (Days 3–4)
-🟢 **D2.** Count of delivered orders. (Days 3, 9)
-🟢 **D3.** Insert a new user safely. (Day 5)
-🟡 **D4.** Users who never ordered. (Day 12)
-🟡 **D5.** Revenue per month, non-cancelled, chronological. (Days 17, 10)
-🟡 **D6.** Categories with average price above the overall average. (Day 14)
-🟡 **D7.** Each product's rating vs its own average rating. (Day 14/16)
-🔴 **D8.** Top 3 revenue products per category — the full pattern. (Day 16)
-🔴 **D9.** A transaction: create order + item + decrement stock, with a deliberate failure showing atomicity. (Day 21)
-🔴 **D10.** EXPLAIN ANALYZE a query of your choice on `perf_lab`; fix one thing; show before/after. (Days 22–24)
+[Beginner] **D1.** Top 3 most expensive in-stock products. (Days 3–4)
+[Beginner] **D2.** Count of delivered orders. (Days 3, 9)
+[Beginner] **D3.** Insert a new user safely. (Day 5)
+[Intermediate] **D4.** Users who never ordered. (Day 12)
+[Intermediate] **D5.** Revenue per month, non-cancelled, chronological. (Days 17, 10)
+[Intermediate] **D6.** Categories with average price above the overall average. (Day 14)
+[Intermediate] **D7.** Each product's rating vs its own average rating. (Day 14/16)
+[Advanced] **D8.** Top 3 revenue products per category — the full pattern. (Day 16)
+[Advanced] **D9.** A transaction: create order + item + decrement stock, with a deliberate failure showing atomicity. (Day 21)
+[Advanced] **D10.** EXPLAIN ANALYZE a query of your choice on `perf_lab`; fix one thing; show before/after. (Days 22–24)
 
-## 🐛 Part 3 — Debugging Drills
+## Part 3 — Debugging Drills
 
 ```sql
 -- A: silent empty result (name it, fix it)
@@ -57,7 +76,7 @@ SELECT * FROM big_orders WHERE UPPER(status) = 'DELIVERED';
 SELECT * FROM big_orders ORDER BY id LIMIT 10 OFFSET 199990;
 ```
 
-## 🎤 Part 4 — Mock Interview (30 minutes)
+## Part 4 — Mock Interview (30 minutes)
 
 Do this out loud — record yourself on your phone. Answer each, then follow-ups:
 
@@ -79,7 +98,7 @@ Do this out loud — record yourself on your phone. Answer each, then follow-ups
 
 Grade yourself per question: could I answer the *follow-ups* without notes? Anything shaky → re-do that day's recall section tomorrow morning before Day 29.
 
-## ✅ Completion Checklist
+## Completion Checklist
 
 - [ ] Part 1 answered in writing before checking
 - [ ] D1–D10 written from memory and verified

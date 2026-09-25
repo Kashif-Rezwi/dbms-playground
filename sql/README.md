@@ -1,4 +1,4 @@
-# 🗣️ SQL Track — The Query Language
+# SQL Track — The Query Language
 
 > **SQL is a language, not a database.** You speak SQL *to* a database system. In this track you learn the language and the relational thinking behind it; in the `postgresql/` track you learn the engine itself.
 
@@ -39,12 +39,14 @@ psql -d ecommerce
 
 Lessons reuse the four shared datasets — see `../shared/datasets/` and the ER diagrams in `../shared/diagrams/`:
 
-| Dataset | Used heavily in |
+| Dataset | Used in |
 |---|---|
-| 🛒 ecommerce | Days 1–5, 19, 22–24, capstone |
-| 💬 social | Days 11–16, project P3 |
-| 🏢 saas | Day 19, project P4 |
-| 💼 jobs | Days 11–18, project P3 |
+| ecommerce | Days 1–6, 9–10, 12, 14, 17, 19, 21, 25, 27–28, project P4, capstone |
+| social | Days 11, 13 (+ Day 15 combine), drill packs |
+| saas | Days 7, 15–16, Stage Review 2 |
+| jobs | Days 8, 18 |
+| your own | Day 20, projects P1–P3 and P5 |
+| perf_lab (generated, ~500k rows) | Days 22–24, Day 28 drill, project P6 — load with `./scripts/utilities/load-large-postgres.sh` |
 
 ## Structure
 
@@ -52,15 +54,17 @@ Lessons reuse the four shared datasets — see `../shared/datasets/` and the ER 
 sql/
 ├── days/day-01.md … day-30.md   ← one lesson per day (45–90 min)
 ├── projects/                    ← consolidation milestones (attempt before solutions/)
-├── reviews/                     ← stage reviews + mock interview
-├── exercises/                   ← extra drill packs (predict / debug / from-memory)
+├── reviews/                     ← stage reviews
+├── exercises/                   ← drill packs: predict-the-result + write-from-memory
 └── cheat-sheet.md               ← quick syntax reference
 ```
+
+**Drill packs** (`exercises/`): extra spaced-repetition sets. Do [predict-the-result](exercises/predict-the-result.md) after Day 12 and [write-from-memory](exercises/write-from-memory.md) around Days 17–24 — and revisit both during Day 28's review.
 
 ## Rules of This Track
 
 1. **Type every query yourself** — no copy-paste.
-2. **Predict before you run** — ⭐ exercises require a written prediction first.
+2. **Predict before you run** — exercises marked **Predict first** require a written prediction before executing.
 3. **Write-from-memory means no notes.** Failing is data, not defeat — reread, retry.
 4. **Attempt projects before opening `solutions/`.**
 

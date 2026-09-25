@@ -1,8 +1,8 @@
-# 📝 Write-From-Memory Drill Pack
+# Write-From-Memory Drill Pack
 
 > No notes, no cheat-sheet, no peeking at previous days. Write each query, run it, *then* compare with the day files. Dataset: `ecommerce` / `social` as noted.
 
-## Level 🟢 — One operation (Days 2–8)
+## Level 1 (Beginner) — One operation (Days 2–8)
 
 1. Names and emails of all users.
 2. The 3 cheapest products.
@@ -13,7 +13,7 @@
 7. Products whose name contains `'Mat'` or `'Shoes'`.
 8. Prices between 500 and 2500 (inclusive).
 
-## Level 🟡 — Combinations (Days 9–17)
+## Level 2 (Intermediate) — Combinations (Days 9–17)
 
 9. Revenue (SUM of total_amount) for delivered orders only.
 10. Order count per status, alphabetical by status.
@@ -25,7 +25,7 @@
 16. Monthly revenue, chronological (EXTRACT pattern).
 17. Every order with a running total of all revenue so far (window).
 
-## Level 🔴 — Full patterns (Days 12–24)
+## Level 3 (Advanced) — Full patterns (Days 12–24)
 
 18. Top 2 products by revenue per category (CTE + row_number).
 19. Categories with average price above the overall average (subquery of a GROUP BY).
