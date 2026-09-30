@@ -55,7 +55,8 @@ db.users.findOne({ email: 'ayesha@example.com' })
 ## Load the Datasets
 
 ```bash
-./scripts/seed/seed-mongo.sh ecommerce   # or social | saas | jobs
+./scripts/seed/seed-mongo.sh ecommerce   # or social | saas | jobs | all
+# or seed everything at once:  ./scripts/setup/setup-mongo.sh
 mongosh ecommerce
 db.users.countDocuments()                // 10
 
@@ -94,8 +95,8 @@ Your existing databases survive this change. If `mongosh` sessions started *befo
 | Symptom | Fix |
 | --- | --- |
 | `mongosh: command not found` | Run `brew install mongosh` and reopen terminal |
-| `connect ECONNREFUSED 127.0.0.1:27017` | `brew services start @8.0`, check the log |
-| Dataset "missing" | Rerun the seed script; check `show dbs` |
+| `connect ECONNREFUSED 127.0.0.1:27017` | `brew services start mongodb-community@8.0`, check the log |
+| Dataset "missing" in `show dbs` | Connecting never creates a database (MongoDB creates DBs on first write) — run `./scripts/seed/seed-mongo.sh ecommerce` (or `all`) |
 | `Transaction numbers are only allowed on a replica set...` | Follow the replica-set steps above |
 | `rs.initiate()` errors with "not started with --replSet" | `mongod` wasn't restarted with the replication config — check steps 1–2 |
 
