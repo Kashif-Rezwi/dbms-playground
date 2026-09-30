@@ -96,8 +96,8 @@ First day — instead of combining, build the **compare habit**: look at one ord
 
 ## Completion Checklist
 
-- [ ] Connected, explored 3+ collections
+- [x] Connected, explored 3+ collections
 - [ ] Can name field types on sight, including arrays/objects
-- [ ] Completed P1–P6 (P5 predicted first)
+- [x] Completed P1–P6 (P5 predicted first)
 - [ ] Diagnosed all three bugs
-- [ ] Answered recall without notes
+- [x] Answered recall without notes
