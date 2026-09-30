@@ -46,8 +46,8 @@ brew install postgresql@16 && brew services start postgresql@16
 ./scripts/seed/seed-postgres.sh ecommerce
 
 # MongoDB
-brew install mongodb-community && brew services start mongodb-community
-./scripts/seed/seed-mongo.sh ecommerce
+brew install mongodb-community@8.0 && brew services start mongodb-community@8.0
+./scripts/setup/setup-mongo.sh
 
 # Reset a dataset back to its original state any time
 ./scripts/reset/reset-postgres.sh ecommerce
