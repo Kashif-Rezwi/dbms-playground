@@ -7,14 +7,15 @@
 ```bash
 brew install postgresql@16
 brew services start postgresql@16
-brew install mongodb-community
-brew services start mongodb-community
+brew install mongodb-community@8.0
+brew services start mongodb-community@8.0
 ```
 
 Then create your practice databases:
 
 ```bash
 ./scripts/setup/setup-postgres.sh     # creates ecommerce, social, saas, jobs databases
+./scripts/setup/setup-mongo.sh        # verifies MongoDB + seeds all four datasets
 ```
 
 ### Option B — Docker (optional)
@@ -37,7 +38,7 @@ Every day that needs data tells you which dataset to load. To (re)load:
 
 ```bash
 ./scripts/seed/seed-postgres.sh ecommerce   # or: social | saas | jobs
-./scripts/seed/seed-mongo.sh ecommerce
+./scripts/seed/seed-mongo.sh ecommerce      # or: social | saas | jobs | all
 ./scripts/reset/reset-postgres.sh ecommerce # drop + reseed (use freely — experimentation is the point)
 ./scripts/reset/reset-mongo.sh ecommerce
 ```

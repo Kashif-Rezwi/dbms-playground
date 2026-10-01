@@ -18,8 +18,8 @@ Days 28–30  Review + CAPSTONE
 ## How to Run the Lessons
 
 ```bash
-brew install mongodb-community && brew services start mongodb-community
-./scripts/seed/seed-mongo.sh ecommerce
+brew install mongodb-community@8.0 && brew services start mongodb-community@8.0
+./scripts/setup/setup-mongo.sh      # verify install + seed all four datasets
 mongosh ecommerce
 ```
 

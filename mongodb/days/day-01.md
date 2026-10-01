@@ -54,10 +54,15 @@ db.orders.findOne({ _id: 4 })           // look: items is an array of OBJECTS
 ## Practice
 
 [Beginner] **P1.** Connect; `show dbs`; `use ecommerce`; `show collections`.
+
 [Beginner] **P2.** Inspect one user, one product, one order (`.pretty()`). For each, write down: which fields are strings, numbers, booleans, dates? Which are arrays/objects?
+
 [Beginner] **P3.** Compare a product document with an order document — *different shapes, same database, no complaint from the DB*. That's the headline.
+
 [Beginner] **P4.** In `use social`: find a post, and note the `likes_count` — a field the `ecommerce` documents don't have. Who decided that field exists? (The insert. Nothing else.)
-[Intermediate] **P5. Predict first:** what does `db.products.find({ tags: 'usb' })` return — and *why* does that work on an array? (Predict count too; there are 2 products with 'usb'.)
+
+[Intermediate] **P5. Predict first:** what does `db.products.find({ tags: 'usb' })` return — and *why* does that work on an array? (Predict count too; there is 1 product with 'usb'.)
+
 [Intermediate] **P6.** The 2-minute reflection, written: name one thing a spreadsheet can do that this can't, and one thing this can do that a spreadsheet can't.
 
 ## Debugging
@@ -91,8 +96,8 @@ First day — instead of combining, build the **compare habit**: look at one ord
 
 ## Completion Checklist
 
-- [ ] Connected, explored 3+ collections
-- [ ] Can name field types on sight, including arrays/objects
-- [ ] Completed P1–P6 (P5 predicted first)
-- [ ] Diagnosed all three bugs
-- [ ] Answered recall without notes
+- [x] Connected, explored 3+ collections
+- [x] Can name field types on sight, including arrays/objects
+- [x] Completed P1–P6 (P5 predicted first)
+- [x] Diagnosed all three bugs
+- [x] Answered recall without notes

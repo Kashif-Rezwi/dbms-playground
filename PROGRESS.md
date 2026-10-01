@@ -75,7 +75,7 @@
 
 | Day | Topic | L | P | D | R | C | X | E |
 |---|---|---|---|---|---|---|---|---|
-| 01 | What is a document DB? mongosh | [ ] | [ ] | [ ] | [ ] | [ ] | — | [ ] |
+| 01 | What is a document DB? mongosh | [x] | [x] | [x] | [x] | [x] | — | [x] |
 | 02 | Databases, collections, BSON | [ ] | [ ] | [ ] | [ ] | [ ] | — | [ ] |
 | 03 | insertOne / insertMany | [ ] | [ ] | [ ] | [ ] | [ ] | — | [ ] |
 | 04 | find / findOne | [ ] | [ ] | [ ] | [ ] | [ ] | — | [ ] |

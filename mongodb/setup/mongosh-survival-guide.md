@@ -6,10 +6,12 @@
 
 ```javascript
 show dbs                        // list databases
-use ecommerce                   // switch (creates on first write)
+use ecommerce                   // switch context — NOT created until first write!
 show collections                // list collections in current db
 db                              // which db am I in?
 ```
+
+> **Why `show dbs` doesn't list `ecommerce`:** connecting (or `use`) never creates anything — MongoDB creates a database lazily on the **first write**. Seed first: `./scripts/seed/seed-mongo.sh ecommerce` (or `all`).
 
 ## The one habit that changes everything: `.pretty()` (and its successors)
 

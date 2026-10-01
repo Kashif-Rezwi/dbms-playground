@@ -4,8 +4,8 @@
 
 ```bash
 brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community    # runs on localhost:27017
+brew install mongodb-community@8.0
+brew services start mongodb-community@8.0    # runs on localhost:27017
 brew install mongosh                    # installs the shell (if not bundled)
 
 ```
@@ -21,7 +21,7 @@ mongosh --eval "db.runCommand({ ping: 1 })"
 ### Stop / Restart / Logs
 
 ```bash
-brew services stop mongodb-community
+brew services stop mongodb-community@8.0
 tail -f $(brew --prefix)/var/log/mongodb/mongo.log
 
 ```
@@ -55,7 +55,8 @@ db.users.findOne({ email: 'ayesha@example.com' })
 ## Load the Datasets
 
 ```bash
-./scripts/seed/seed-mongo.sh ecommerce   # or social | saas | jobs
+./scripts/seed/seed-mongo.sh ecommerce   # or social | saas | jobs | all
+# or seed everything at once:  ./scripts/setup/setup-mongo.sh
 mongosh ecommerce
 db.users.countDocuments()                // 10
 
@@ -75,7 +76,7 @@ db.users.countDocuments()                // 10
 #        replSetName: rs0
 
 # 2. Restart the service
-brew services restart mongodb-community
+brew services restart mongodb-community@8.0
 
 # 3. Initialize the one-node replica set (once, ever)
 mongosh --eval "rs.initiate()"
@@ -94,8 +95,8 @@ Your existing databases survive this change. If `mongosh` sessions started *befo
 | Symptom | Fix |
 | --- | --- |
 | `mongosh: command not found` | Run `brew install mongosh` and reopen terminal |
-| `connect ECONNREFUSED 127.0.0.1:27017` | `brew services start mongodb-community`, check the log |
-| Dataset "missing" | Rerun the seed script; check `show dbs` |
+| `connect ECONNREFUSED 127.0.0.1:27017` | `brew services start mongodb-community@8.0`, check the log |
+| Dataset "missing" in `show dbs` | Connecting never creates a database (MongoDB creates DBs on first write) — run `./scripts/seed/seed-mongo.sh ecommerce` (or `all`) |
 | `Transaction numbers are only allowed on a replica set...` | Follow the replica-set steps above |
 | `rs.initiate()` errors with "not started with --replSet" | `mongod` wasn't restarted with the replication config — check steps 1–2 |
 
