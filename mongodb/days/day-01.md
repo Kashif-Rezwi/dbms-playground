@@ -28,7 +28,7 @@ No tables-with-fixed-columns. No "every row has the same shape." **Each document
 
 **MongoDB is part of the NoSQL family** — a label meaning "not the relational table model" (document, key-value, graph, column). **NoSQL is a category, not a language.** You talk to MongoDB with its own API (here, JavaScript via mongosh) — not SQL.
 
-**The honest framing:** relational databases organize data around *what it IS* (normalized entities); MongoDB organizes data around *how it's USED* (documents shaped like your app's reads). Both are legitimate — for different problems.
+**The honest framing:** relational databases often organize data around *what it IS* by separating important facts into **normalized entities** (for example, customers, orders, and products stored in separate tables to reduce repeated data). MongoDB often organizes data around *how it's USED* by shaping documents around the data an application reads together. Both approaches are legitimate — for different problems.
 
 ## Why It Matters
 
@@ -85,7 +85,7 @@ db.orders.findOne({ _id: 4 })           // look: items is an array of OBJECTS
 
 ## Combine Concepts
 
-First day — instead of combining, build the **compare habit**: look at one order document and describe, in 3 sentences, how this single document captures what a relational database would need *three tables* to represent (order, order_items, and the join). You've just met the whole track's thesis: **embed what you read together**.
+First day — instead of combining, build the **compare habit**: look at one order document and describe, in 3 sentences, how this single document can capture data that a normalized relational design might store across *multiple tables* (for example, `orders` and `order_items`, queried together with a join). You've just met the whole track's thesis: **embed what you read together**.
 
 ## Recall
 
