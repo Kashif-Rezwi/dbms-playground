@@ -90,9 +90,20 @@ First day — instead of combining, build the **compare habit**: look at one ord
 ## Recall
 
 1. What is a document? Name three types a field can hold (make one exotic — array or nested object).
+
+   **A:** A **document** is a self-contained record — MongoDB's unit of storage, JSON-*looking*, stored as **BSON**. Example: `{ name: 'Wireless Mouse', price: 2499, tags: ['wireless', 'mouse'], specs: { color: 'black' } }`. Types: **string** (`'Karachi'`), **number** (`2499`), **date** (`ISODate('2024-01-15')`) — exotic: **array** (`tags`) and **nested object** (`specs`).
+
 2. What is BSON in one line?
+
+   **A:** **BSON (Binary JSON)** is MongoDB's binary, *typed* serialization format for JSON-like data. It supports values JSON does not represent natively, such as real dates, `ObjectId`, binary data, regular expressions, and distinct numeric types such as int32, double, and decimal128.
+
 3. Is NoSQL a language? What is it?
+
+   **A:** **No — NoSQL is a category, not a language.** It labels databases that aren't the relational table model (document, key-value, graph, column). Each system brings its own API; here it's MongoDB's query language driven from JavaScript in mongosh.
+
 4. What happens when two documents in one collection have different fields?
+
+   **A:** **MongoDB permits it by default.** There is no required fixed shape for every document: each insert can provide different fields. However, collection validators can enforce selected rules when you configure them. *Can* ≠ *should* — divergent shapes make queries silently miss data, so keep a consistent core shape and add fields deliberately; validators (Day 3) and `$exists` shape audits (Day 11) are the discipline tools.
 
 ## Interview Questions
 
