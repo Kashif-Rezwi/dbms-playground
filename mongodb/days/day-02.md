@@ -1,6 +1,7 @@
 # Day 02 — Databases, Collections, Documents, BSON, ObjectId
 
-**Track:** MongoDB · **Stage:** 1 · **Difficulty:** Beginner
+**Track:** MongoDB · **Stage:** 1 — Foundation · **Difficulty:** Beginner
+**Prerequisites:** Day 01 — What Is a Document Database? + mongosh (completed)
 
 ## Goal
 
@@ -21,7 +22,7 @@ MongoDB server (one process, port 27017)
 
 - Documents in one collection can have **different shapes** (usually they *shouldn't* — that's a design smell — but the DB won't stop you)
 - No schema is enforced; **you** are the schema (Day 12 is about deserving that freedom)
-- Collections auto-create on first insert
+- Databases and collections **create themselves on first write** — no CREATE step, and empty ones don't appear in `show dbs` / `show collections`
 
 **BSON** — the storage format: JSON-like but **binary and typed**. What JSON can't do, BSON can:
 
@@ -55,12 +56,15 @@ You'll decode ObjectIds ("when was this created?") and choose `NumberDecimal` fo
 ## Examples
 
 ```javascript
-use ecommerce
+use ecommerce   // after ./scripts/seed/seed-mongo.sh ecommerce
 
 // BSON types in action
 db.products.findOne({ _id: 9 })   // created_at: ISODate — that's BSON
-const oid = db.users.findOne()._id
-oid.getTimestamp()                // decode creation time from the id!
+
+// ObjectId — the seed docs use explicit integer _ids, so make your own:
+const { insertedId } = db.users.insertOne({ name: 'Auto Id' })
+insertedId                        // an ObjectId the server generated for you
+insertedId.getTimestamp()         // decode creation time from the id!
 
 // _id rules
 db.users.insertOne({ _id: 42, name: 'Explicit' })   // you choose _id → allowed
@@ -70,11 +74,17 @@ db.users.insertOne({ _id: 42, name: 'Duplicate' })  // E11000 duplicate key
 ## Practice
 
 [Beginner] **P1.** In mongosh: create db `playground` (`use playground`), insert into a brand-new collection — confirm it appeared (`show collections`) without any CREATE step.
+
 [Beginner] **P2.** Insert three docs in one collection with *different shapes*. Find all three. No errors — explain in one line why that's allowed.
+
 [Beginner] **P3.** `ObjectId().getTimestamp()` — run it, decode it, run again 2 seconds later. What changed in the timestamp part?
-[Intermediate] **P4.** Decode real data: take a document seeded *without* explicit _id... (ours use explicit _ids!) — so instead: `db.mycollection.insertOne({a:1})` and read back `_id`; getTimestamp it.
+
+[Intermediate] **P4.** Decode real data: insert a doc with no `_id` (`db.mycollection.insertOne({ a: 1 })`), read back `_id`, and `getTimestamp()` it. (Our seed docs all carry explicit integer `_id`s — no timestamp hidden inside — which is exactly why you make your own.)
+
 [Intermediate] **P5. Predict first:** `db.x.insertMany([{n:1},{n:2}])`, then insert one more, then sort by `_id` ascending — is that creation order? Why *roughly* (hint: same-second inserts — the counter)?
+
 [Intermediate] **P6.** The money demo: `db.t.insertOne({a: 0.1, b: NumberDecimal('0.1')})` — then `db.t.findOne()`. What does `a` print as? Sum `a + a` in JS — the classic float surprise, live.
+
 [Advanced] **P7.** From scratch: insert a document with `_id: 'sku-001'` (a string id!) and another with `_id: 42`. What does this teach about `_id`'s flexibility — and what's the trade-off vs ObjectId (no timestamp, your uniqueness duty)?
 
 ## Debugging
@@ -92,6 +102,13 @@ db.users.insertOne({ _id: 42, name: 'Duplicate' })  // E11000 duplicate key
 
 Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address of a review comment — from server to the exact nested field — for `db.reviews.findOne({ _id: 12 })`'s `comment` value. You've built the mental path every query will walk.
 
+## Previous Knowledge
+
+1. What is a document? Name three types a field can hold (make one exotic).
+2. What is BSON in one line — and one thing it does that JSON can't?
+3. What did `db.products.find({ tags: 'usb' })` prove about matching against an array?
+4. "Each document decides its own fields" — what does that make *you* responsible for?
+
 ## Recall
 
 1. The 4-level hierarchy — from memory.
@@ -107,7 +124,8 @@ Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address
 
 ## Completion Checklist
 
-- [ ] Understand hierarchy, BSON, ObjectId, _id rules
+- [ ] Know the hierarchy cold: server → database → collection → document
+- [ ] Can decode an ObjectId's four parts — and name its free benefit
 - [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Diagnosed all three bugs
 - [ ] Answered recall without notes
