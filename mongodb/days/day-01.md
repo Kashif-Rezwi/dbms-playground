@@ -77,6 +77,12 @@ db.orders.findOne({ _id: 4 })           // look: items is an array of OBJECTS
 // first write — queries on missing collections just return nothing!)
 ```
 
+**Answers:**
+
+- **Bug 1 — display problem, not a data problem.** `find()` returns a *cursor* — a result object that can provide matching documents one at a time — and the shell prints it dense by default. Verify the data is fine first (`findOne()` reads one doc cleanly), then use the right control for the problem: **(1)** chain `.pretty()` to format documents, or **(2)** set the session-wide `config.set("displayBatchSize", 20)` and use `.limit(n)` to control how many results are shown. The batch-size and limit settings reduce output; they do not replace formatting.
+- **Bug 2 — context problem.** Collections live inside a database, and `db` is bound to the last database you used (you just did `use social` in P4). **Check:** `db` (prints the current database) plus `show collections` (what actually exists here). **Fix:** `use ecommerce`, then re-run `db.products.find()`.
+- **Bug 3 — typo, silent by design.** The collection is `users` (plural); `user` doesn't exist — and MongoDB **never errors on reads against a missing collection**: `find()` just returns an empty cursor, which looks identical to "query ran, matched nothing." Writes behave the opposite way: collections are auto-created on **first write**, so a typo'd *insert* would silently create a junk `user` collection and split your data. **Fix:** `db.users.find()` — catch the typo with `show collections` or mongosh Tab-completion, and clean up any junk with `db.user.drop()`.
+
 ## Combine Concepts
 
 First day — instead of combining, build the **compare habit**: look at one order document and describe, in 3 sentences, how this single document captures what a relational database would need *three tables* to represent (order, order_items, and the join). You've just met the whole track's thesis: **embed what you read together**.
