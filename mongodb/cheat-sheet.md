@@ -20,6 +20,19 @@ db.users.insertMany([{...}, {...}])
 // _id is added automatically (ObjectId) if you don't provide one
 ```
 
+## ObjectId
+
+```text
+68 5d 2f a1 | 9c 3b 2f | d4 7a | 91 b2 c3
+timestamp     machine    pid     counter
+```
+
+12 bytes / 24 hex chars — **4B** timestamp · **3B** machine · **2B** pid · **3B** counter.
+
+- **Free benefit:** timestamp comes *first* → ids are roughly **creation-ordered** (`sort({ _id: 1 })` ≈ oldest first), and `oid.getTimestamp()` gives creation time — **no `created_at` field needed**
+- Machine + PID → unique ids with **no coordination** between servers *(newer MongoDB: one random 5-byte value — same idea)*
+- Every document needs an `_id`, unique per collection: let MongoDB generate it, or supply your own (any type) — a duplicate → `E11000`
+
 ## Read
 
 ```javascript

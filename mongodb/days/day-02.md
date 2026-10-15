@@ -34,15 +34,24 @@ MongoDB server (one process, port 27017)
 
 > Money note (the same rule as SQL-land): plain JS numbers are floats. For money use `NumberDecimal` or store integer cents. Same disease, same cure.
 
-**ObjectId** — the auto-generated `_id` when you don't provide one:
+**ObjectId** — the auto-generated `_id` when you don't provide one. **12 bytes (24 hex chars)**, built from four parts:
 
 ```text
-68 5d 2f a1 | 9c 3b | 2f | d4 7a 91 b2
-timestamp    machine  pid  counter
+68 5d 2f a1 | 9c 3b 2f | d4 7a | 91 b2 c3
+timestamp     machine    pid     counter
 ```
 
-- 4-byte **timestamp** → ObjectIds are *roughly sorted by creation time*!
-- The rest → uniqueness without coordination between servers
+| Part | Bytes | What it holds |
+|---|---|---|
+| **Timestamp** | 4 | Unix epoch **seconds** when the id was created |
+| **Machine** | 3 | Which machine/client generated it |
+| **PID** | 2 | Which process generated it |
+| **Counter** | 3 | Increments per id — two ids in the same second can't collide |
+
+Machine + PID exist so **uniqueness needs no coordination** between servers. *(Newer MongoDB versions store those middle 5 bytes as one random value — same idea.)*
+
+**The free benefit:** the timestamp comes *first*, so ObjectIds are **roughly creation-ordered** — `sort({ _id: 1 })` ≈ oldest → newest — and `oid.getTimestamp()` answers *"when was this created?"* **without a `created_at` field**. Trade-off: custom ids (`42`, `'sku-001'`) give that up — no timestamp, and uniqueness becomes *your* job (P7).
+
 - Every document MUST have an `_id` — unique per collection
 
 ## Why It Matters
