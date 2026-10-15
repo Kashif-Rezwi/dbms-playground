@@ -83,7 +83,7 @@ db.users.insertOne({ _id: 42, name: 'Duplicate' })  // E11000 duplicate key
 
 [Intermediate] **P5. Predict first:** `db.x.insertMany([{n:1},{n:2}])`, then insert one more, then sort by `_id` ascending — is that creation order? Why *roughly* (hint: same-second inserts — the counter)?
 
-[Intermediate] **P6.** The money demo: `db.t.insertOne({a: 0.1, b: NumberDecimal('0.1')})` — then `db.t.findOne()`. What does `a` print as? Sum `a + a` in JS — the classic float surprise, live.
+[Intermediate] **P6.** The money demo: `db.t.insertOne({a: 0.1, b: NumberDecimal('0.1')})` — then `db.t.findOne()`. What does `a` print as? Then in JS run `0.1 + 0.2` (and check `0.1 + 0.2 === 0.3`) — the classic float surprise, live.
 
 [Advanced] **P7.** From scratch: insert a document with `_id: 'sku-001'` (a string id!) and another with `_id: 42`. What does this teach about `_id`'s flexibility — and what's the trade-off vs ObjectId (no timestamp, your uniqueness duty)?
 
@@ -124,8 +124,8 @@ Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address
 
 ## Completion Checklist
 
-- [ ] Know the hierarchy cold: server → database → collection → document
-- [ ] Can decode an ObjectId's four parts — and name its free benefit
-- [ ] Completed P1–P7 (P5 predicted first)
+- [x] Know the hierarchy cold: server → database → collection → document
+- [x] Can decode an ObjectId's four parts — and name its free benefit
+- [x] Completed P1–P7 (P5 predicted first)
 - [ ] Diagnosed all three bugs
 - [ ] Answered recall without notes
