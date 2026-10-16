@@ -107,6 +107,12 @@ db.users.insertOne({ _id: 42, name: 'Duplicate' })  // E11000 duplicate key
 // there. Which BSON type fixes it, and what does the insert look like?
 ```
 
+**Answers:**
+
+- **Bug 1 — `_id` uniqueness is enforced by an index, not by hope.** The error itself names it: `index: _id_`. Every collection automatically gets a **unique index** on `_id` the moment it's created — that's the machinery behind "an `_id` must be unique per collection." **Duplicate key** means: "this insert would store an indexed value that already exists." **Verify:** `db.dupes.getIndexes()` lists `_id_`; re-trying with `_id: 2` succeeds. **Trap:** run the same insert in `ecommerce` and it fails on the *first* try — the seeds own explicit `_id: 1`, so you collided with existing data, not with yourself.
+- **Bug 2 — naming isn't creating; writes are.** Typing `db.ghost` just evaluates to a collection *handle* in the shell — nothing is sent that creates anything, and `show collections` (correctly) lists only what exists server-side. The one thing that creates a collection: **a first write** (`insertOne` / `insertMany` / update / delete) — or the explicit escape hatch `db.createCollection('ghost')`. **Check (the wrong-database suspect):** `db` prints your current database and `show collections` what's inside it — a "missing" collection often means it was created under a *different* database (`db` sticks to your last `use`). **Fix:** `db.ghost.insertOne({ born: true })`. **Why this bug hides:** reads against a missing collection return an *empty cursor* — no error — so only `show collections` tells the truth.
+- **Bug 3 — plain numbers are floats; money needs Decimal128.** A BSON/JS plain number is an IEEE-754 **float**: `0.1 + 0.2` → `0.30000000000000004`, and adding `0.1` ten times gives `0.9999999999999999` — tiny per-calculation rounding errors that compound into totals "off by a paisa." **Fix:** store money as **`NumberDecimal`** (BSON **Decimal128** — exact base-10 arithmetic): `db.prices.insertOne({ item: 'Cable', price: NumberDecimal('899.00') })`. Always pass a **string** — `NumberDecimal(899.00)` converts the *float* as-is (whatever drift it already carries), while `'899.00'` records exactly the digits you meant. **Alternative cure:** store integer **cents/paisa** (`price_cents: 89900`) and format on display — same rule as SQL-land. **Verify:** `db.prices.findOne()` prints `NumberDecimal("899.00")` — a visibly different type from a plain `899`.
+
 ## Combine Concepts
 
 Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address of a review comment — from server to the exact nested field — for `db.reviews.findOne({ _id: 12 })`'s `comment` value. You've built the mental path every query will walk.
@@ -136,5 +142,5 @@ Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address
 - [x] Know the hierarchy cold: server → database → collection → document
 - [x] Can decode an ObjectId's four parts — and name its free benefit
 - [x] Completed P1–P7 (P5 predicted first)
-- [ ] Diagnosed all three bugs
+- [x] Diagnosed all three bugs
 - [ ] Answered recall without notes
