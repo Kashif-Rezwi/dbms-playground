@@ -173,4 +173,4 @@ Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address
 - [x] Can decode an ObjectId's four parts — and name its free benefit
 - [x] Completed P1–P7 (P5 predicted first)
 - [x] Diagnosed all three bugs
-- [ ] Answered recall without notes
+- [x] Answered recall without notes
