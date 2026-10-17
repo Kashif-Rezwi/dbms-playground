@@ -120,22 +120,52 @@ Yesterday's shoebox, today's hierarchy: write (in your notes) the 4-line address
 ## Previous Knowledge
 
 1. What is a document? Name three types a field can hold (make one exotic).
+
+   **A:** A **document** is the self-contained record MongoDB stores — JSON-*looking*, saved as **BSON** — e.g. `{ name: 'Wireless Mouse', price: 2499, tags: ['wireless', 'mouse'] }`. Three types: **string** (`'Karachi'`), **number** (`2499`), **date** (`ISODate('2024-01-15')`) — exotic: **array** (`tags`) or **nested object** (`specs`).
+
 2. What is BSON in one line — and one thing it does that JSON can't?
+
+   **A:** **BSON (Binary JSON)** is MongoDB's binary, *typed* storage format for JSON-like data. What plain JSON can't hold: real typed values — a **date** (`ISODate`), **ObjectId**, **Decimal128**, binary/regex — JSON only has strings, numbers, booleans.
+
 3. What did `db.products.find({ tags: 'usb' })` prove about matching against an array?
+
+   **A:** That **plain equality on an array field means "array contains the value"** — `'usb'` found the product whose `tags: ['cable', 'usb']` holds it, no special operator needed. One query value can match any single element; the dedicated array operators arrive on Day 9.
+
 4. "Each document decides its own fields" — what does that make *you* responsible for?
+
+   **A:** **Schema discipline** — consistent field *names* and *types* across the collection, because the database enforces no shape. Without it: the same fact spelled two ways, fields that vanish silently, and queries that quietly skip documents. The tools: app-side naming/type conventions, plus **collection validators** (Day 3).
 
 ## Recall
 
 1. The 4-level hierarchy — from memory.
+
+   **A:** **Server → database → collection → document.** One `mongod` process (port 27017) runs many databases (`use ecommerce`); each database holds collections (`users`, `products` — the loose "table" analog); each collection holds the documents themselves. Isolation rules: a query never crosses databases, and databases/collections appear only on **first write**.
+
 2. What can BSON do that JSON can't? (Three things.)
+
+   **A:** Three from today's examples: **(1) real dates** — `ISODate('2025-01-15')` is a typed, sortable date where JSON would only have a string; **(2) Decimal128** — `NumberDecimal('2499.00')`, exact base-10 decimals for money (floats drift); **(3) ObjectId** — a native 12-byte id with a built-in timestamp. (Also: binary data, regex, and a binary encoding the server scans efficiently.)
+
 3. What are the parts of an ObjectId, and what does the first one give you for free?
+
+   **A:** 12 bytes / 24 hex chars, four parts: **timestamp (4B)** — the Unix epoch *second* of creation; **machine (3B) + PID (2B)** — which client made it (newer MongoDB stores those 5 bytes as one random value); **counter (3B)** — increments within the same second so same-second ids can't collide. The **first part is the creation time, free**: `oid.getTimestamp()` answers *"when was this created?"* — and because the timestamp leads the id, ObjectIds sort **roughly in creation order** (`sort({ _id: 1 })` ≈ oldest first) with **no `created_at` field needed**.
+
 4. What creates a collection? What happens to a query against a nonexistent one?
+
+   **A:** A **first write** (`insertOne` / `insertMany` / update / delete) creates it — or explicitly `db.createCollection('name')`. Merely naming `db.ghost` or `use`-ing a database creates nothing. A **query** against a missing collection never errors: `find()` returns an **empty cursor** — identical to "ran, matched nothing" — so read-typo bugs hide. Confirm with `show collections`.
 
 ## Interview Questions
 
 1. "What is the role of `_id` and what is an ObjectId?"
+
+   **A:** `_id` is every document's **primary key**: mandatory, **unique within its collection**, and **immutable** (cannot be updated). The uniqueness isn't a convention — MongoDB automatically creates the unique **`_id_` index**, so repeating an `_id` fails with **E11000 duplicate key**. You may supply your own `_id` of any BSON type; if you don't, the driver sends an **ObjectId** — 12 bytes: **4-byte timestamp** (creation second), **machine + PID** (who generated it — unique across servers with *no coordination*), **3-byte counter** (same-second uniqueness). Free extras: `getTimestamp()` and roughly creation-ordered ids. Custom ids (`'sku-001'`, `42`) are readable but give up the timestamp — and uniqueness becomes your job.
+
 2. "Can a MongoDB collection contain documents with different fields? Should it?" *(Can: yes. Should: rarely — say why that's a design smell.)*
+
+   **A:** **Can — yes; should — rarely.** MongoDB enforces no fixed shape — **schemaless** means *no enforced shape*, not *no schema* — so each document declares its own fields, changeable without **DDL** (the SQL-style structure commands such as `ALTER TABLE`). But *can ≠ should*: mixed shapes for the same kind of fact is a **design smell**. Queries assume fields and **silently skip** documents that lack one (`find({ city: 'X' })` misses docs without `city`), sorts and `$group`s split into separate piles, and validation silently becomes the application's burden. Legitimate variation is **intentional** — optional facts, evolving features, embedded subdocs — kept honest by **schema discipline** (consistent names/types) and **validators** (Day 3). Days 12–15 turn this into a design skill.
+
 3. "How would you store money in MongoDB?" *(NumberDecimal / integer cents.)*
+
+   **A:** **Never a plain float.** Two sound answers: **(1) `NumberDecimal`** — BSON **Decimal128**, exact base-10: `price: NumberDecimal('19.99')`, constructed from a **string** so no float error sneaks in (`NumberDecimal(19.99)` would convert the float — drift and all). **(2) Integer minor units** — `price_cents: 1999` (or paisa), formatted on display. The why: plain numbers are **IEEE-754 floats** — `0.1 + 0.2 → 0.30000000000000004`, ten additions of `0.1 → 0.9999999999999999` — tiny per-calculation rounding errors that compound into totals "off by a paisa" across line items and aggregations. Pick one convention app-wide; aggregation `$sum` adds Decimal128 exactly.
 
 ## Completion Checklist
 
