@@ -75,16 +75,23 @@ db.products.aggregate([
 
 ## Practice
 
-[Beginner] **P1.** The example flow on delivered orders — type it, run it, read every stage's output mentally.
-[Beginner] **P2.** $match-first discipline: run the pipeline with $match AFTER $project — same result, different cost. Explain why order matters for work, not correctness.
-[Beginner] **P3.** Products with a computed `price_in_cents` ($multiply by 100) — then $match on price_in_cents works! (Stages see earlier stages' fields — feel the dataflow.)
-[Intermediate] **P4.** The $switch labeler on orders (delivered / cancelled / else ), sorted by label then date.
-[Intermediate] **P5. Predict first:** `[$match: {rating: 5}, $count: 'n']` on reviews — what's the output SHAPE? (An array with ONE document `{ n: ... }` — never a bare number. Predict, verify.)
-[Intermediate] **P6. From memory:** delivered orders, newest 3, with computed `days_old` — the date-math idiom: `$divide: [{ $subtract: [new Date(), '$ordered_at'] }, 86400000]`.
-[Advanced] **P7.** The SQL-translation drill: write "top 3 delivered orders' totals with an is_big flag" in SQL (you know it!), then as the pipeline. Write the mapping in your notes: WHERE→$match, ORDER/LIMIT→$sort/$limit, CASE→$switch.
-[Advanced] **P8.** Pipeline debugging method: a pipeline returns empty — run stages one at a time, printing each; find where docs vanish. Do it on purpose by breaking P4's $switch.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** The example flow on delivered orders — type it, run it, read every stage's output mentally.
+
+[Beginner] **W2.** $match-first discipline: run the pipeline with $match AFTER $project — same result, different cost. Explain why order matters for work, not correctness.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `[$match: {rating: 5}, $count: 'n']` on reviews — what's the output SHAPE? (An array with ONE document `{ n: ... }` — never a bare number. Predict, verify.)
+
+[Intermediate] **C2.** `[From Memory]` delivered orders, newest 3, with computed `days_old` — the date-math idiom: `$divide: [{ $subtract: [new Date(), '$ordered_at'] }, 86400000]`.
+
+[Intermediate] **C3.** Products with a computed `price_in_cents` ($multiply by 100) — then $match on price_in_cents works! (Stages see earlier stages' fields — feel the dataflow.)
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: $project references 'price' (no $) — in expressions that's a
@@ -95,23 +102,9 @@ db.products.aggregate([
 // collection. One-line fix + the reason.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** `db.products.aggregate([{$match:{category_id:3}}, {$project:{name:1,_id:0}}, {$sort:{name:1}}, {$limit:5}])` — explain() the aggregate: can the Day 16/18 compound index cover the whole thing? (Aggregations use indexes too — a leading $match is index-eligible. Write the one-line rule.)
 
-`db.products.aggregate([{$match:{category_id:3}}, {$project:{name:1,_id:0}}, {$sort:{name:1}}, {$limit:5}])` — explain() the aggregate: can the Day 16/18 compound index cover the whole thing? (Aggregations use indexes too — a leading $match is index-eligible. Write the one-line rule.)
-
-## Previous Knowledge
-
-1. Covered query — what breaks coverage?
-2. The profiler's role?
-3. ESR rule?
-4. TTL contract?
-
-## Recall
-
-1. Pipeline rule #1 — and the cost reason?
-2. $project's superpower beyond find's projection?
-3. How do you reference fields inside expressions?
-4. What shape does every pipeline return — even $count?
+[Advanced] **H3.** The SQL-translation drill: write "top 3 delivered orders' totals with an is_big flag" in SQL (you know it!), then as the pipeline. Write the mapping in your notes: WHERE→$match, ORDER/LIMIT→$sort/$limit, CASE→$switch.
 
 ## Interview Questions
 
@@ -122,8 +115,5 @@ db.products.aggregate([
 ## Completion Checklist
 
 - [ ] Understand pipelines, $match-first, $project computations, dataflow
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the SQL↔pipeline mapping table
-- [ ] Answered recall without notes
-

@@ -91,55 +91,31 @@ db.users_v.insertOne({ name: 'X' })   // rejected: email missing!
 
 ## Practice
 
-[Beginner] **P1.** Create a `playground` collection `tasks`; `insertOne` with a nested `meta: { created_by: 'you' }`; verify with `findOne()`.
+### 🟢 Warm Up
 
-[Beginner] **P2.** `insertMany` of 4 tasks with mixed-but-intentional shapes (some with `due_date`, some without — say what the absence means!).
+[Beginner] **W1.** Create a `playground` collection `tasks` (using Day 2's collection concepts); `insertOne` with a nested `meta: { created_by: 'you' }`; verify with `findOne()`.
 
-[Beginner] **P3.** Insert with an explicit `_id` (your choice), verify; attempt a duplicate → read the `E11000` duplicate key error out loud.
+[Beginner] **W2.** `insertMany` of 4 tasks with mixed-but-intentional shapes (some with `due_date`, some without — explain what field absence represents in document design).
 
-[Intermediate] **P4.** Batch habit, measured: insert 1,000 docs via `insertMany` in one call; then 1,000 one-by-one in a JS loop. Time both (`const t0 = Date.now() ...` around them). Report the ratio — that's the round-trip cost, felt.
+### 🔵 Core
 
-[Intermediate] **P5. Predict first:** what does `insertMany([{ _id: 1 }, { _id: 1 }, { _id: 2 }])` do — all fail? Partial insert? Which documents exist after? Verify. (And: what does `{ ordered: false }` change?)
+[Intermediate] **C1.** Batch habit, measured: insert 1,000 docs via `insertMany` in one call; then 1,000 one-by-one in a JS loop. Time both (`const t0 = Date.now() ...` around them). Report the ratio — that's the round-trip cost, felt.
 
-[Intermediate] **P6. From memory:** the validator collection — `users_v`-style with required `name` + `email`, string types. Prove a bad insert fails.
+[Intermediate] **C2.** `[Predict]` What does `insertMany([{ _id: 1 }, { _id: 1 }, { _id: 2 }])` do — all fail? Partial insert? Which documents exist after? Verify in mongosh. Then test what `{ ordered: false }` changes when handling batch errors.
 
-[Advanced] **P7.** The schema-freedom debate, written: 4 sentences — "when is flexible schema a superpower vs a footgun?" (Superpower: evolving app, optional facts, prototypes. Footgun: same-fact-different-names, typos, missing invariants that validators should catch.)
+[Intermediate] **C3.** `[From Memory]` The validator collection — `users_v`-style with required `name` + `email`, string types. Prove a bad insert fails.
 
-   **Answer (4-sentence synthesis):**
-   1. **Superpower:** A flexible schema is a superpower when an application evolves rapidly or models inherently polymorphic data (like product catalogs or user profiles), allowing new fields to be added without costly DDL migrations or downtime.
-   2. **Honest absence:** It cleanly models optional facts through natural field absence rather than sparse, null-filled relational columns.
-   3. **Footgun:** However, it turns into a catastrophic footgun when teams mistake "schemaless" for "no schema discipline", allowing silent typos, inconsistent field naming (e.g., `fullName` vs `name`), or mixed types to corrupt queries without raising database errors.
-   4. **Resolution:** Real-world mastery means maintaining strict application-level contracts and placing collection validators (`$jsonSchema`) at the database boundary to lock down critical invariants.
+### 🟠 Challenge
 
-## Debugging
+[Advanced] **H1.** `[Fix It]` Diagnose and fix this broken batch insert:
 
 ```javascript
-// Bug 1: db.tasks.insertMany({a:1},{b:2})  — what error? (insertMany needs
-// an ARRAY. One pair of brackets, whole different meaning.)
-// Bug 2: insertMany partially succeeded and the app "retried" — now
-// duplicates. What two tools fix this (unique index on business key;
-// ordered:false + handling, or a deterministic _id!)
-// Bug 3: a "required" field keeps going missing and different teams write
-// different checks. What collection-level tool centralizes it?
+db.tasks.insertMany({ title: 'Task 1' }, { title: 'Task 2' })
 ```
 
-## Combine Concepts
+Explain what error occurs and why, provide the corrected call, and describe two strategies to prevent duplicate records if a batch partially fails during a network retry.
 
-Yesterday's ObjectId + today's inserts: create `events` (no explicit `_id`) — insert 3 events 1 second apart; sort by `_id` — creation order? Now add `created_at: new Date()` to your insert habit and compare sorting by both. Two lines: when is `_id`-order good enough, and when is `created_at` the honest choice?
-
-## Previous Knowledge
-
-1. The 4-level hierarchy — from memory.
-2. What are ObjectId's parts? What's the free benefit?
-3. Which BSON type for money?
-4. What creates a collection?
-
-## Recall
-
-1. `insertOne` vs `insertMany` — and why batching matters (the cost you measured).
-2. What does `{ ordered: false }` change on partial failure?
-3. Validator collections — what do they enforce, and what do they NOT (answer: shape rules, not cross-document logic)?
-4. Good vs bad schema flexibility — one example each.
+[Advanced] **H2.** Combine Day 2's ObjectId with today's inserts: create an `events` collection (no explicit `_id`) and insert 3 events with a delay or distinct timestamps. Compare sorting by `_id` vs sorting by an explicit `created_at: new Date()`. In two sentences: when is natural `_id`-order sufficient, and when is an explicit timestamp necessary?
 
 ## Interview Questions
 
@@ -150,6 +126,4 @@ Yesterday's ObjectId + today's inserts: create `events` (no explicit `_id`) — 
 ## Completion Checklist
 
 - [x] Understand insertOne / insertMany, ordered: false, validators, schema discipline
-- [x] Completed P1–P7 (P5 predicted first; P4's numbers recorded)
-- [ ] Fixed all three bugs
-- [ ] Answered recall without notes
+- [x] Completed Warm Up, Core, and Challenge exercises

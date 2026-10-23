@@ -62,15 +62,23 @@ db.messages.find({ body: { $type: 'string' } })
 
 ## Practice
 
-[Beginner] **P1.** Users WITH a bio field (`$exists: true`) — count them; then with a *non-null* bio — different count? (Our data has exactly one null bio — feel the distinction.)
-[Beginner] **P2.** $elemMatch on jobs: skills entries with skill 'PostgreSQL' AND required true. Which jobs?
-[Intermediate] **P3.** Orders with ONE item having product_id 12 AND quantity 1 — both versions (wrong: two dotted conditions; right: $elemMatch). Same results on our data? When would they differ? *(Write a 2-doc thought experiment where they differ!)*
-[Intermediate] **P4. Predict first:** `db.orders.find({ items: { $elemMatch: { product_id: 9, quantity: 3 } } })` — which orders match? Verify.
-[Intermediate] **P5.** The mixed-type audit: run `$type: 'string'` on `products.price`... all decimals in our data — so create the disease: update one product's price to `'999'` (a string!); now find all string-priced products. Then FIX them ($set with the number... via one update). The audit query goes in your notes forever.
-[Advanced] **P6. From memory:** $elemMatch query — candidates with advanced PostgreSQL. Then verify against the SQL version's answer (candidate 3 and 5).
-[Advanced] **P7.** Shape-audit report on `ecommerce` (portfolio artifact): for each collection, spot-check the 5 critical fields with $exists + $type counts; write the "shape contract" you'd enforce (which fields required, which types). This is Day 12's opening act.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Users WITH a bio field (`$exists: true`) — count them; then with a *non-null* bio — different count? (Our data has exactly one null bio — feel the distinction.)
+
+[Beginner] **W2.** $elemMatch on jobs: skills entries with skill 'PostgreSQL' AND required true. Which jobs?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `db.orders.find({ items: { $elemMatch: { product_id: 9, quantity: 3 } } })` — which orders match? Verify.
+
+[Intermediate] **C2.** `[From Memory]` $elemMatch query — candidates with advanced PostgreSQL. Then verify against the SQL version's answer (candidate 3 and 5).
+
+[Intermediate] **C3.** Orders with ONE item having product_id 12 AND quantity 1 — both versions (wrong: two dotted conditions; right: $elemMatch). Same results on our data? When would they differ? *(Write a 2-doc thought experiment where they differ!)*
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: find({ bio: { $ne: null } }) returns users with NO bio at all.
@@ -83,23 +91,9 @@ db.messages.find({ body: { $type: 'string' } })
 // find the strings; one update to fix them. (You built this in P5.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** **[P3: Social Feed Queries](../projects/03-social-feed.md)** — everything from Stage 3 over the social dataset: nested reads, $elemMatch correctness, array operators, shape audits. Attempt before solutions.
 
-**[P3: Social Feed Queries](../projects/03-social-feed.md)** — everything from Stage 3 over the social dataset: nested reads, $elemMatch correctness, array operators, shape audits. Attempt before solutions.
-
-## Previous Knowledge
-
-1. Positional `$` — what does it refer to?
-2. The any-item trap — restate it.
-3. What does $set do to a missing path?
-4. $push vs $addToSet?
-
-## Recall
-
-1. $exists vs null — the 4-way matrix, from memory.
-2. What's $type for, and what does it catch?
-3. What does $elemMatch guarantee that dotted conditions don't?
-4. When did you *feel* shape discipline today (the string-price disease)?
+[Advanced] **H3.** Shape-audit report on `ecommerce` (portfolio artifact): for each collection, spot-check the 5 critical fields with $exists + $type counts; write the "shape contract" you'd enforce (which fields required, which types). This is Day 12's opening act.
 
 ## Interview Questions
 
@@ -110,7 +104,6 @@ db.messages.find({ body: { $type: 'string' } })
 ## Completion Checklist
 
 - [ ] Understand $exists/$type/$elemMatch + the shape matrix
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Fixed all three bugs (matrix written!)
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the shape-audit report
 - [ ] Started Project 3

@@ -69,16 +69,23 @@ db.users.updateOne({ _id: 2 },
 
 ## Practice
 
-[Beginner] **P1.** Add tag 'eco' to product 5 (push), verify; add it again (push) — duplicate! Then make the same story with $addToSet — no duplicate. You've *felt* the difference.
-[Beginner] **P2.** Remove the duplicate 'eco' — one $pull removes BOTH. Verify.
-[Intermediate] **P3.** Batch add: $push with $each of two tags to product 7.
-[Intermediate] **P4.** Capped log drill: run the $slice activity example 7 times with different `what` values; count the array — forever 5. Explain $slice: -5 in one line.
-[Intermediate] **P5. Predict first:** `db.orders.updateOne({ _id: 1 }, { $addToSet: { items: { product_id: 3, quantity: 1, unit_price: 899 } } })` — items already contains that object. What happens? And if you $addToSet a *slightly different* object (quantity: 2)? Whole-object equality — say the rule.
-[Intermediate] **P6.** Create the multikey index on products.tags; `explain()` (the lightweight `db.products.find({tags:'usb'}).explain()`) — spot IXscan? (Full explain comes Day 17 — just find the index-scan mention today.)
-[Advanced] **P7. From memory:** the "toggle tag" workflow — $addToSet it, verify, $pull it, verify.
-[Advanced] **P8.** The race-condition reasoning, written: two users simultaneously $push to the same array — what's possible in MongoDB that ISN'T in the SQL "read array, change it in the app, write it back" version? (Concurrent appends both land — $push is atomic. The app-side version loses one. This is the array-operators' killer argument.)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Add tag 'eco' to product 5 (push), verify; add it again (push) — duplicate! Then make the same story with $addToSet — no duplicate. You've *felt* the difference.
+
+[Beginner] **W2.** Remove the duplicate 'eco' — one $pull removes BOTH. Verify.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `db.orders.updateOne({ _id: 1 }, { $addToSet: { items: { product_id: 3, quantity: 1, unit_price: 899 } } })` — items already contains that object. What happens? And if you $addToSet a *slightly different* object (quantity: 2)? Whole-object equality — say the rule.
+
+[Intermediate] **C2.** `[From Memory]` the "toggle tag" workflow — $addToSet it, verify, $pull it, verify.
+
+[Intermediate] **C3.** Batch add: $push with $each of two tags to product 7.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: $push added the same tag 15 times. Which operator was meant?
@@ -91,23 +98,9 @@ db.users.updateOne({ _id: 2 },
 // the comma-list-in-one-field disease, now killing multikey indexes. Fix: real arrays.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The mini-cart: create a `carts` collection (user_id, items array of {product_id, quantity}); $push an item; $inc an existing item's quantity (`'items.$.quantity'`... that's positional — preview! Simpler path: $set on the matched item via filter on `items.product_id`... genuinely tricky — attempt, then note: *this exact pain is why Day 21's $unwind and aggregation exist, and why carts are often normalized*. Write the one-sentence honest verdict.)
 
-The mini-cart: create a `carts` collection (user_id, items array of {product_id, quantity}); $push an item; $inc an existing item's quantity (`'items.$.quantity'`... that's positional — preview! Simpler path: $set on the matched item via filter on `items.product_id`... genuinely tricky — attempt, then note: *this exact pain is why Day 21's $unwind and aggregation exist, and why carts are often normalized*. Write the one-sentence honest verdict.)
-
-## Previous Knowledge
-
-1. Projection include/exclude mixing rule?
-2. Skip's cost and the cursor fix?
-3. `{ field: null }` matches what?
-4. The delete ritual?
-
-## Recall
-
-1. $push vs $addToSet vs $pull — one line each.
-2. What does $slice: -5 do, and which operator carries it?
-3. What is a multikey index?
-4. Why are array operators safer than read-modify-write in the app? (Atomicity.)
+[Advanced] **H3.** The race-condition reasoning, written: two users simultaneously $push to the same array — what's possible in MongoDB that ISN'T in the SQL "read array, change it in the app, write it back" version? (Concurrent appends both land — $push is atomic. The app-side version loses one. This is the array-operators' killer argument.)
 
 ## Interview Questions
 
@@ -118,7 +111,4 @@ The mini-cart: create a `carts` collection (user_id, items array of {product_id,
 ## Completion Checklist
 
 - [ ] Understand push/addToSet/pull/pop, $each/$slice, multikey indexes
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the mini-cart combine (and the honest verdict)
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

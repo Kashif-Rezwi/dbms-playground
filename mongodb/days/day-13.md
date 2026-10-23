@@ -57,14 +57,23 @@ Every collection design is this decision, repeated. The hybrid pattern is what r
 
 ## Practice
 
-[Beginner] **P1.** Classify with the framework (5-line verdict each): (a) user's shipping address; (b) ALL of a user's orders; (c) a course's 10 lessons; (d) an author's 50,000 articles; (e) a post's first 3 comments + count.
-[Beginner] **P2.** On `ecommerce`: fetch 3 orders, then their user names app-side (findOne per order — an N+1, felt). Then add `user_name` (hybrid) to one order copy and feel the read simplify. Write the drift chore that comes with it.
-[Intermediate] **P3.** Write-amp demo: `docs` with a 100-element array — `$push` 5 times; `refs` version (100 small docs + parent). Which update pattern moves more data and why?
-[Intermediate] **P4. Predict first:** you embed the customer's full address in every order. The customer moves. How many documents must update — and the drift bug when the app forgets? Then the twist: for ORDER HISTORY, keeping the old address is *correct* (a snapshot!). Which semantics apply where? (If you did the SQL track: Day 26's history-vs-copy debate, document edition.)
-[Advanced] **P5.** The ghost-document experiment: insert an order with `user_id: 999` — no error! Find it. Write the integrity check (collect used user_ids, diff against real ids). One-line lesson on referential integrity here.
-[Advanced] **P6. From memory:** the 5-question framework + the hybrid's exact trade.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Classify with the framework (5-line verdict each): (a) user's shipping address; (b) ALL of a user's orders; (c) a course's 10 lessons; (d) an author's 50,000 articles; (e) a post's first 3 comments + count.
+
+[Beginner] **W2.** On `ecommerce`: fetch 3 orders, then their user names app-side (findOne per order — an N+1, felt). Then add `user_name` (hybrid) to one order copy and feel the read simplify. Write the drift chore that comes with it.
+
+### 🔵 Core
+
+[Intermediate] **C1.** Write-amp demo: `docs` with a 100-element array — `$push` 5 times; `refs` version (100 small docs + parent). Which update pattern moves more data and why?
+
+[Intermediate] **C2.** `[Predict]` you embed the customer's full address in every order. The customer moves. How many documents must update — and the drift bug when the app forgets? Then the twist: for ORDER HISTORY, keeping the old address is *correct* (a snapshot!). Which semantics apply where? (If you did the SQL track: Day 26's history-vs-copy debate, document edition.)
+
+[Intermediate] **C3.** `[From Memory]` the 5-question framework + the hybrid's exact trade.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: "product docs keep getting huge and slow" — reviews embedded,
@@ -78,23 +87,9 @@ Every collection design is this decision, repeated. The hybrid pattern is what r
 // (positional $ / array operators), and what still caps this design?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Extend the access-pattern contract (Day 12): for each top-5 ecommerce read, mark embed/reference/hybrid AND write the drift chore or join cost each choice adds. One page = your modeling manifesto for Project 4.
 
-Extend the access-pattern contract (Day 12): for each top-5 ecommerce read, mark embed/reference/hybrid AND write the drift chore or join cost each choice adds. One page = your modeling manifesto for Project 4.
-
-## Previous Knowledge
-
-1. The modeling rule — one sentence.
-2. The four forces — which direction?
-3. What does a shape contract enforce?
-4. The any-item trap's cure?
-
-## Recall
-
-1. The 5-question framework — from memory.
-2. Embed's two scaling killers?
-3. What does referencing give up (read-time AND integrity)?
-4. The hybrid — benefit + standing chore.
+[Advanced] **H3.** The ghost-document experiment: insert an order with `user_id: 999` — no error! Find it. Write the integrity check (collect used user_ids, diff against real ids). One-line lesson on referential integrity here.
 
 ## Interview Questions
 
@@ -105,8 +100,5 @@ Extend the access-pattern contract (Day 12): for each top-5 ecommerce read, mark
 ## Completion Checklist
 
 - [ ] Understand embed/reference trade-offs, framework, no-FK reality
-- [ ] Completed P1–P6 (P4 reasoned before peeking)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Extended the modeling manifesto
-- [ ] Answered recall without notes
-

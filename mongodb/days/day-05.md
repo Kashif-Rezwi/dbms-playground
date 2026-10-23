@@ -73,15 +73,23 @@ db.view_counts.updateOne({ product_id: 1 },
 
 ## Practice
 
-[Beginner] **P1.** Reactivate users 4 and 8 with ONE updateMany. Verify.
-[Beginner] **P2.** Sell 2 units of product 9 — `$inc: { stock: -2 }`. Verify before/after.
-[Beginner] **P3.** The replace trap, safely: scratch collection, one doc, `updateOne(filter, {only_one_field})` — record what your mongosh does (error or replace?).
-[Intermediate] **P4.** `$mul: { stock: 1.10 }` on Sports products — then look at the values. Integer problem! Discuss the honest fix (avoid $mul on integer fields; compute per-doc, or accept and round). Which fields are *never* ok to $mul?
-[Intermediate] **P5. Predict first:** upsert on `stats` twice in a row (user_id 1, `$inc: {count: 1}`) — count = 0, 1, or 2 after?
-[Intermediate] **P6. From memory:** the "record a view" upsert for product 3 — run twice, verify count = 2.
-[Advanced] **P7.** The safe-update rules, written (5 lines): preview the filter with a find first; always use operators; read matchedCount/modifiedCount; upsert only with a business-key filter; verify after. (If you did the SQL track: which two are identical to SQL Day 6's habits?)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Reactivate users 4 and 8 with ONE updateMany. Verify.
+
+[Beginner] **W2.** Sell 2 units of product 9 — `$inc: { stock: -2 }`. Verify before/after.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` upsert on `stats` twice in a row (user_id 1, `$inc: {count: 1}`) — count = 0, 1, or 2 after?
+
+[Intermediate] **C2.** `[From Memory]` the "record a view" upsert for product 3 — run twice, verify count = 2.
+
+[Intermediate] **C3.** The replace trap, safely: scratch collection, one doc, `updateOne(filter, {only_one_field})` — record what your mongosh does (error or replace?).
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: updateMany with an EMPTY filter {} — MongoDB blocks it for safety.
@@ -93,23 +101,9 @@ db.view_counts.updateOne({ product_id: 1 },
 // business key + upsert everywhere.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Full CRUD cycle in one workflow: **insert** a review (product 3, rating 5, nested `helpful_votes: { up: 0, down: 0 }`), **update** with `$inc` twice (an up-vote), **find** it with dot notation (`'helpful_votes.up': 1`). Project 1 puts the whole cycle together.
 
-Full CRUD cycle in one workflow: **insert** a review (product 3, rating 5, nested `helpful_votes: { up: 0, down: 0 }`), **update** with `$inc` twice (an up-vote), **find** it with dot notation (`'helpful_votes.up': 1`). Project 1 puts the whole cycle together.
-
-## Previous Knowledge
-
-1. Dot-notation query for a nested field — from memory.
-2. Array matching rule?
-3. What BSON type for money (and why is $mul on money risky)?
-4. What creates a collection?
-
-## Recall
-
-1. What does an operator-less update document do?
-2. $set vs $inc — and what makes $inc special?
-3. What is an upsert and when is it *the* pattern?
-4. The return values every update gives that you must read?
+[Advanced] **H3.** The safe-update rules, written (5 lines): preview the filter with a find first; always use operators; read matchedCount/modifiedCount; upsert only with a business-key filter; verify after. (If you did the SQL track: which two are identical to SQL Day 6's habits?)
 
 ## Interview Questions
 
@@ -124,8 +118,5 @@ Build **[P1: Task Manager (Mongo CRUD)](../projects/01-task-manager.md)** — fu
 ## Completion Checklist
 
 - [ ] Understand operators, replace trap, upsert, return values
-- [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 1
-- [ ] Answered recall without notes
-

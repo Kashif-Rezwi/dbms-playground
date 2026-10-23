@@ -53,57 +53,27 @@ db.orders.findOne({ _id: 4 })           // look: items is an array of OBJECTS
 
 ## Practice
 
-[Beginner] **P1.** Connect; `show dbs`; `use ecommerce`; `show collections`.
+### 🟢 Warm Up
 
-[Beginner] **P2.** Inspect one user, one product, one order (`.pretty()`). For each, write down: which fields are strings, numbers, booleans, dates? Which are arrays/objects?
+[Beginner] **W1.** Connect to mongosh, run `show dbs`, switch to `use ecommerce`, and inspect the available collections with `show collections`.
 
-[Beginner] **P3.** Compare a product document with an order document — *different shapes, same database, no complaint from the DB*. That's the headline.
+[Beginner] **W2.** Inspect one user, one product, and one order document with `.pretty()`. For each, identify which fields are scalars (string, number, boolean, date) versus exotic types (arrays, nested objects).
 
-[Beginner] **P4.** In `use social`: find a post, and note the `likes_count` — a field the `ecommerce` documents don't have. Who decided that field exists? (The insert. Nothing else.)
+### 🔵 Core
 
-[Intermediate] **P5. Predict first:** what does `db.products.find({ tags: 'usb' })` return — and *why* does that work on an array? (Predict count too; there is 1 product with 'usb'.)
+[Intermediate] **C1.** Compare a `products` document with an `orders` document in `ecommerce`, then inspect a post document in `social` (noting `likes_count`). What do these different shapes in the same engine prove about MongoDB document modeling?
 
-[Intermediate] **P6.** The 2-minute reflection, written: name one thing a spreadsheet can do that this can't, and one thing this can do that a spreadsheet can't.
+[Intermediate] **C2.** `[Predict]` Predict what `db.products.find({ tags: 'usb' })` returns before executing it, and explain why querying an array with a scalar value works in MongoDB. Verify the count.
 
-## Debugging
+[Intermediate] **C3.** `[From Memory]` Write down the two fundamental ways MongoDB handles data that a relational database would normalize into multiple tables: when do you embed, and when do you reference?
 
-```javascript
-// Bug 1: db.users.find() printed a wall of unreadable text.
-// What's the display fix (two options)?
-// Bug 2: "collection products not found in db social" — you're in the WRONG
-// DATABASE. What's the check, and the fix command?
-// Bug 3: db.user.find() — silent "no results"-ish behavior. What's wrong,
-// and what does MongoDB do about nonexistent collections? (auto-created on
-// first write — queries on missing collections just return nothing!)
-```
+### 🟠 Challenge
 
-**Answers:**
+[Advanced] **H1.** `[Fix It]` Diagnose and resolve these two common beginner mongosh traps:
+1. Running `db.user.find()` returns nothing without throwing an error, even though users exist in the database. What causes this silent empty cursor, how do collections behave on read vs write, and how do you fix it?
+2. You run `db.products.find()` and receive a "collection not found in db social" error. What is the root cause, what check command confirms your context, and how do you switch back?
 
-- **Bug 1 — display problem, not a data problem.** `find()` returns a *cursor* — a result object that can provide matching documents one at a time — and the shell prints it dense by default. Verify the data is fine first (`findOne()` reads one doc cleanly), then use the right control for the problem: **(1)** chain `.pretty()` to format documents, or **(2)** set the session-wide `config.set("displayBatchSize", 20)` and use `.limit(n)` to control how many results are shown. The batch-size and limit settings reduce output; they do not replace formatting.
-- **Bug 2 — context problem.** Collections live inside a database, and `db` is bound to the last database you used (you just did `use social` in P4). **Check:** `db` (prints the current database) plus `show collections` (what actually exists here). **Fix:** `use ecommerce`, then re-run `db.products.find()`.
-- **Bug 3 — typo, silent by design.** The collection is `users` (plural); `user` doesn't exist — and MongoDB **never errors on reads against a missing collection**: `find()` just returns an empty cursor, which looks identical to "query ran, matched nothing." Writes behave the opposite way: collections are auto-created on **first write**, so a typo'd *insert* would silently create a junk `user` collection and split your data. **Fix:** `db.users.find()` — catch the typo with `show collections` or mongosh Tab-completion, and clean up any junk with `db.user.drop()`.
-
-## Combine Concepts
-
-First day — instead of combining, build the **compare habit**: look at one order document and describe, in 3 sentences, how this single document can capture data that a normalized relational design might store across *multiple tables* (for example, `orders` and `order_items`, queried together with a join). You've just met the whole track's thesis: **embed what you read together**.
-
-## Recall
-
-1. What is a document? Name three types a field can hold (make one exotic — array or nested object).
-
-   **A:** A **document** is a self-contained record — MongoDB's unit of storage, JSON-*looking*, stored as **BSON**. Example: `{ name: 'Wireless Mouse', price: 2499, tags: ['wireless', 'mouse'], specs: { color: 'black' } }`. Types: **string** (`'Karachi'`), **number** (`2499`), **date** (`ISODate('2024-01-15')`) — exotic: **array** (`tags`) and **nested object** (`specs`).
-
-2. What is BSON in one line?
-
-   **A:** **BSON (Binary JSON)** is MongoDB's binary, *typed* serialization format for JSON-like data. It supports values JSON does not represent natively, such as real dates, `ObjectId`, binary data, regular expressions, and distinct numeric types such as int32, double, and decimal128.
-
-3. Is NoSQL a language? What is it?
-
-   **A:** **No — NoSQL is a category, not a language.** It labels databases that aren't the relational table model (document, key-value, graph, column). Each system brings its own API; here it's MongoDB's query language driven from JavaScript in mongosh.
-
-4. What happens when two documents in one collection have different fields?
-
-   **A:** **MongoDB permits it by default.** There is no required fixed shape for every document: each insert can provide different fields. However, collection validators can enforce selected rules when you configure them. *Can* ≠ *should* — divergent shapes make queries silently miss data, so keep a consistent core shape and add fields deliberately; validators (Day 3) and `$exists` shape audits (Day 11) are the discipline tools.
+[Advanced] **H2.** The Document vs Relational contrast: look at one order document in `db.orders.findOne()`. In 3 sentences, explain how this single document captures data that a normalized relational database stores across `orders` and `order_items` joined together.
 
 ## Interview Questions
 
@@ -123,6 +93,4 @@ First day — instead of combining, build the **compare habit**: look at one ord
 
 - [x] Connected, explored 3+ collections
 - [x] Can name field types on sight, including arrays/objects
-- [x] Completed P1–P6 (P5 predicted first)
-- [x] Diagnosed all three bugs
-- [x] Answered recall without notes
+- [x] Completed Warm Up, Core, and Challenge exercises

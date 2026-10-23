@@ -61,16 +61,23 @@ db.orders.find({}, { status: 1, 'items.quantity': 1 })
 
 ## Practice
 
-[Beginner] **P1.** Names + emails only, all users (hide _id).
-[Beginner] **P2.** Top 3 most expensive products (name + price only).
-[Beginner] **P3.** Page 2 of 3-per-page products by price ascending. Which products are on it?
-[Beginner] **P4.** Everything about users EXCEPT email.
-[Intermediate] **P5.** Orders' status + item quantities (project into the array). Look closely at the shape — arrays get *filtered copies*. What happened to unit_price?
-[Intermediate] **P6. Predict first:** `db.users.find({}, { name: 1, city: 0 })` — error or result? What's the mixing rule?
-[Intermediate] **P7. From memory:** top 3 most recent products with name + created_at only.
-[Advanced] **P8.** Deep pagination, the cursor way: fetch "page 1" (3 products by price desc, take note of the last `_id`/price shown), then fetch the next 3 *without skip* using `{ price: { $lt: lastPrice } }` (what breaks with ties? — say the fix: sort by (price, _id) and filter on both. Then implement it!). Compare with skip(3).limit(3) results — same page, zero discarded docs.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Names + emails only, all users (hide _id).
+
+[Beginner] **W2.** Top 3 most expensive products (name + price only).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `db.users.find({}, { name: 1, city: 0 })` — error or result? What's the mixing rule?
+
+[Intermediate] **C2.** `[From Memory]` top 3 most recent products with name + created_at only.
+
+[Intermediate] **C3.** Page 2 of 3-per-page products by price ascending. Which products are on it?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: db.products.find({}, 'name price') — works? Projection wants an
@@ -83,23 +90,9 @@ db.orders.find({}, { status: 1, 'items.quantity': 1 })
 // cures (cursor-based pagination; limit/anchor queries).
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Everything so far, one query: **products under 3000, sorted by price ascending then name, showing name+price only, page 2 of 2-per-page** — filter (Day 7) + projection + sort + skip + limit. Then rewrite it cursor-style. Two ways to the same page — you now own both.
 
-Everything so far, one query: **products under 3000, sorted by price ascending then name, showing name+price only, page 2 of 2-per-page** — filter (Day 7) + projection + sort + skip + limit. Then rewrite it cursor-style. Two ways to the same page — you now own both.
-
-## Previous Knowledge
-
-1. All eight comparison operators — from memory.
-2. The `$ne` missing-field quirk?
-3. What does `{ field: null }` match?
-4. The delete ritual?
-
-## Recall
-
-1. Projection include vs exclude mode — and the mixing rule.
-2. What does sort do with multiple keys (priority)?
-3. Skip's cost — and the cursor-based alternative?
-4. What does projecting into an array field do?
+[Advanced] **H3.** Deep pagination, the cursor way: fetch "page 1" (3 products by price desc, take note of the last `_id`/price shown), then fetch the next 3 *without skip* using `{ price: { $lt: lastPrice } }` (what breaks with ties? — say the fix: sort by (price, _id) and filter on both. Then implement it!). Compare with skip(3).limit(3) results — same page, zero discarded docs.
 
 ## Interview Questions
 
@@ -114,7 +107,5 @@ Build **[P2: Book Catalog](../projects/02-book-catalog.md)** — your own catalo
 ## Completion Checklist
 
 - [ ] Understand projection, sort, limit/skip, cursor pagination
-- [ ] Completed P1–P8 (P6 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 2
-- [ ] Answered recall without notes

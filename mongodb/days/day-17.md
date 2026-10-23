@@ -68,15 +68,23 @@ db.orders.find({ user_id: 1 }).explain('executionStats')
 
 ## Practice
 
-[Beginner] **P1.** Unique email index on a scratch users copy; prove the duplicate rejection. Then discuss case-insensitivity: MongoDB has no expression indexes like PG's `lower(email)` — the standard solutions are a stored normalized field (`email_lower`) or a **collation** with strength 2 on the index. Write the honest trade.
-[Beginner] **P2.** TTL watched: sessions with `expireAfterSeconds: 10` — insert, watch them vanish (~a minute of countDocuments checks). Feel the sweep timing.
-[Intermediate] **P3.** Partial unique: one active subscription per user (`partialFilterExpression: { status: 'active' }`) — two actives rejected; active→cancelled→active allowed.
-[Intermediate] **P4. Predict first:** with `{ user_id: 1, ordered_at: -1 }` on orders — the three explain numbers for `find({ user_id: 1 })`? Then run. Now `find({ status: 'pending' })` — what do the ratios look like there?
-[Intermediate] **P5.** Ratio audit: for each top-5 query from Day 16's index plan — record the three numbers. Anything docsExamined ≫ nReturned? Fix, re-measure.
-[Advanced] **P6. From memory:** the TTL contract (field type, timing, sweep) + two uses and one anti-use.
-[Advanced] **P7.** The case-sensitivity design: design a signup flow's uniqueness under YOUR chosen solution from P1 — write the insert, the index, and what the login query must now match.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Unique email index on a scratch users copy; prove the duplicate rejection. Then discuss case-insensitivity: MongoDB has no expression indexes like PG's `lower(email)` — the standard solutions are a stored normalized field (`email_lower`) or a **collation** with strength 2 on the index. Write the honest trade.
+
+[Beginner] **W2.** TTL watched: sessions with `expireAfterSeconds: 10` — insert, watch them vanish (~a minute of countDocuments checks). Feel the sweep timing.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` with `{ user_id: 1, ordered_at: -1 }` on orders — the three explain numbers for `find({ user_id: 1 })`? Then run. Now `find({ status: 'pending' })` — what do the ratios look like there?
+
+[Intermediate] **C2.** `[From Memory]` the TTL contract (field type, timing, sweep) + two uses and one anti-use.
+
+[Intermediate] **C3.** Partial unique: one active subscription per user (`partialFilterExpression: { status: 'active' }`) — two actives rejected; active→cancelled→active allowed.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: createIndex unique fails with "duplicate key" — ON EXISTING DATA.
@@ -88,23 +96,9 @@ db.orders.find({ user_id: 1 }).explain('executionStats')
 // every candidate doc — the ratio told you before you felt it.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The auth mini-system: `users` (unique normalized email — your P7 choice), `sessions` (TTL 1h), `tokens` (TTL + partial unique on user for active tokens). Write the three createIndex calls + the two E11000 proofs + the expiry demo. A production-shaped auth schema in ~10 lines.
 
-The auth mini-system: `users` (unique normalized email — your P7 choice), `sessions` (TTL 1h), `tokens` (TTL + partial unique on user for active tokens). Write the three createIndex calls + the two E11000 proofs + the expiry demo. A production-shaped auth schema in ~10 lines.
-
-## Previous Knowledge
-
-1. ESR rule — from memory.
-2. Leftmost-prefix consequence?
-3. What's a multikey index?
-4. The modeling rule?
-
-## Recall
-
-1. Unique index — what it enforces, what error proves it?
-2. Partial unique — the "one active X per user" pattern, from memory.
-3. TTL contract — field type, timing, sweep, anti-use?
-4. The three explain numbers + the health ratio?
+[Advanced] **H3.** The case-sensitivity design: design a signup flow's uniqueness under YOUR chosen solution from P1 — write the insert, the index, and what the login query must now match.
 
 ## Interview Questions
 
@@ -115,8 +109,5 @@ The auth mini-system: `users` (unique normalized email — your P7 choice), `ses
 ## Completion Checklist
 
 - [ ] Understand unique/partial/TTL indexes + explain ratios
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Built the auth mini-system
-- [ ] Answered recall without notes
-

@@ -46,15 +46,23 @@ db.transfers.insertOne({...}, { writeConcern: { w: 'majority' } })
 
 ## Practice
 
-[Beginner] **P1.** `rs.status()` — decode: set name, member state, `self`, uptime. One sentence per field in notes.
-[Beginner] **P2.** `rs.conf()` — members + votes. Why does a one-node set still "elect" (it's the only voter)?
-[Intermediate] **P3.** Failover story, drawn: the 3-node timeline for "secondary 2 dies" (nothing changes) vs "primary dies" (election + client reconnect via the multi-host connection string). What's the client-side requirement?
-[Intermediate] **P4. Predict first:** app writes with `w: 1`; primary ACKS, dies before replication; new primary elected — is the write there? (No — rollback files.) With `w: 'majority'`? (Survives.) Write the two-line durability dial lesson.
-[Intermediate] **P5.** Read preference reality: reads from secondaries guarantee which user-facing bug? ("You changed your email but see the old one.") Two fixes (read primary; session-causal consistency — name the concept).
-[Advanced] **P6.** The design memo: chat app, 99.9% uptime, ≤1s data loss, analytics must not slow the app. Write: topology (3 nodes), write concern (critical writes: majority; messages: your call — defend), read preference (app: primary; analytics: secondaryPreferred). Which of your Day 24 transfers get majority?
-[Advanced] **P7. From memory:** oplog → election → write concern — the three-sentence replica-set story.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** `rs.status()` — decode: set name, member state, `self`, uptime. One sentence per field in notes.
+
+[Beginner] **W2.** `rs.conf()` — members + votes. Why does a one-node set still "elect" (it's the only voter)?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` app writes with `w: 1`; primary ACKS, dies before replication; new primary elected — is the write there? (No — rollback files.) With `w: 'majority'`? (Survives.) Write the two-line durability dial lesson.
+
+[Intermediate] **C2.** `[From Memory]` oplog → election → write concern — the three-sentence replica-set story.
+
+[Intermediate] **C3.** Failover story, drawn: the 3-node timeline for "secondary 2 dies" (nothing changes) vs "primary dies" (election + client reconnect via the multi-host connection string). What's the client-side requirement?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Scenario 1: sudden NotWritablePrimary errors everywhere — an election
@@ -66,23 +74,9 @@ db.transfers.insertOne({...}, { writeConcern: { w: 'majority' } })
 // Day 23's setup exist? (Replica set = the transaction requirement.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** **If you did the PostgreSQL track:** the ops crossover (portfolio-grade) — build the comparison table of PostgreSQL streaming replication vs MongoDB replica sets on: replication unit (WAL vs oplog), failover (external tooling vs built-in elections), durability dial (sync vs w:1/majority), read scaling (lag vs readPreference lag). Your dual-database education is rare — this table is why. (Standalone? Skip it — `shared/cross-database/` awaits you if you ever do both tracks.)
 
-**If you did the PostgreSQL track:** the ops crossover (portfolio-grade) — build the comparison table of PostgreSQL streaming replication vs MongoDB replica sets on: replication unit (WAL vs oplog), failover (external tooling vs built-in elections), durability dial (sync vs w:1/majority), read scaling (lag vs readPreference lag). Your dual-database education is rare — this table is why. (Standalone? Skip it — `shared/cross-database/` awaits you if you ever do both tracks.)
-
-## Previous Knowledge
-
-1. The production transaction template's five beats?
-2. Filter-carried guards — why race-free?
-3. The three transaction rules that bite?
-4. When do you NOT need a transaction?
-
-## Recall
-
-1. What is the oplog and who consumes it?
-2. Primary dies — the sequence?
-3. `w: 1` vs `w: 'majority'` — the durability trade?
-4. Why does reading from secondaries break read-your-writes?
+[Advanced] **H3.** The design memo: chat app, 99.9% uptime, ≤1s data loss, analytics must not slow the app. Write: topology (3 nodes), write concern (critical writes: majority; messages: your call — defend), read preference (app: primary; analytics: secondaryPreferred). Which of your Day 24 transfers get majority?
 
 ## Interview Questions
 
@@ -93,8 +87,5 @@ db.transfers.insertOne({...}, { writeConcern: { w: 'majority' } })
 ## Completion Checklist
 
 - [ ] Understand replica sets, oplog, elections, write/read concerns
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Worked all three scenarios
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Built the PG-vs-Mongo replication comparison table
-- [ ] Answered recall without notes
-
