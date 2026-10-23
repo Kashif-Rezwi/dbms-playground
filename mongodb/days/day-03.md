@@ -105,6 +105,12 @@ db.users_v.insertOne({ name: 'X' })   // rejected: email missing!
 
 [Advanced] **P7.** The schema-freedom debate, written: 4 sentences — "when is flexible schema a superpower vs a footgun?" (Superpower: evolving app, optional facts, prototypes. Footgun: same-fact-different-names, typos, missing invariants that validators should catch.)
 
+   **Answer (4-sentence synthesis):**
+   1. **Superpower:** A flexible schema is a superpower when an application evolves rapidly or models inherently polymorphic data (like product catalogs or user profiles), allowing new fields to be added without costly DDL migrations or downtime.
+   2. **Honest absence:** It cleanly models optional facts through natural field absence rather than sparse, null-filled relational columns.
+   3. **Footgun:** However, it turns into a catastrophic footgun when teams mistake "schemaless" for "no schema discipline", allowing silent typos, inconsistent field naming (e.g., `fullName` vs `name`), or mixed types to corrupt queries without raising database errors.
+   4. **Resolution:** Real-world mastery means maintaining strict application-level contracts and placing collection validators (`$jsonSchema`) at the database boundary to lock down critical invariants.
+
 ## Debugging
 
 ```javascript
@@ -143,7 +149,7 @@ Yesterday's ObjectId + today's inserts: create `events` (no explicit `_id`) — 
 
 ## Completion Checklist
 
-- [ ] Understand insertOne / insertMany, ordered: false, validators, schema discipline
-- [ ] Completed P1–P7 (P5 predicted first; P4's numbers recorded)
+- [x] Understand insertOne / insertMany, ordered: false, validators, schema discipline
+- [x] Completed P1–P7 (P5 predicted first; P4's numbers recorded)
 - [ ] Fixed all three bugs
 - [ ] Answered recall without notes
