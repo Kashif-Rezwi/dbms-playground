@@ -45,17 +45,14 @@ Every day that needs data tells you which dataset to load. To (re)load:
 
 > **Resetting is not failure — it's the workflow.** Break things. Reset. Break them differently.
 
-## The Daily Loop (45–90 minutes per day)
+## The Daily Loop (45–60 minutes per day)
 
 ```text
-1. Previous Knowledge   — answer 2–5 recall questions from earlier days FIRST, without notes
-2. Goal + Fundamentals  — read the concept (keep it short)
-3. Examples             — run every example yourself; observe the output
-4. Practice             — do ALL exercises, in order, including predict-the-result
-5. Debugging            — diagnose the broken queries (what? why? fix? verify?)
-6. Combine Concepts     — one task that mixes today + earlier days
-7. Recall + Interview   — answer without notes; say interview answers OUT LOUD
-8. PROGRESS.md          — tick honestly (practiced ≠ read)
+1. Goal + Fundamentals  — read the concept and mental model (keep it focused)
+2. Examples             — run every example yourself; observe the output
+3. Practice             — complete Warm Up (🟢), Core (🔵), and Challenge (🟠)
+4. Interview Questions  — say interview answers OUT LOUD
+5. PROGRESS.md          — tick honestly (practiced ≠ read)
 ```
 
 ## Rules That Make This Work
@@ -65,14 +62,14 @@ Every day that needs data tells you which dataset to load. To (re)load:
 3. **Write-from-memory means no peeking.** If you can't, re-read yesterday's lesson — that's a normal part of learning, not a failure.
 4. **Attempt projects before solutions.** Every project has a `solutions/` folder. Spending 20 stuck minutes teaches more than 2 minutes of reading.
 5. **Explain out loud.** The last checkbox every day: *can I explain this without notes?* Literally talk to a rubber duck.
-6. **Don't skip debugging days.** Reading a broken query and knowing *why* it fails is the skill interviews actually test.
-7. **If you miss days, don't restart.** Redo the last day's recall section, then continue.
+6. **Don't skip Challenge exercises.** Diagnosing broken queries (`[Fix It]`) and synthesizing concepts is the skill real engineering requires.
+7. **If you miss days, don't restart.** Review yesterday's Core exercises, then continue.
 
 ## How Difficulty Works
 
-- [Beginner] — direct application of today's concept
-- [Intermediate] — combines today with prior concepts, or needs thought
-- [Advanced] — design/debug/performance thinking; mostly appears after Day 20
+- [Beginner] — direct application of today's concept (Warm Up)
+- [Intermediate] — combines today with prior concepts or needs thought (Core)
+- [Advanced] — design, debugging, or multi-concept synthesis (Challenge)
 
 ## Self-Assessment: "Read" vs "Learned"
 
@@ -81,10 +78,8 @@ Tick `PROGRESS.md` only when you can honestly say:
 | Claim | It means you... |
 |---|---|
 | **Learned** | read the concept and ran the examples |
-| **Practiced** | completed the exercises (typed, not copied) |
-| **Debugged** | fixed the broken query AND explained why it broke |
-| **Recalled** | answered recall questions without notes |
-| **Challenge** | completed the combine-concepts task |
+| **Practiced** | completed Warm Up and Core exercises (typed, not copied) |
+| **Challenge** | completed the Challenge exercises (Fix It + Combine) |
 | **Project** | built it yourself before opening solutions |
 | **Explain** | explained it out loud without notes |
 

@@ -111,7 +111,7 @@ Stages are progressive — never start a stage before finishing the previous one
 
 Projects are **consolidation milestones**, not daily filler. Each lands only after its concepts have been taught and practiced:
 
-- Small consolidation mini-tasks appear daily ( Combine Concepts).
+- Small consolidation mini-tasks appear daily within the Challenge tier (🟠 **H2** exercises leading into projects).
 - Formal projects (above) take 30 min–2 hrs and have `project.md` (spec) + `solutions/` (attempt first!).
 - Capstones (multi-day) require real design decisions — no step-by-step solution exists for the design itself.
 

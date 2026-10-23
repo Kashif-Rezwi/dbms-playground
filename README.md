@@ -21,18 +21,18 @@ A beginner developer learning databases seriously for the first time. **Zero dat
 Every concept follows this loop:
 
 ```text
-Concept → Understand → Observe Example → Implement → Practice Repeatedly
-       → Debug → Combine Concepts → Build Something → Recall From Memory
+Concept → Mental Model → Observe Example → Implement → Warm Up (🟢)
+       → Core (🔵) → Challenge (🟠: Fix It + Synthesis) → Interview Defense
 ```
 
-Each daily lesson pushes you through that loop. Reading is the smallest part. Most of your time is spent typing queries, predicting outputs, fixing broken queries, and writing queries from memory.
+Each daily lesson pushes you through that progressive loop. Reading is the smallest part. Most of your time is spent typing queries, predicting outputs, tackling challenges, and defending your decisions out loud.
 
 ## How the 30-Day Challenge Works
 
-1. **One track day = one sitting (45–90 min).** Follow the standard lesson format in `STUDY-GUIDE.md`.
-2. **Progress is tracked in `PROGRESS.md`** — and it tracks *learning*, not reading: practiced? debugged? recalled? can you explain it without notes?
+1. **One track day = one sitting (45–60 min).** Follow the standard lesson format in `STUDY-GUIDE.md`.
+2. **Progress is tracked in `PROGRESS.md`** — and it tracks *learning*, not reading: practiced? challenged? built the project? can you explain it without notes?
 3. **Projects are consolidation milestones.** After a group of related concepts, you build something with them before moving on (see `ROADMAP.md`).
-4. **Exercises are labeled by difficulty:** `[Beginner]`, `[Intermediate]`, `[Advanced]`. Early days are mostly Beginner; Advanced appears only after the foundation is built.
+4. **Exercises are structured progressively:** Warm Up (🟢), Core (🔵), and Challenge (🟠).
 5. **Interview prep is built in.** Every day ends with interview questions, and every stage ends with a mini interview simulation. Understanding *is* the interview prep.
 
 ## Quick Start
