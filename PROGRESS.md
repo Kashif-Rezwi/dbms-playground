@@ -77,7 +77,7 @@
 |---|---|---|---|---|---|---|
 | 01 | What is a document DB? mongosh | [x] | [x] | [x] | — | [x] |
 | 02 | Databases, collections, BSON | [x] | [x] | [x] | — | [x] |
-| 03 | insertOne / insertMany | [ ] | [ ] | [ ] | — | [ ] |
+| 03 | insertOne / insertMany | [x] | [x] | [x] | — | [x] |
 | 04 | find / findOne | [ ] | [ ] | [ ] | — | [ ] |
 | 05 | Update operators + P1 | [ ] | [ ] | [ ] | [ ] | [ ] |
 | 06 | Delete + CRUD review | [ ] | [ ] | [ ] | — | [ ] |
