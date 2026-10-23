@@ -54,16 +54,23 @@ Functions give your database a vocabulary: `order_status_label(orders)` in every
 
 ## Practice
 
-[Beginner] **P1.** Create `price_with_tax`; select name, price, both prices for products > 2000.
-[Beginner] **P2.** Create the `order_status_label` plpgsql function; label all orders; verify labels match the data by eye.
-[Beginner] **P3.** Break it on purpose: call with a bogus status ('weird') — which branch runs? Add an ELSE if missing.
-[Intermediate] **P4.** A computed-column-style function: `line_total(order_items)` → quantity * unit_price; apply to all items of order 4.
-[Intermediate] **P5. Predict first:** can you use `price_with_tax(price)` in an index? (`CREATE INDEX ON products (price_with_tax(price));`) And in a WHERE clause matching `price_with_tax(price) > 5000` — will a plain price index serve? Explain both before running.
-[Intermediate] **P6. From memory:** a `stale_task(tasks)` function: TRUE if status IN ('todo','doing') AND created_at < now() - 60 days (use the saas DB).
-[Advanced] **P7.** Volatility experiment: create two versions of a "current tax rate" function, one tagged IMMUTABLE that actually reads a table (`SELECT rate FROM config`). Run a query, update the table, run again within the *same transaction* (REPEATABLE READ... keep simple: same session) — what does the mislabeled IMMUTABLE risk? Document the rule: *never lie on the volatility label*.
-[Advanced] **P8.** Set-returning function (the gateway to Day 10's power): `CREATE FUNCTION active_users() RETURNS SETOF users LANGUAGE sql AS $$ SELECT * FROM users WHERE is_active $$;` then `SELECT name FROM active_users();` — and in FROM. One line: what did you just build? (A parameterized, reusable subquery.)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Create `price_with_tax`; select name, price, both prices for products > 2000.
+
+[Beginner] **W2.** Create the `order_status_label` plpgsql function; label all orders; verify labels match the data by eye.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` can you use `price_with_tax(price)` in an index? (`CREATE INDEX ON products (price_with_tax(price));`) And in a WHERE clause matching `price_with_tax(price) > 5000` — will a plain price index serve? Explain both before running.
+
+[Intermediate] **C2.** `[From Memory]` a `stale_task(tasks)` function: TRUE if status IN ('todo','doing') AND created_at < now() - 60 days (use the saas DB).
+
+[Intermediate] **C3.** Break it on purpose: call with a bogus status ('weird') — which branch runs? Add an ELSE if missing.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: ERROR: "input is out of range" from the function on some rows.
@@ -75,23 +82,9 @@ Functions give your database a vocabulary: `order_status_label(orders)` in every
 -- Why do tags matter if the result is the same?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The consistency argument, embodied: two reports (orders by status label; label counts by month) both using `order_status_label`. Now change the business rule *once* (stale = 14 days) and re-run both — that's the function payoff. Write the two-sentence version of this story as your combine-concepts answer.
 
-The consistency argument, embodied: two reports (orders by status label; label counts by month) both using `order_status_label`. Now change the business rule *once* (stale = 14 days) and re-run both — that's the function payoff. Write the two-sentence version of this story as your combine-concepts answer.
-
-## Previous Knowledge
-
-1. View vs materialized view — the freshness trade.
-2. What does CONCURRENTLY refresh require?
-3. Partial unique constraints — one real use.
-4. SQL: window vs GROUP BY.
-
-## Recall
-
-1. IMMUTABLE / STABLE / VOLATILE — one line each.
-2. What does mislabeling volatility risk?
-3. When is a function the right design call? (The two-condition test.)
-4. What does SETOF enable?
+[Advanced] **H3.** Volatility experiment: create two versions of a "current tax rate" function, one tagged IMMUTABLE that actually reads a table (`SELECT rate FROM config`). Run a query, update the table, run again within the *same transaction* (REPEATABLE READ... keep simple: same session) — what does the mislabeled IMMUTABLE risk? Document the rule: *never lie on the volatility label*.
 
 ## Interview Questions
 
@@ -102,7 +95,4 @@ The consistency argument, embodied: two reports (orders by status label; label c
 ## Completion Checklist
 
 - [ ] Understand functions, plpgsql, volatility tags
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the consistency combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

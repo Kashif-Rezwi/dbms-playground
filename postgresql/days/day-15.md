@@ -34,16 +34,23 @@ Understand *how* the planner decides — statistics, cost model, join strategies
 
 ## Practice
 
-[Beginner] **P1.** `SELECT * FROM pg_stats WHERE tablename = 'big_orders' AND attname = 'status';` — read n_distinct, MCV frequencies. One line: why does the planner know 'delivered' ≈ 50%?
-[Beginner] **P2.** EXPLAIN the "small outer" join (`WHERE u.id = 417`, users→orders) vs the "big both" join — one Nested Loop, one Hash. Explain each choice from cardinality.
-[Intermediate] **P3.** Cost sanity: a Seq Scan shows cost `0.00..3400.00`, `rows=200000` — check the arithmetic (pages + cpu costs) in your notes.
-[Intermediate] **P4.** Correlation reality: `SELECT correlation FROM pg_stats WHERE tablename='big_orders' AND attname='ordered_at';` — near 1.0 for generated data? Explain what correlation ≈ 0 would do to range-scan costs.
-[Intermediate] **P5. Predict first:** join users→orders WHERE `u.id IN (1,2,3)` — Nested Loop or Hash? Then WHERE `u.city = 'Karachi'` (≈5k users)? Predict, check, explain both.
-[Intermediate] **P6. From memory:** the three join strategies + one-sentence "wins when".
-[Advanced] **P7.** Estimate sabotage (safe experiment): `UPDATE big_users SET city='Karachi' WHERE id <= 25000;` WITHOUT re-ANALYZING — pg_stats still believes old n_distinct. EXPLAIN a city query (estimates ~5k, actual ~25k), then ANALYZE and watch the plan flip. Write the before/after story — this *exact* thing happens after production bulk loads.
-[Advanced] **P8.** Cost-model playground: `SET random_page_cost = 1.1;` (SSD-ish), EXPLAIN a moderately-selective query that scanned — did it switch to an index? Reset. One line: what hardware reality does that knob model?
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** `SELECT * FROM pg_stats WHERE tablename = 'big_orders' AND attname = 'status';` — read n_distinct, MCV frequencies. One line: why does the planner know 'delivered' ≈ 50%?
+
+[Beginner] **W2.** EXPLAIN the "small outer" join (`WHERE u.id = 417`, users→orders) vs the "big both" join — one Nested Loop, one Hash. Explain each choice from cardinality.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` join users→orders WHERE `u.id IN (1,2,3)` — Nested Loop or Hash? Then WHERE `u.city = 'Karachi'` (≈5k users)? Predict, check, explain both.
+
+[Intermediate] **C2.** `[From Memory]` the three join strategies + one-sentence "wins when".
+
+[Intermediate] **C3.** Cost sanity: a Seq Scan shows cost `0.00..3400.00`, `rows=200000` — check the arithmetic (pages + cpu costs) in your notes.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: plan shows "rows=1" but actual=25000, and the join above it
@@ -56,23 +63,9 @@ Understand *how* the planner decides — statistics, cost model, join strategies
 -- What changed? (Stats refresh / autovacuum / data-growth thresholds.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Upgrade your SQL Day 23 method with today's vocabulary: re-run Day 14's P8 audit report, annotating each plan with: strategy choice (NL/HJ/MJ), the estimate that drove it, and the statistic backing it. That annotated report is a portfolio artifact.
 
-Upgrade your SQL Day 23 method with today's vocabulary: re-run Day 14's P8 audit report, annotating each plan with: strategy choice (NL/HJ/MJ), the estimate that drove it, and the statistic backing it. That annotated report is a portfolio artifact.
-
-## Previous Knowledge
-
-1. Composite ordering rule — and why.
-2. What does INCLUDE buy?
-3. Heap fetches — what are they?
-4. SQL: five-step slow-query method.
-
-## Recall
-
-1. What three statistic ingredients does the planner use per column?
-2. Nested Loop vs Hash Join — "wins when" for each.
-3. Why do random page costs make index scans lose on low selectivity?
-4. What does `correlation` tell the planner?
+[Advanced] **H3.** Estimate sabotage (safe experiment): `UPDATE big_users SET city='Karachi' WHERE id <= 25000;` WITHOUT re-ANALYZING — pg_stats still believes old n_distinct. EXPLAIN a city query (estimates ~5k, actual ~25k), then ANALYZE and watch the plan flip. Write the before/after story — this *exact* thing happens after production bulk loads.
 
 ## Interview Questions
 
@@ -83,8 +76,5 @@ Upgrade your SQL Day 23 method with today's vocabulary: re-run Day 14's P8 audit
 ## Completion Checklist
 
 - [ ] Understand cost model, statistics, join strategies
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the annotated audit report
-- [ ] Answered recall without notes
-

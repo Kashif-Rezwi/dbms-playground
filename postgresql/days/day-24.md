@@ -62,16 +62,23 @@ Tuning isn't folklore — it's a loop: measure, name the cost, apply the matchin
 
 ## Practice
 
-[Beginner] **P1.** Enable pg_stat_statements (shared_preload_libraries + restart; skip gracefully if you can't). Run your perf_lab battery; write the top-10 report.
-[Beginner] **P2.** `pg_stat_user_tables` on perf_lab: rank by seq_tup_read. Name the table the database reads sequentially most, and the query causing it.
-[Intermediate] **P3.** Run the full checklist on the worst query from P1 — document each step's finding, including steps that correctly say "no action needed".
-[Intermediate] **P4. Predict first:** which checklist steps will be no-ops on perf_lab's uniform generated data? (Statistics on uniform columns are already good.) Why does production hit those steps far more often?
-[Intermediate] **P5.** SET LOCAL discipline: inside a transaction, `SET LOCAL work_mem = '256MB';` — why does SET LOCAL (auto-reverts) beat SET for one report query in a pooled app?
-[Advanced] **P6.** Parallelism taste: EXPLAIN (ANALYZE) a huge aggregate; then `SET max_parallel_workers_per_gather = 4;` re-run — find Gather nodes. Two lines: what parallelism bought, and why the planner doesn't always use it.
-[Advanced] **P7. From memory:** recite the 7-step checklist, naming the tools for steps 1, 2, and 5.
-[Advanced] **P8.** The anti-tuning audit: three folklore "tweaks" you now distrust, and the measurement-first reason for each (shared_buffers without cache-hit data; indexing everything; max_connections=1000 because "users").
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Enable pg_stat_statements (shared_preload_libraries + restart; skip gracefully if you can't). Run your perf_lab battery; write the top-10 report.
+
+[Beginner] **W2.** `pg_stat_user_tables` on perf_lab: rank by seq_tup_read. Name the table the database reads sequentially most, and the query causing it.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which checklist steps will be no-ops on perf_lab's uniform generated data? (Statistics on uniform columns are already good.) Why does production hit those steps far more often?
+
+[Intermediate] **C2.** `[From Memory]` recite the 7-step checklist, naming the tools for steps 1, 2, and 5.
+
+[Intermediate] **C3.** Run the full checklist on the worst query from P1 — document each step's finding, including steps that correctly say "no action needed".
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: pg_stat_statements shows mean_ms=80 with calls=1,000,000; a dev
@@ -84,23 +91,9 @@ Tuning isn't folklore — it's a loop: measure, name the cost, apply the matchin
 -- you're reading cached history — verify each.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The monthly tuning ritual (Project 6 material): run the top-10 report → pick ONE offender → full checklist → write the 5-line report (symptom / diagnosis / fix / before / after). This *is* the ops habit.
 
-The monthly tuning ritual (Project 6 material): run the top-10 report → pick ONE offender → full checklist → write the 5-line report (symptom / diagnosis / fix / before / after). This *is* the ops habit.
-
-## Previous Knowledge
-
-1. What does pg_dump NOT protect, and what does?
-2. RLS — what does FORCE close?
-3. The composite-order rule.
-4. shared hit vs read vs temp?
-
-## Recall
-
-1. The 7-step checklist — which tools own steps 1, 2, 5?
-2. pg_stat_statements: sort by total vs mean — which purpose each?
-3. Why SET LOCAL work_mem beats SET in pooled apps?
-4. What does seq_tup_read tell you — and when is a high value *fine*?
+[Advanced] **H3.** Parallelism taste: EXPLAIN (ANALYZE) a huge aggregate; then `SET max_parallel_workers_per_gather = 4;` re-run — find Gather nodes. Two lines: what parallelism bought, and why the planner doesn't always use it.
 
 ## Interview Questions
 
@@ -111,8 +104,5 @@ The monthly tuning ritual (Project 6 material): run the top-10 report → pick O
 ## Completion Checklist
 
 - [ ] Understand pg_stat_statements, pg_stat_user_tables, the checklist
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote one full tuning-ritual report
-- [ ] Answered recall without notes
-

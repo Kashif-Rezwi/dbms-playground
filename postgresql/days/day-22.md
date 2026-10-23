@@ -48,16 +48,23 @@ Multi-tenant SaaS is the most common modern data architecture, and RLS is the *n
 
 ## Practice
 
-[Beginner] **P1.** On `saas`: enable RLS on `projects` + the org_select policy. `SET app.current_org='1'` → SELECT all projects: only org 1's. Switch to '3': different rows, no code change.
-[Beginner] **P2.** Unset context (new session): select — read the error. Then the fail-closed pattern: `coalesce(current_setting('app.current_org', true), '0')::int` → zero rows. Why is "fail to zero rows" the safe default?
-[Intermediate] **P3.** INSERT under RLS: context '1', insert a project with org_id=4 — read the error (WITH CHECK). Add the write policy (USING + WITH CHECK); legit inserts pass, cross-tenant fail.
-[Intermediate] **P4. Predict first:** the table OWNER inserts a project for org 4 while context='1' — blocked or allowed? Verify, then apply FORCE and re-test. Explain the trap you just witnessed.
-[Intermediate] **P5.** Multi-table: how would you isolate `tasks` (whose rows reach org only via project)? Two designs: add `org_id` to tasks (denormalize + index) vs a policy with a subquery `(SELECT org_id FROM projects WHERE id = tasks.project_id)`. Discuss costs out loud, implement one.
-[Advanced] **P6.** From memory:** the full RLS sequence for one table: enable → force → select policy → write policy → set context.
-[Advanced] **P7.** Performance: with RLS on a big generated projects table (org_id random 1–100), EXPLAIN with `app.current_org='42'` — is the policy indexable? Add the org_id index; re-measure. One line: "RLS cost = ____ when org_id is indexed."
-[Advanced] **P8.** The bypass audit: three ways RLS is accidentally defeated — (owner without FORCE, superuser, a SECURITY DEFINER function owned by the owner). One line each + fix. (This is exactly Project 5's audit section.)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** On `saas`: enable RLS on `projects` + the org_select policy. `SET app.current_org='1'` → SELECT all projects: only org 1's. Switch to '3': different rows, no code change.
+
+[Beginner] **W2.** Unset context (new session): select — read the error. Then the fail-closed pattern: `coalesce(current_setting('app.current_org', true), '0')::int` → zero rows. Why is "fail to zero rows" the safe default?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` the table OWNER inserts a project for org 4 while context='1' — blocked or allowed? Verify, then apply FORCE and re-test. Explain the trap you just witnessed.
+
+[Intermediate] **C2.** `[From Memory]` ** the full RLS sequence for one table: enable → force → select policy → write policy → set context.
+
+[Intermediate] **C3.** INSERT under RLS: context '1', insert a project with org_id=4 — read the error (WITH CHECK). Add the write policy (USING + WITH CHECK); legit inserts pass, cross-tenant fail.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "new RLS table returns ALL rows for the app role". The policy is
@@ -68,23 +75,9 @@ Multi-tenant SaaS is the most common modern data architecture, and RLS is the *n
 -- Why? (policies compose with AND — rows must pass BOTH tinted glasses)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** **[P5: Secure a Multi-Tenant Schema](../projects/05-multi-tenant.md)** — the saas schema with roles (Day 21) + RLS isolation (today) + the views-only reporting pattern (Day 8) + the bypass audit. Attempt before solutions.
 
-**[P5: Secure a Multi-Tenant Schema](../projects/05-multi-tenant.md)** — the saas schema with roles (Day 21) + RLS isolation (today) + the views-only reporting pattern (Day 8) + the bypass audit. Attempt before solutions.
-
-## Previous Knowledge
-
-1. The three core grants + default privileges line.
-2. Role inheritance — what does it propagate?
-3. Views-only roles — the pattern from Day 21's combine?
-4. Partial indexes — what shape is RLS's predicate like?
-
-## Recall
-
-1. USING vs WITH CHECK — one line each.
-2. Why FORCE — what bug does it close?
-3. How does the app tell the database "who's asking"?
-4. The three accidental RLS bypasses + fixes.
+[Advanced] **H3.** Performance: with RLS on a big generated projects table (org_id random 1–100), EXPLAIN with `app.current_org='42'` — is the policy indexable? Add the org_id index; re-measure. One line: "RLS cost = ____ when org_id is indexed."
 
 ## Interview Questions
 
@@ -95,8 +88,5 @@ Multi-tenant SaaS is the most common modern data architecture, and RLS is the *n
 ## Completion Checklist
 
 - [ ] Understand policies, USING/WITH CHECK, FORCE, context GUCs
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 5
-- [ ] Answered recall without notes
-

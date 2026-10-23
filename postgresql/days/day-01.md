@@ -47,15 +47,23 @@ Then the survival commands (also in [`../setup/psql-survival-guide.md`](../setup
 
 ## Practice
 
-[Beginner] **P1.** Install, start, connect, and run the four SQL examples above. Record the version string.
-[Beginner] **P2.** Run `./scripts/setup/setup-postgres.sh`, then `\l` — find your four practice databases.
-[Beginner] **P3.** `\c ecommerce` → seed if needed → `\dt` → `\d orders`. Read the describe output: what are the "Indexes" section and "Foreign-key constraints" section telling you?
-[Beginner] **P4.** Turn on `\timing`, run a SELECT, note the ms. Turn on `\pset null '∅'` and select a nullable column — why is this display setting gold?
-[Intermediate] **P5. Predict first:** what does `\dt` show after `psql -d saas`? Then `\c social` and predict again. Why does it change?
-[Intermediate] **P6.** Open a **second** psql terminal to the same database. Run `SELECT pg_backend_pid();` in both — different numbers? Explain what a backend is.
-[Advanced] **P7.** Server processes: run `ps aux | grep postgres` (terminal, not psql). Find the *postmaster*, *checkpointer*, *walwriter* — one line each in your notes on what these names hint at (Day 4 confirms your guesses).
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Install, start, connect, and run the four SQL examples above. Record the version string.
+
+[Beginner] **W2.** Run `./scripts/setup/setup-postgres.sh`, then `\l` — find your four practice databases.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` what does `\dt` show after `psql -d saas`? Then `\c social` and predict again. Why does it change?
+
+[Intermediate] **C2.** `\c ecommerce` → seed if needed → `\dt` → `\d orders`. Read the describe output: what are the "Indexes" section and "Foreign-key constraints" section telling you?
+
+[Intermediate] **C3.** Turn on `\timing`, run a SELECT, note the ms. Turn on `\pset null '∅'` and select a nullable column — why is this display setting gold?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "connection refused" when running psql. What are the three
@@ -66,23 +74,9 @@ Then the survival commands (also in [`../setup/psql-survival-guide.md`](../setup
 --         second session's pg_locks query (Day 20) have to do with it?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** SQL Day 1 revisited *through the engine*: run `SELECT * FROM users;` — then, using `\d users` and `SELECT pg_size_pretty(pg_total_relation_size('users'));`, explain the difference between what a *query* sees and what a *server* stores.
 
-SQL Day 1 revisited *through the engine*: run `SELECT * FROM users;` — then, using `\d users` and `SELECT pg_size_pretty(pg_total_relation_size('users'));`, explain the difference between what a *query* sees and what a *server* stores.
-
-## Previous Knowledge (SQL track)
-
-1. What does the ON clause do in a JOIN?
-2. Write from memory: top 3 cheapest in-stock products.
-3. What is referential integrity?
-4. What does EXPLAIN ANALYZE do (one line)?
-
-## Recall
-
-1. Client vs server — who holds the data files?
-2. What is a cluster? A database? A schema (both meanings)?
-3. What port does PostgreSQL listen on by default?
-4. Which three psql commands will you use most this track?
+[Advanced] **H3.** Server processes: run `ps aux | grep postgres` (terminal, not psql). Find the *postmaster*, *checkpointer*, *walwriter* — one line each in your notes on what these names hint at (Day 4 confirms your guesses).
 
 ## Interview Questions
 
@@ -94,7 +88,5 @@ SQL Day 1 revisited *through the engine*: run `SELECT * FROM users;` — then, u
 
 - [ ] Server running; connected; version noted
 - [ ] Survival commands tried (all of them)
-- [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Fixed/diagnosed all three bugs
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain client/server out loud

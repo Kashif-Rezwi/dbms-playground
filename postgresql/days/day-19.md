@@ -38,18 +38,25 @@ The **anomaly table** you'll build today:
 
 > Isolation level = **how often the room takes new photos**: after every sentence (RC), once per visit (RR), or the doorman only lets one visitor in at a time and re-shoots if someone bumped the furniture (S). Retryable errors = the doorman saying "too many people bumped things; please start your visit again."
 
-## Practice (two sessions each!)
+## Practice
 
-[Beginner] **P1. Non-repeatable read:** S1: `BEGIN; SELECT balance FROM accounts WHERE id=1;` — S2: `UPDATE accounts SET balance = balance + 100 WHERE id=1; COMMIT;` — S1 re-selects: **different value** → commit. Reproduced.
-[Beginner] **P2. Phantom read:** S1: `BEGIN; SELECT count(*) FROM accounts WHERE balance > 0;` — S2 inserts a positive-balance row, commits — S1 re-counts: **grew**. Reproduced.
-[Intermediate] **P3. REPEATABLE READ kills both:** redo P1 and P2 with S1 in `BEGIN ISOLATION LEVEL REPEATABLE READ;` — S1 sees the *old* world consistently. Then: S1 tries `UPDATE accounts SET balance = balance - 50 WHERE id = 1;` (the row S2 changed) — read the error; what must S1's code do? (Retry loop!)
-[Intermediate] **P4. Predict first:** RC level, classic **lost update**: two sessions both read balance=1000, both compute +500, both write 1500 (one deposit vanishes). Sequence it exactly, verify 1500 (not 2000). Then repeat with SERIALIZABLE — which session retries?
-[Intermediate] **P5. The real fixes, ranked:** for the lost-update problem, three solutions: (a) `SELECT ... FOR UPDATE` (S1 locks first, S2 waits), (b) `UPDATE ... SET balance = balance + 500` (atomic read-modify-write — often enough!), (c) SERIALIZABLE + retry. Write one line per solution on when it's best.
-[Advanced] **P6. Write skew (the subtle one):** on-call rule "at least one doctor must be on call" — S1 and S2 both check (count=2), both set their own on_call=false, both commit. Reproduce at RR level. Why didn't RR stop it? What level would (S), and what would the app need? (Retry loop.)
-[Advanced] **P7. From memory:** the anomaly table — fill it blank, then verify.
-[Advanced] **P8. Choose a level, defend it:** for (a) analytics dashboards (b) bank transfers (c) seat-booking (d) "increment view count" — pick a level + fix and write one line each.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** **P1. Non-repeatable read:** S1: `BEGIN; SELECT balance FROM accounts WHERE id=1;` — S2: `UPDATE accounts SET balance = balance + 100 WHERE id=1; COMMIT;` — S1 re-selects: **different value** → commit. Reproduced.
+
+[Beginner] **W2.** **P2. Phantom read:** S1: `BEGIN; SELECT count(*) FROM accounts WHERE balance > 0;` — S2 inserts a positive-balance row, commits — S1 re-counts: **grew**. Reproduced.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` RC level, classic **lost update**: two sessions both read balance=1000, both compute +500, both write 1500 (one deposit vanishes). Sequence it exactly, verify 1500 (not 2000). Then repeat with SERIALIZABLE — which session retries?
+
+[Intermediate] **C2.** `[From Memory]` the anomaly table — fill it blank, then verify.
+
+[Intermediate] **C3.** **P3. REPEATABLE READ kills both:** redo P1 and P2 with S1 in `BEGIN ISOLATION LEVEL REPEATABLE READ;` — S1 sees the *old* world consistently. Then: S1 tries `UPDATE accounts SET balance = balance - 50 WHERE id = 1;` (the row S2 changed) — read the error; what must S1's code do? (Retry loop!)
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "ERROR: could not serialize access due to concurrent update"
@@ -63,23 +70,9 @@ The **anomaly table** you'll build today:
 -- genuinely the right call?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Tie to Project 4 (tomorrow): your bank transfer procedure (Day 10) currently assumes no concurrency. Write the three upgrades it needs — atomic balance arithmetic, `FOR UPDATE` on the debit row, SERIALIZABLE-with-retry for the audit-critical path — and note which anomalies each upgrade kills.
 
-Tie to Project 4 (tomorrow): your bank transfer procedure (Day 10) currently assumes no concurrency. Write the three upgrades it needs — atomic balance arithmetic, `FOR UPDATE` on the debit row, SERIALIZABLE-with-retry for the audit-critical path — and note which anomalies each upgrade kills.
-
-## Previous Knowledge
-
-1. MVCC two-liner.
-2. What does a snapshot fix in RR?
-3. What are xmin/xmax?
-4. What does SELECT FOR UPDATE do to plain readers? (Nothing — MVCC!)
-
-## Recall
-
-1. The four anomalies + which levels block which.
-2. What does "retryable error" mean and whose job is the retry?
-3. Why does `UPDATE ... SET x = x + n` fix most lost updates without isolation changes?
-4. Default level of PostgreSQL? When would you move up?
+[Advanced] **H3.** **P6. Write skew (the subtle one):** on-call rule "at least one doctor must be on call" — S1 and S2 both check (count=2), both set their own on_call=false, both commit. Reproduce at RR level. Why didn't RR stop it? What level would (S), and what would the app need? (Retry loop.)
 
 ## Interview Questions
 
@@ -91,7 +84,5 @@ Tie to Project 4 (tomorrow): your bank transfer procedure (Day 10) currently ass
 
 - [ ] Reproduced NR, phantom, lost update (two sessions)
 - [ ] Understood RR's error-and-retry, write skew, SERIALIZABLE
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the transfer-upgrade plan
-- [ ] Answered recall without notes

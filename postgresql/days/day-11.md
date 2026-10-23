@@ -56,16 +56,23 @@ SELECT '[2025-01-01, 2025-03-01)'::daterange @> '2025-02-15'::date;   -- contain
 
 ## Practice
 
-[Beginner] **P1.** Create `events`, insert 3 varied rows (one with nested objects), and pull `->>'user'` from each.
-[Beginner] **P2.** Containment: find events `@> '{"plan": "pro"}'`. Then key-exists `WHERE data ? 'tags'`. Explain the difference in one line.
-[Intermediate] **P3.** Add the GIN index; EXPLAIN a containment query before and after on `perf_lab`-sized fake JSON (generate 100k events with generate_series; vary plan among 3 values). Did the index win? When would the planner still scan?
-[Intermediate] **P4.** Arrays: `tags` on a products copy; three queries: exact tag (ANY), overlap (&&), and "array has at least 2 tags" (array_length).
-[Intermediate] **P5. Predict first:** `SELECT '[1,2]'::jsonb @> '[2]'` vs `SELECT '[1,2]'::int[] @> ARRAY[2]` — both true? What did each contain-check actually compare?
-[Intermediate] **P6. From memory:** insert a JSONB row, then UPDATE one nested key: `UPDATE events SET data = jsonb_set(data, '{plan}', '"free"') WHERE id = 1;` — from memory after one look.
-[Advanced] **P7.** The design gauntlet — for each, JSONB or columns? One-line defense: (a) user profile: name, email, signup date; (b) per-integration settings for 200 connector types; (c) product prices; (d) webhook event payloads you must replay later; (e) multi-language product descriptions (5 languages, growing).
-[Advanced] **P8.** Statistics truth: with 100k events, `WHERE data->>'plan' = 'pro'` (plain comparison) vs `@> '{"plan":"pro"}'` (containment + GIN). EXPLAIN both — one index-assistable, one not. Explain why the *shape* of the predicate decides.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Create `events`, insert 3 varied rows (one with nested objects), and pull `->>'user'` from each.
+
+[Beginner] **W2.** Containment: find events `@> '{"plan": "pro"}'`. Then key-exists `WHERE data ? 'tags'`. Explain the difference in one line.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `SELECT '[1,2]'::jsonb @> '[2]'` vs `SELECT '[1,2]'::int[] @> ARRAY[2]` — both true? What did each contain-check actually compare?
+
+[Intermediate] **C2.** `[From Memory]` insert a JSONB row, then UPDATE one nested key: `UPDATE events SET data = jsonb_set(data, '{plan}', '"free"') WHERE id = 1;` — from memory after one look.
+
+[Intermediate] **C3.** Add the GIN index; EXPLAIN a containment query before and after on `perf_lab`-sized fake JSON (generate 100k events with generate_series; vary plan among 3 values). Did the index win? When would the planner still scan?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "cannot extract element from a scalar" — some rows have data
@@ -78,23 +85,9 @@ SELECT '[2025-01-01, 2025-03-01)'::daterange @> '2025-02-15'::date;   -- contain
 -- must they now write, and what would they have written with columns?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The hybrid table (the real-world pattern): `customers` with real columns (id, email, created_at) + `prefs JSONB` (theme, notification flags, dashboard layout — *actually optional/varying*). Write: (1) all customers with theme = dark; (2) a CHECK that `prefs ? 'theme'` OR prefs IS NULL... (3) your design memo one-paragraph: what did columns buy you, what did JSONB buy you?
 
-The hybrid table (the real-world pattern): `customers` with real columns (id, email, created_at) + `prefs JSONB` (theme, notification flags, dashboard layout — *actually optional/varying*). Write: (1) all customers with theme = dark; (2) a CHECK that `prefs ? 'theme'` OR prefs IS NULL... (3) your design memo one-paragraph: what did columns buy you, what did JSONB buy you?
-
-## Previous Knowledge
-
-1. BEFORE vs AFTER triggers.
-2. What are triggers' three legitimate jobs?
-3. Function volatility tags — the three.
-4. SQL: what's a correlated subquery?
-
-## Recall
-
-1. `->` vs `->>` — what does each return?
-2. What does `@>` mean, and which index serves it?
-3. The rule for columns vs JSONB (one line)?
-4. Why are enums often a trap?
+[Advanced] **H3.** The design gauntlet — for each, JSONB or columns? One-line defense: (a) user profile: name, email, signup date; (b) per-integration settings for 200 connector types; (c) product prices; (d) webhook event payloads you must replay later; (e) multi-language product descriptions (5 languages, growing).
 
 ## Interview Questions
 
@@ -105,7 +98,5 @@ The hybrid table (the real-world pattern): `customers` with real columns (id, em
 ## Completion Checklist
 
 - [ ] Understand JSONB operators, GIN, arrays, ranges, enum trade-offs
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the hybrid-table design task
-- [ ] Answered recall without notes

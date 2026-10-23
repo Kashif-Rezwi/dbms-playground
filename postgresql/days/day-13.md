@@ -39,16 +39,23 @@ You used indexes blind (SQL Day 22). From here, every EXPLAIN you read is interp
 
 ## Practice
 
-[Beginner] **P1.** On `perf_lab`: create `idx_big_orders_ordered ON big_orders(ordered_at)`; EXPLAIN `WHERE ordered_at = DATE '2025-03-01'` — Index Scan. Now EXPLAIN `ORDER BY ordered_at LIMIT 5` — look: **no Sort node**. Explain why in one line.
-[Beginner] **P2.** `SELECT MIN(ordered_at) FROM big_orders;` with and without the index — compare plans (look for "Result ... InitPlan" — the index answers MIN instantly from the leftmost leaf).
-[Intermediate] **P3.** Tree depth, estimated: `SELECT pg_relation_size('idx_big_orders_ordered') / 8192 AS pages;` — a few hundred pages ≈ depth 2–3. Compute pages for a hypothetical 10× table; depth barely moves. State the O(log n) consequence in your notes.
-[Intermediate] **P4.** Heap-fetch truth: EXPLAIN (ANALYZE, BUFFERS) an index scan — see `Heap Fetches:`. Increase work_mem... no — instead: SELECT only the indexed column: the "Index Only Scan" appears (Heap Fetches ~0). Explain what just happened (the index *contains* the answer).
-[Intermediate] **P5. Predict first:** which uses the index — `LIKE '2025%'` vs `LIKE '%2025'` on a TEXT date column? Both plans before running.
-[Intermediate] **P6. From memory:** create a B-tree on `big_users(email)`; find user by exact email; time it.
-[Advanced] **P7.** BRIN experiment: create `big_logs` (5M rows, id, ts, message) with generate_series where ts increases monotonically. Compare index size: B-tree on ts vs `USING BRIN (ts)`. Query a 1-hour window with each. Report the size difference and when BRIN's assumption (physical order ≈ key order) breaks (bulk-deleted/updated data).
-[Advanced] **P8.** The "why not index everything" memo: measure your total index bytes vs table bytes on perf_lab after Day 13's work (`pg_indexes_size` vs `pg_relation_size`). Compute the % "index tax" and write the two-sentence verdict for a write-heavy orders table.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** On `perf_lab`: create `idx_big_orders_ordered ON big_orders(ordered_at)`; EXPLAIN `WHERE ordered_at = DATE '2025-03-01'` — Index Scan. Now EXPLAIN `ORDER BY ordered_at LIMIT 5` — look: **no Sort node**. Explain why in one line.
+
+[Beginner] **W2.** `SELECT MIN(ordered_at) FROM big_orders;` with and without the index — compare plans (look for "Result ... InitPlan" — the index answers MIN instantly from the leftmost leaf).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which uses the index — `LIKE '2025%'` vs `LIKE '%2025'` on a TEXT date column? Both plans before running.
+
+[Intermediate] **C2.** `[From Memory]` create a B-tree on `big_users(email)`; find user by exact email; time it.
+
+[Intermediate] **C3.** Tree depth, estimated: `SELECT pg_relation_size('idx_big_orders_ordered') / 8192 AS pages;` — a few hundred pages ≈ depth 2–3. Compute pages for a hypothetical 10× table; depth barely moves. State the O(log n) consequence in your notes.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: Index exists on email; this query scans the whole table. Why?
@@ -63,23 +70,9 @@ SELECT * FROM big_users WHERE lower(email) = 'user417@example.com';
 -- things does B-tree do that Hash never will? (ORDER BY, ranges, NULLs)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The composite report: query "orders for user 417 in March 2025, newest first" — no index, then single `user_id`, then `(user_id, ordered_at)`. Three plans, three timings, one paragraph: what did each index buy, and why does the composite answer the ORDER BY too? (Day 14 is literally this — you're arriving early.)
 
-The composite report: query "orders for user 417 in March 2025, newest first" — no index, then single `user_id`, then `(user_id, ordered_at)`. Three plans, three timings, one paragraph: what did each index buy, and why does the composite answer the ORDER BY too? (Day 14 is literally this — you're arriving early.)
-
-## Previous Knowledge
-
-1. `ON CONFLICT` requires what?
-2. SKIP LOCKED — what does it prevent?
-3. SQL: the two costs of any index.
-4. SQL: what does EXPLAIN ANALYZE do + caveat.
-
-## Recall
-
-1. Why is a B-tree lookup ~4 page reads on millions of rows?
-2. Name three things sortedness gives besides `=`.
-3. GIN vs BRIN — one line each.
-4. What's the heap, and why does an index scan touch it?
+[Advanced] **H3.** BRIN experiment: create `big_logs` (5M rows, id, ts, message) with generate_series where ts increases monotonically. Compare index size: B-tree on ts vs `USING BRIN (ts)`. Query a 1-hour window with each. Report the size difference and when BRIN's assumption (physical order ≈ key order) breaks (bulk-deleted/updated data).
 
 ## Interview Questions
 
@@ -90,7 +83,4 @@ The composite report: query "orders for user 417 in March 2025, newest first" �
 ## Completion Checklist
 
 - [ ] Understand B-tree structure, heap fetches, index types
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the composite-index combine report
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

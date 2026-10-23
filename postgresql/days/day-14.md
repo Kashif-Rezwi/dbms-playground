@@ -50,16 +50,23 @@ CREATE INDEX idx_orders_user_inc ON big_orders (user_id) INCLUDE (status);
 
 ## Practice
 
-[Beginner] **P1.** Build `(user_id, ordered_at DESC)` on perf_lab; EXPLAIN user+date-range+ORDER BY — seek with no sort. Then drop, add `(ordered_at, user_id)`, re-run. Write the two plans side by side and the one-line verdict.
-[Beginner] **P2.** Leftmost prefix proof: with `(user_id, ordered_at)`, EXPLAIN `WHERE ordered_at = ...` alone — used or not? (Predict first!)
-[Intermediate] **P3.** Partial: in `ecommerce`, index only 'pending' orders, EXPLAIN the support query, compare index size to a full index (`pg_relation_size`).
-[Intermediate] **P4.** Expression: create `lower(email)` index on big_users; EXPLAIN `WHERE lower(email) = ...` before/after. (Day 13 Bug 1, resolved.)
-[Intermediate] **P5. Predict first:** `WHERE user_id = 417 AND status = 'pending'` — what does `(user_id, ordered_at)` buy, what's still done after the seek (filter on status), and would `(user_id, status)` serve *this* query better? Reason, then check both plans.
-[Advanced] **P6. From memory:** the partial index for "active users by email" (Day 7's design).
-[Advanced] **P7.** Covering: `INCLUDE (status)`; EXPLAIN (ANALYZE, BUFFERS) `SELECT user_id, status FROM big_orders WHERE user_id = 417` — find "Index Only Scan" + Heap Fetches ≈ 0. Now update one of those rows and re-run: heap fetches return. Explain (visibility map — Day 25 hook).
-[Advanced] **P8.** The design memo: given top-5 queries (user lookup by email; a user's recent orders; pending queue by age; monthly revenue by city; product by id) — write the *minimum* index set (≤4) and map each query to its serving index. Defend every exclusion.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Build `(user_id, ordered_at DESC)` on perf_lab; EXPLAIN user+date-range+ORDER BY — seek with no sort. Then drop, add `(ordered_at, user_id)`, re-run. Write the two plans side by side and the one-line verdict.
+
+[Beginner] **W2.** Leftmost prefix proof: with `(user_id, ordered_at)`, EXPLAIN `WHERE ordered_at = ...` alone — used or not? (Predict first!)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `WHERE user_id = 417 AND status = 'pending'` — what does `(user_id, ordered_at)` buy, what's still done after the seek (filter on status), and would `(user_id, status)` serve *this* query better? Reason, then check both plans.
+
+[Intermediate] **C2.** `[From Memory]` the partial index for "active users by email" (Day 7's design).
+
+[Intermediate] **C3.** Partial: in `ecommerce`, index only 'pending' orders, EXPLAIN the support query, compare index size to a full index (`pg_relation_size`).
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "I indexed (created_at, user_id) but the user's-orders query
@@ -71,23 +78,9 @@ CREATE INDEX idx_orders_user_inc ON big_orders (user_id) INCLUDE (status);
 -- "a@x.com" got in *before* the index. Remediation sequence?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Audit + fix `ecommerce` end to end: list its hot queries (from SQL-track days); check which FK columns lack indexes (Day 6's trap); design the minimal index set; apply; re-run your SQL-track analytics battery and record before/after timings. That's Project 3's warm-up.
 
-Audit + fix `ecommerce` end to end: list its hot queries (from SQL-track days); check which FK columns lack indexes (Day 6's trap); design the minimal index set; apply; re-run your SQL-track analytics battery and record before/after timings. That's Project 3's warm-up.
-
-## Previous Knowledge
-
-1. Why does a B-tree serve ORDER BY?
-2. Heap fetches — why does an index scan touch the heap?
-3. `ON CONFLICT` needs what?
-4. SQL: keyset pagination — the fix for deep OFFSET.
-
-## Recall
-
-1. The composite-order rule?
-2. Leftmost prefix — what does `(a,b)` serve besides both?
-3. Partial index — when does it shine?
-4. What does INCLUDE buy, and what breaks it?
+[Advanced] **H3.** Covering: `INCLUDE (status)`; EXPLAIN (ANALYZE, BUFFERS) `SELECT user_id, status FROM big_orders WHERE user_id = 417` — find "Index Only Scan" + Heap Fetches ≈ 0. Now update one of those rows and re-run: heap fetches return. Explain (visibility map — Day 25 hook).
 
 ## Interview Questions
 
@@ -98,8 +91,5 @@ Audit + fix `ecommerce` end to end: list its hot queries (from SQL-track days); 
 ## Completion Checklist
 
 - [ ] Understand composite ordering, prefixes, partial, INCLUDE, expression indexes
-- [ ] Completed P1–P8 (P5 reasoned first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the ecommerce index audit
-- [ ] Answered recall without notes
-

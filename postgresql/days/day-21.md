@@ -58,16 +58,23 @@ Every breached app database was one over-privileged connection away from catastr
 
 ## Practice
 
-[Beginner] **P1.** Create `app_read` + grants; `SET ROLE app_read`; prove: SELECT works, INSERT fails with "permission denied". Reset.
-[Beginner] **P2.** Create `app_write` inheriting app_read; prove SELECT (inherited) + INSERT (direct) both work, and `CREATE TABLE` fails.
-[Intermediate] **P3.** The audit query: list every grant in the database (`information_schema.role_table_grants` filtered to public schema) — read it like an auditor: who can touch what?
-[Intermediate] **P4.** Default privileges proof: as superuser, create a NEW table after setting defaults; as `app_read`, select from it — works with zero new grants? (If not, you missed P1's ALTER DEFAULT PRIVILEGES.)
-[Intermediate] **P5. Predict first:** app_read has SELECT on all tables. You run `REVOKE SELECT ON users FROM app_read;` — then `SET ROLE app_read; SELECT count(*) FROM users;` — allowed? Predict, verify, explain (per-table revoke beats schema-wide grant).
-[Intermediate] **P6. From memory:** the three-GRANT starter set for a read-only role (CONNECT, USAGE, SELECT + the default-privileges line).
-[Advanced] **P7.** Design the badge map for a real app: `analytics_bot` (SELECT on orders+payments only, NOT users), `api_service` (CRUD on orders/reviews, none on payments), `migration_tool` (DDL during deploys only). Write grants + one REVOKE line per role that surprises people.
-[Advanced] **P8.** The superuser audit: run `\du` on your dev instance; write down why each superuser exists, and the one-line policy for production ("two humans, break-glass procedure, no services").
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Create `app_read` + grants; `SET ROLE app_read`; prove: SELECT works, INSERT fails with "permission denied". Reset.
+
+[Beginner] **W2.** Create `app_write` inheriting app_read; prove SELECT (inherited) + INSERT (direct) both work, and `CREATE TABLE` fails.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` app_read has SELECT on all tables. You run `REVOKE SELECT ON users FROM app_read;` — then `SET ROLE app_read; SELECT count(*) FROM users;` — allowed? Predict, verify, explain (per-table revoke beats schema-wide grant).
+
+[Intermediate] **C2.** `[From Memory]` the three-GRANT starter set for a read-only role (CONNECT, USAGE, SELECT + the default-privileges line).
+
+[Intermediate] **C3.** The audit query: list every grant in the database (`information_schema.role_table_grants` filtered to public schema) — read it like an auditor: who can touch what?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "permission denied for schema public" — but table grants exist.
@@ -78,23 +85,9 @@ Every breached app database was one over-privileged connection away from catastr
 -- manually grants. What was never set? (ALTER DEFAULT PRIVILEGES)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Roles + views (Day 8): create `app_read` with SELECT on *views only* (not base tables) — a reporting role that can never see raw PII columns. Prove: view SELECT works, base-table SELECT fails. This is the standard production reporting pattern and tomorrow's RLS builds directly on it.
 
-Roles + views (Day 8): create `app_read` with SELECT on *views only* (not base tables) — a reporting role that can never see raw PII columns. Prove: view SELECT works, base-table SELECT fails. This is the standard production reporting pattern and tomorrow's RLS builds directly on it.
-
-## Previous Knowledge
-
-1. What does a retryable serialization error demand from app code?
-2. The deadlock-prevention habit.
-3. Row locks — who takes them, who never does?
-4. security_invoker views (Day 8) — what do they change about permissions?
-
-## Recall
-
-1. Role vs user in PostgreSQL — the actual model?
-2. The three core grants for any role? (+ default privileges)
-3. What does role inheritance (GRANT role TO role) do?
-4. Why does per-table REVOKE beat schema-wide GRANT, and where do you check?
+[Advanced] **H3.** Design the badge map for a real app: `analytics_bot` (SELECT on orders+payments only, NOT users), `api_service` (CRUD on orders/reviews, none on payments), `migration_tool` (DDL during deploys only). Write grants + one REVOKE line per role that surprises people.
 
 ## Interview Questions
 
@@ -105,7 +98,5 @@ Roles + views (Day 8): create `app_read` with SELECT on *views only* (not base t
 ## Completion Checklist
 
 - [ ] Understand roles, inheritance, privilege ladder, defaults, verification
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Built the views-only reporting role
-- [ ] Answered recall without notes
