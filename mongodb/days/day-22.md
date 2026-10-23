@@ -70,15 +70,23 @@ db.orders.aggregate([
 
 ## Practice
 
-[Beginner] **P1.** Reviews + product names — verify the join shape first WITHOUT $unwind (look at `product: [...]`), then with.
-[Beginner] **P2.** Per-city revenue — predict the top city first (compute from the seed data, then verify!).
-[Intermediate] **P3.** The index law, felt: generate 20k scratch orders (loop) referencing users; build the $lookup pipeline on `email` (unindexed as join field) vs `_id` (indexed) — time both versions. Report the ratio and the rule: "the ______ field needs an index."
-[Intermediate] **P4. Predict first:** the $lookup output *before* $unwind for order 1: what's the shape of `user`? And for an order referencing user 999 (a ghost)? (An EMPTY array — the doc survives: the left-outer behavior!)
-[Intermediate] **P5.** Ghost detection via pipeline: $lookup + `$match: { user: { $size: 0 } }` — find orders pointing at missing users (insert one first). Your Day 13 P5 integrity check, automated!
-[Advanced] **P6.** The full analytics pipeline (Project 6's core): "top products by revenue with names and units" — orders → $match → $unwind items → $lookup products → $unwind → $group by product name → $sort → $limit 5. Predict the top product first. Comment every stage's job.
-[Advanced] **P7. From memory:** the $lookup 4 fields + the always-an-array rule + the unwind-after habit.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Reviews + product names — verify the join shape first WITHOUT $unwind (look at `product: [...]`), then with.
+
+[Beginner] **W2.** Per-city revenue — predict the top city first (compute from the seed data, then verify!).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` the $lookup output *before* $unwind for order 1: what's the shape of `user`? And for an order referencing user 999 (a ghost)? (An EMPTY array — the doc survives: the left-outer behavior!)
+
+[Intermediate] **C2.** `[From Memory]` the $lookup 4 fields + the always-an-array rule + the unwind-after habit.
+
+[Intermediate] **C3.** The index law, felt: generate 20k scratch orders (loop) referencing users; build the $lookup pipeline on `email` (unindexed as join field) vs `_id` (indexed) — time both versions. Report the ratio and the rule: "the ______ field needs an index."
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: after $lookup, code reads result.product.name — undefined!
@@ -92,23 +100,11 @@ db.orders.aggregate([
 // first, and why?
 ```
 
-## Combine Concepts → Project 6
+[Advanced] **H2.** Capstone Preview (leading into Project 6):
 
 Build **[P6: E-Commerce Analytics (pipeline)](../projects/06-ecommerce-analytics.md)** — the full analytics battery via pipelines: joins, grouping, unwinds, business questions with predictions. The SQL P4 project, MongoDB edition. Attempt before solutions.
 
-## Previous Knowledge
-
-1. $unwind's two behaviors?
-2. What does $lookup output pre-unwind?
-3. Pipeline rule #1?
-4. The modeling rule (Day 12)?
-
-## Recall
-
-1. The four $lookup fields — from memory.
-2. Why is the result always an array — and the two consequences (unwind-after; empty = no match)?
-3. What makes $lookup fast or slow?
-4. $lookup vs app-side $in — when each?
+[Advanced] **H3.** The full analytics pipeline (Project 6's core): "top products by revenue with names and units" — orders → $match → $unwind items → $lookup products → $unwind → $group by product name → $sort → $limit 5. Predict the top product first. Comment every stage's job.
 
 ## Interview Questions
 
@@ -119,8 +115,5 @@ Build **[P6: E-Commerce Analytics (pipeline)](../projects/06-ecommerce-analytics
 ## Completion Checklist
 
 - [ ] Understand $lookup, the array rule, $unwind-after, indexing the join
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 6
-- [ ] Answered recall without notes
-

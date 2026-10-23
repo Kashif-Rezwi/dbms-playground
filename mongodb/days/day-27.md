@@ -44,15 +44,23 @@ Day 27 is where the track's skills become stewardship. And the "when not to use 
 
 ## Practice
 
-[Beginner] **P1.** Run `db.serverStatus()`; find: current connections, opcounters, resident memory. One line per metric.
-[Beginner] **P2.** `db.users.stats()` + `db.orders.stats()` on ecommerce — dataSize vs indexSizes. Compute your index tax %. When would that ratio worry you?
-[Intermediate] **P3.** Working-set math, written: perf_lab (~25MB data+indexes) vs a hypothetical 8GB data + 12GB indexes on a 16GB RAM box — hot set in RAM? What's the *first* fix and the *fundamental* fix?
-[Intermediate] **P4. Predict first:** `time mongodump --db perf_lab` — how long, and what's the consistency caveat of a dump? Why do disk snapshots of a replica-set member beat it at scale?
-[Intermediate] **P5.** The vitals report: build a 5-line mongosh script (serverStatus + stats + currentOp) — your MongoDB Grafana. Save it.
-[Advanced] **P6.** The "when NOT" memo, written: bank ledger, ERP, CMS, IoT event pipeline, social feed — MongoDB, PostgreSQL, or either (what tips it)? One line each. A *killer* interview artifact.
-[Advanced] **P7. From memory:** the six production checklist items + the working-set rule.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Run `db.serverStatus()`; find: current connections, opcounters, resident memory. One line per metric.
+
+[Beginner] **W2.** `db.users.stats()` + `db.orders.stats()` on ecommerce — dataSize vs indexSizes. Compute your index tax %. When would that ratio worry you?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `time mongodump --db perf_lab` — how long, and what's the consistency caveat of a dump? Why do disk snapshots of a replica-set member beat it at scale?
+
+[Intermediate] **C2.** `[From Memory]` the six production checklist items + the working-set rule.
+
+[Intermediate] **C3.** Working-set math, written: perf_lab (~25MB data+indexes) vs a hypothetical 8GB data + 12GB indexes on a 16GB RAM box — hot set in RAM? What's the *first* fix and the *fundamental* fix?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Incident 1: gradual degradation over weeks; no query changed. Top
@@ -63,23 +71,9 @@ Day 27 is where the track's skills become stewardship. And the "when not to use 
 // What's missing (consistent snapshot: rs member + fsync/snapshot)?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The **grand comparison table** (capstone centerpiece): PostgreSQL vs MongoDB across — data model, integrity, joins, transactions, scaling, backups, and the killer column: "best at". Built from *your* ~56 days of experience, not a textbook.
 
-The **grand comparison table** (capstone centerpiece): PostgreSQL vs MongoDB across — data model, integrity, joins, transactions, scaling, backups, and the killer column: "best at". Built from *your* ~56 days of experience, not a textbook.
-
-## Previous Knowledge
-
-1. The three shard-key properties?
-2. What does sharding solve that replicas don't?
-3. Oplog → election → write concern?
-4. Scatter-gather — what causes it?
-
-## Recall
-
-1. The working-set rule + the first and fundamental fixes?
-2. Mongodump vs disk snapshots — when each?
-3. The six production checklist items?
-4. Name two "don't use MongoDB here" domains and why.
+[Advanced] **H3.** The "when NOT" memo, written: bank ledger, ERP, CMS, IoT event pipeline, social feed — MongoDB, PostgreSQL, or either (what tips it)? One line each. A *killer* interview artifact.
 
 ## Interview Questions
 
@@ -90,8 +84,5 @@ The **grand comparison table** (capstone centerpiece): PostgreSQL vs MongoDB acr
 ## Completion Checklist
 
 - [ ] Understand working sets, ops toolkit, backups, security, the honest "when not"
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Worked all three incidents
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Built the grand comparison table
-- [ ] Answered recall without notes
-

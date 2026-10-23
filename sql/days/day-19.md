@@ -68,22 +68,28 @@ VALUES (99, 12345, 1, 1, 100);                                                  
 
 ## Practice
 
-[Beginner] **P1.** Run all four failing examples. For each, name *which constraint* fired (the error message tells you).
-[Beginner] **P2.** `\d orders` — list every constraint on that table and say what each protects.
-[Intermediate] **P3.** Try deleting user 1 (who has orders). What happens and why? What are your two options, and which is safer for an e-commerce DB?
-[Intermediate] **P4.** Design (write CREATE TABLE, don't run yet): a `wishlist` table — a user saves products. Columns? PK? What must be unique?
-[Intermediate] **P5.** Run your `wishlist` DDL. Insert: user 1 wishes products 2 and 3; user 2 wishes product 2. Then try user 1 wishes product 2 *again* — what fires?
-[Intermediate] **P6. Predict first:** which constraint rejects each?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Run all four failing examples. For each, name *which constraint* fired (the error message tells you).
+
+[Beginner] **W2.** `\d orders` — list every constraint on that table and say what each protects.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which constraint rejects each?
 
 ```sql
 INSERT INTO reviews (id, product_id, user_id, rating) VALUES (99, 1, 1, 9);
 INSERT INTO reviews (id, product_id, user_id, rating) VALUES (98, 1, 1, 4);
 ```
 
-[Advanced] **P7.** `\d products` — there's no CHECK on stock! Add one: `ALTER TABLE products ADD CONSTRAINT positive_stock CHECK (stock >= 0);` then try `UPDATE products SET stock = -5 WHERE id = 1;`. Why do some tables have CHECKs and others not? (Inconsistent design — real life! Now you can spot it.)
-[Advanced] **P8.** Design decision: should `orders.total_amount` have a `CHECK (total_amount >= 0)`? Could a cancelled order legitimately be zero? Argue both sides in two sentences, then implement your choice.
+[Intermediate] **C2.** Try deleting user 1 (who has orders). What happens and why? What are your two options, and which is safer for an e-commerce DB?
 
-## Debugging
+[Intermediate] **C3.** Design (write CREATE TABLE, don't run yet): a `wishlist` table — a user saves products. Columns? PK? What must be unique?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (design): why can this table never be joined to orders?
@@ -98,23 +104,9 @@ INSERT INTO order_items (id, order_id, product_id, quantity, unit_price)
 VALUES (100, 1, 1, 0, 100);
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Schema audit of `ecommerce`: (1) which columns are surrogate vs natural keys? (2) where could data still go wrong (hint: nothing enforces `orders.total_amount` = sum of its items!) (3) write the UPDATE that proves the drift, then describe the CHECK or trigger that would prevent it (triggers arrive in the PG track).
 
-Schema audit of `ecommerce`: (1) which columns are surrogate vs natural keys? (2) where could data still go wrong (hint: nothing enforces `orders.total_amount` = sum of its items!) (3) write the UPDATE that proves the drift, then describe the CHECK or trigger that would prevent it (triggers arrive in the PG track).
-
-## Previous Knowledge
-
-1. Write from memory: cities with candidates but no companies (EXCEPT).
-2. UNION vs UNION ALL — one line.
-3. Revenue per month — the pattern from memory.
-4. Top-3-per-group — the pattern from memory.
-
-## Recall
-
-1. PK vs UNIQUE vs FK — one line each.
-2. What is referential integrity, and what enforces it?
-3. Three ON DELETE behaviors and when you'd choose each.
-4. Surrogate vs natural keys — why do modern apps prefer surrogate?
+[Advanced] **H3.** `\d products` — there's no CHECK on stock! Add one: `ALTER TABLE products ADD CONSTRAINT positive_stock CHECK (stock >= 0);` then try `UPDATE products SET stock = -5 WHERE id = 1;`. Why do some tables have CHECKs and others not? (Inconsistent design — real life! Now you can spot it.)
 
 ## Interview Questions
 
@@ -129,9 +121,5 @@ Build **[P4: E-commerce Analytics](../projects/04-ecommerce-analytics.md)** — 
 ## Completion Checklist
 
 - [ ] Understand keys, constraints, ON DELETE options
-- [ ] Completed P1–P8 (P6 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task (schema audit)
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 4
-

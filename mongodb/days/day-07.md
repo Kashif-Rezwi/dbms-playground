@@ -54,22 +54,27 @@ db.jobs.find({ salary_max: { $gte: 100000 }, is_remote: true })
 
 ## Practice
 
-[Beginner] **P1.** Products priced 1000–2500 (inclusive). Predict the count first.
-[Beginner] **P2.** Users NOT from Karachi (either $ne or $nin — try both; do the results differ? Why?).
-[Intermediate] **P3.** Products in category 2 OR with stock 0.
-[Intermediate] **P4.** Orders that are pending OR shipped, with total over 3000. (Implicit AND + $or + $gt.)
-[Intermediate] **P5. Predict first:**
+### 🟢 Warm Up
 
-```javascript
+[Beginner] **W1.** Products priced 1000–2500 (inclusive). Predict the count first.
+
+[Beginner] **W2.** Users NOT from Karachi (either $ne or $nin — try both; do the results differ? Why?).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` ```javascript
 db.users.find({ bio: { $ne: 'hello' } })
 ```
 
 How many users match — and *which user surprises you*? (One user has no bio field at all. What happened?) This is the missing-field quirk, live.
-[Intermediate] **P6.** In jobs: remote roles with max salary ≥ 120000 OR any role requiring PostgreSQL. One query.
-[Advanced] **P7. From memory:** price between 500 and 1500 AND (category 3 OR tag 'book') — one query, mixing implicit AND, range, and $or.
-[Advanced] **P8.** The $and necessity drill: find products with price > 1000 AND price < 3000 — write it with implicit syntax `{ price: { $gt: 1000, $lt: 3000 } }` (works! operators stack) vs explicit $and. When does implicit FAIL and $and become required? (Duplicate keys in a JS object: `{ price: {...}, price: {...} }` — impossible — say why that forces $and.)
 
-## Debugging
+[Intermediate] **C2.** `[From Memory]` price between 500 and 1500 AND (category 3 OR tag 'book') — one query, mixing implicit AND, range, and $or.
+
+[Intermediate] **C3.** Products in category 2 OR with stock 0.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: db.products.find({ price: $gt: 100 }) — syntax error. Operators
@@ -80,23 +85,9 @@ How many users match — and *which user surprises you*? (One user has no bio fi
 // — $or needs an ARRAY of objects. Fix the shape.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The shop filter, full form: products matching **(price 500–3000) AND (category in [1,5]) AND (stock > 0) AND NOT tag 'toys'**... tags are arrays — `$nin` on arrays works how? Predict, test, and write the one-sentence rule for negation on array fields (matches docs where NO element equals the value).
 
-The shop filter, full form: products matching **(price 500–3000) AND (category in [1,5]) AND (stock > 0) AND NOT tag 'toys'**... tags are arrays — `$nin` on arrays works how? Predict, test, and write the one-sentence rule for negation on array fields (matches docs where NO element equals the value).
-
-## Previous Knowledge
-
-1. The delete ritual's three steps?
-2. Soft delete shape — and its cost on reads?
-3. What does an operator-less update do?
-4. matchedCount vs modifiedCount?
-
-## Recall
-
-1. Name all eight comparison operators.
-2. Implicit AND vs explicit $and — when is explicit required?
-3. The `$ne`/missing-field quirk — one sentence + the fix's name ($exists — tomorrow).
-4. What does `find({ field: null })` match (two things!)?
+[Advanced] **H3.** The $and necessity drill: find products with price > 1000 AND price < 3000 — write it with implicit syntax `{ price: { $gt: 1000, $lt: 3000 } }` (works! operators stack) vs explicit $and. When does implicit FAIL and $and become required? (Duplicate keys in a JS object: `{ price: {...}, price: {...} }` — impossible — say why that forces $and.)
 
 ## Interview Questions
 
@@ -107,7 +98,4 @@ The shop filter, full form: products matching **(price 500–3000) AND (category
 ## Completion Checklist
 
 - [ ] Understand all comparison + logical operators, null/missing quirks
-- [ ] Completed P1–P8 (P5 predicted first!)
-- [ ] Fixed all three bugs
-- [ ] Completed the shop-filter combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

@@ -38,15 +38,23 @@ Every production PostgreSQL runs with replication; every "what if the server die
 
 ## Practice
 
-[Beginner] **P1.** Draw the topology from today's text: primary → 2 replicas → which node takes writes? reads? What happens if the primary dies? What if *one* replica dies?
-[Beginner] **P2.** The three reasons for replication — one line each, with a real product example (WhatsApp availability; an analytics dashboard on a replica; a regional read endpoint).
-[Intermediate] **P3.** RPO/RTO in your own words, then assign to each: sync replication (RPO?), async replication (RPO?), nightly dump only (RPO?). Which is acceptable for (a) a blog (b) a bank ledger?
-[Intermediate] **P4. Predict first:** the app reads its own write from a replica right after committing to the primary. What does the user experience, and what are the two standard fixes?
-[Intermediate] **P5.** The failure catalog: primary dies / replica dies / network split (replica falls behind) / disk full on the primary — one line each on detection + response. Which does your Day 26 vitals report already cover?
-[Advanced] **P6.** Design on paper: a small SaaS needs 99.9% uptime, analytics queries that don't burden the app, and no more than ~5s of data loss. Write the topology (how many replicas, sync or async, where reads go), and name what you *didn't* solve with replication alone (backups, failover automation).
-[Advanced] **P7.** From memory: "Why is replication not a backup?" — 90 seconds, out loud, with the DROP TABLE story.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Draw the topology from today's text: primary → 2 replicas → which node takes writes? reads? What happens if the primary dies? What if *one* replica dies?
+
+[Beginner] **W2.** The three reasons for replication — one line each, with a real product example (WhatsApp availability; an analytics dashboard on a replica; a regional read endpoint).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` the app reads its own write from a replica right after committing to the primary. What does the user experience, and what are the two standard fixes?
+
+[Intermediate] **C2.** `[From Memory]` "Why is replication not a backup?" — 90 seconds, out loud, with the DROP TABLE story.
+
+[Intermediate] **C3.** RPO/RTO in your own words, then assign to each: sync replication (RPO?), async replication (RPO?), nightly dump only (RPO?). Which is acceptable for (a) a blog (b) a bank ledger?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Scenario A: replicas are 20 minutes behind during the nightly ETL.
@@ -61,23 +69,9 @@ Every production PostgreSQL runs with replication; every "what if the server die
 -- runbook phrase for that situation?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Add the **replication section** to your Project 6 runbook: topology diagram (even ASCII), RPO/RTO targets, the failover decision checklist, and the "what replication doesn't protect" list. The runbook is now nearly complete — pooling and scaling finish it tomorrow.
 
-Add the **replication section** to your Project 6 runbook: topology diagram (even ASCII), RPO/RTO targets, the failover decision checklist, and the "what replication doesn't protect" list. The runbook is now nearly complete — pooling and scaling finish it tomorrow.
-
-## Previous Knowledge
-
-1. Instant vs table-rewrite DDL — one each.
-2. The incident shape — the five stages?
-3. What does autovacuum do? What blocks it?
-4. WAL — what does it stand for and guarantee? (Today it *became a stream*.)
-
-## Recall
-
-1. The three reasons for replication — one line each.
-2. Sync vs async — the trade in one line each way.
-3. Why is replication NOT a backup?
-4. What is replica lag, and what does "read your writes" require?
+[Advanced] **H3.** Design on paper: a small SaaS needs 99.9% uptime, analytics queries that don't burden the app, and no more than ~5s of data loss. Write the topology (how many replicas, sync or async, where reads go), and name what you *didn't* solve with replication alone (backups, failover automation).
 
 ## Interview Questions
 
@@ -88,7 +82,5 @@ Add the **replication section** to your Project 6 runbook: topology diagram (eve
 ## Completion Checklist
 
 - [ ] Understand streaming replication, sync/async, RPO/RTO, failover
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Worked all three scenarios
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Added the replication section to the runbook
-- [ ] Answered recall without notes

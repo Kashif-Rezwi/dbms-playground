@@ -72,12 +72,15 @@ JOIN users r ON r.id = m.receiver_id;
 
 ## Practice
 
-[Beginner] **P1.** Follower graph with usernames, like the example (type it yourself).
-[Beginner] **P2.** Employee → manager names. Who has NULL manager? (Why LEFT JOIN?)
-[Beginner] **P3.** Message sender + receiver usernames + body (users twice).
-[Intermediate] **P4.** Comments: commenter username + post content + comment text — the full 3-table chain.
-[Intermediate] **P5.** Followers of 'ayesha_k' specifically — their usernames.
-[Intermediate] **P6. Predict first** — how many rows, and does the CEO appear?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Follower graph with usernames, like the example (type it yourself).
+
+[Beginner] **W2.** Employee → manager names. Who has NULL manager? (Why LEFT JOIN?)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — how many rows, and does the CEO appear?
 
 ```sql
 SELECT e.name, m.name AS manager
@@ -85,11 +88,13 @@ FROM employees e
 INNER JOIN employees m ON m.id = e.manager_id;
 ```
 
-[Intermediate] **P7. From memory:** posts per city — post content + author city (2 tables, GROUP BY).
-[Advanced] **P8.** Pairs of users who follow the **same person** — without duplicates of the same pair. (Self-join followers against itself: `followers f1 JOIN followers f2 ON f1.followed_id = f2.followed_id AND f1.follower_id < f2.follower_id`.) Predict one such pair first.
-[Advanced] **P9.** Comments on posts liked by 'junaid_s' — comment text + post content. (3 tables + likes chain.)
+[Intermediate] **C2.** `[From Memory]` posts per city — post content + author city (2 tables, GROUP BY).
 
-## Debugging
+[Intermediate] **C3.** Message sender + receiver usernames + body (users twice).
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: self-join without aliases — what error?
@@ -109,23 +114,9 @@ WHERE u.username = 'ayesha_k';
 -- Intent was "comments BY ayesha_k" — but it returns comments on HER posts only. Diagnose ON vs WHERE here.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The influence report: **username, their total post count, and their follower count** — for users with at least 1 follower. (Two LEFT JOINs + two COUNT(o.id)s... or two separate GROUP BYs... tricky! Do it as: LEFT JOIN posts + GROUP BY for post count; LEFT JOIN followers + GROUP BY for follower count. Two queries side-by-side is honest work today; Day 15's CTEs will let you glue them.)
 
-The influence report: **username, their total post count, and their follower count** — for users with at least 1 follower. (Two LEFT JOINs + two COUNT(o.id)s... or two separate GROUP BYs... tricky! Do it as: LEFT JOIN posts + GROUP BY for post count; LEFT JOIN followers + GROUP BY for follower count. Two queries side-by-side is honest work today; Day 15's CTEs will let you glue them.)
-
-## Previous Knowledge
-
-1. The "never ordered" pattern — write it from memory.
-2. Why `COUNT(*)` lies in LEFT JOIN counts?
-3. What does GROUP BY's boxes metaphor mean?
-4. What is the join order with WHERE — which happens first?
-
-## Recall
-
-1. Why are aliases *mandatory* in a self join?
-2. What does the `<` trick in P8 accomplish?
-3. How many JOINs does a 4-table chain need?
-4. Why LEFT JOIN for employee→manager?
+[Advanced] **H3.** Pairs of users who follow the **same person** — without duplicates of the same pair. (Self-join followers against itself: `followers f1 JOIN followers f2 ON f1.followed_id = f2.followed_id AND f1.follower_id < f2.follower_id`.) Predict one such pair first.
 
 ## Interview Questions
 
@@ -136,8 +127,5 @@ The influence report: **username, their total post count, and their follower cou
 ## Completion Checklist
 
 - [ ] Understand self joins, aliases, chains
-- [ ] Completed P1–P9 (P6 and P8 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task (two queries acceptable)
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain self joins out loud

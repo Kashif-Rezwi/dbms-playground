@@ -54,15 +54,23 @@ A transaction template without retries is production theater. The atomic-guard p
 
 ## Practice
 
-[Beginner] **P1.** Type and run the safeTransfer template (mongosh) — successful transfer, then insufficient funds (read the abort path).
-[Beginner] **P2.** The atomic-guard upgrade: transfer with the guard INSIDE the update filter; verify `modifiedCount` distinguishes success from "guard blocked". One line: why is this race-free where the separate findOne guard wasn't quite?
-[Intermediate] **P3.** Manufacture a retry: two mongosh tabs, both start transactions that update the SAME account; commit both — one gets a write conflict (or blocks). Read the error; feel why retries exist.
-[Intermediate] **P4. Predict first:** the transfers log insert inside the transaction, then abort — is the log row there? (No — the whole briefcase rolled back, log included.) Verify.
-[Intermediate] **P5.** Session-scoped reads: inside a transaction, tab 2 updates account 1 + commits; tab 1 (transaction still open, having read account 1) reads again — same value? (Snapshot behavior — the transaction sees its own consistent view.) Verify + one line on what this mirrors from SQL-land.
-[Advanced] **P6.** The full audit pattern: safeTransfer + a post-transaction verification (re-read both balances + assert conservation: SUM unchanged) — money mathematically cannot vanish, proven by code you wrote.
-[Advanced] **P7. From memory:** the five beats of the production template (start session → startTransaction → session-ops → commit → end, with abort+retry in the catch).
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Type and run the safeTransfer template (mongosh) — successful transfer, then insufficient funds (read the abort path).
+
+[Beginner] **W2.** The atomic-guard upgrade: transfer with the guard INSIDE the update filter; verify `modifiedCount` distinguishes success from "guard blocked". One line: why is this race-free where the separate findOne guard wasn't quite?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` the transfers log insert inside the transaction, then abort — is the log row there? (No — the whole briefcase rolled back, log included.) Verify.
+
+[Intermediate] **C2.** `[From Memory]` the five beats of the production template (start session → startTransaction → session-ops → commit → end, with abort+retry in the catch).
+
+[Intermediate] **C3.** Manufacture a retry: two mongosh tabs, both start transactions that update the SAME account; commit both — one gets a write conflict (or blocks). Read the error; feel why retries exist.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: safeTransfer "works" but the log shows transfers that never
@@ -74,23 +82,11 @@ A transaction template without retries is production theater. The atomic-guard p
 // how does modifiedCount disambiguate?
 ```
 
-## Combine Concepts → Project 7
+[Advanced] **H2.** Capstone Preview (leading into Project 7):
 
 Build **[P7: Bank Transfer (Mongo)](../projects/07-bank-transfer.md)** — the full bank: schema decisions (account-pair modeling vs transactions — you argue!), the retry-wrapped transfer, failure theater, conservation audit. Attempt before solutions.
 
-## Previous Knowledge
-
-1. The three transaction rules that bite?
-2. What's always been atomic without transactions?
-3. $lookup's array rule?
-4. The hybrid pattern's drift chore?
-
-## Recall
-
-1. The production template's five beats + the catch's two duties (abort + retry-or-throw)?
-2. Filter-carried guards — the pattern + why race-free?
-3. What does session-scoped reading give you (snapshot)?
-4. Why are retries *expected* rather than exceptional?
+[Advanced] **H3.** The full audit pattern: safeTransfer + a post-transaction verification (re-read both balances + assert conservation: SUM unchanged) — money mathematically cannot vanish, proven by code you wrote.
 
 ## Interview Questions
 
@@ -101,7 +97,5 @@ Build **[P7: Bank Transfer (Mongo)](../projects/07-bank-transfer.md)** — the f
 ## Completion Checklist
 
 - [ ] Own the production template (retries, guards, verification)
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 7
-- [ ] Answered recall without notes

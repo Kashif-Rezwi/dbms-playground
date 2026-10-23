@@ -64,14 +64,23 @@ db.setProfilingLevel(0)   // and off — profiles have overhead
 
 ## Practice
 
-[Beginner] **P1.** Build the covered query above; verify `totalDocsExamined: 0`. Now add `_id` back to the projection — docs examined again?! ( _id needs the doc... unless excluded!) Explain why `_id: 0` matters for coverage.
-[Beginner] **P2.** Regex drill: both regexes above, before/after explain.
-[Intermediate] **P3.** The deep-skip numbers: `skip(10000).limit(10)` vs cursor-style on a 20k-doc scratch collection — time both; write the ratio.
-[Intermediate] **P4. Predict first:** which is faster — one query returning 3 docs via perfect index, or an app loop of 3 findOne-by-id calls? Predict, then measure (the answer is about round-trips — 3× ~0.5ms network + overhead vs 1 round trip).
-[Advanced] **P5.** Profiler lab: enable (slowms: 100), manufacture a slow query (COLLSCAN on 100k+ scratch docs... generate with a loop), read the profile entry, name the pattern, fix it (index), verify the profile goes quiet. The full diagnosis loop, MongoDB edition.
-[Advanced] **P6.** From memory: all eight patterns + one line each on the fix.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Build the covered query above; verify `totalDocsExamined: 0`. Now add `_id` back to the projection — docs examined again?! ( _id needs the doc... unless excluded!) Explain why `_id: 0` matters for coverage.
+
+[Beginner] **W2.** Regex drill: both regexes above, before/after explain.
+
+### 🔵 Core
+
+[Intermediate] **C1.** The deep-skip numbers: `skip(10000).limit(10)` vs cursor-style on a 20k-doc scratch collection — time both; write the ratio.
+
+[Intermediate] **C2.** `[Predict]` which is faster — one query returning 3 docs via perfect index, or an app loop of 3 findOne-by-id calls? Predict, then measure (the answer is about round-trips — 3× ~0.5ms network + overhead vs 1 round trip).
+
+[Intermediate] **C3.** `[From Memory]` all eight patterns + one line each on the fix.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: "queries got slow after the last deploy" — the deploy added
@@ -83,23 +92,11 @@ db.setProfilingLevel(0)   // and off — profiles have overhead
 // (capped collection — research it), and when should you even run level 1?
 ```
 
-## Combine Concepts → Project 5
+[Advanced] **H2.** Capstone Preview (leading into Project 5):
 
 Build **[P5: Index Performance Lab](../projects/05-index-lab.md)** — the before/after lab, MongoDB edition: profilers, ratios, covered queries, cursor pagination, a written report.
 
-## Previous Knowledge
-
-1. The three explain numbers + health ratio?
-2. TTL contract?
-3. Partial unique pattern?
-4. ESR rule?
-
-## Recall
-
-1. What makes a query "covered" — and what usually breaks coverage?
-2. Regex + indexes — the rule?
-3. Deep skip's cure — in MongoDB syntax?
-4. The profiler's levels and their overhead trade?
+[Advanced] **H3.** Profiler lab: enable (slowms: 100), manufacture a slow query (COLLSCAN on 100k+ scratch docs... generate with a loop), read the profile entry, name the pattern, fix it (index), verify the profile goes quiet. The full diagnosis loop, MongoDB edition.
 
 ## Interview Questions
 
@@ -110,7 +107,6 @@ Build **[P5: Index Performance Lab](../projects/05-index-lab.md)** — the befor
 ## Completion Checklist
 
 - [ ] Understand all eight patterns + profiler + ratios
-- [ ] Completed P1–P6 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 5
 - [ ] Can recite the diagnostic loop from memory

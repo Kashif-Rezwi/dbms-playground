@@ -59,21 +59,27 @@ db.jobs.find({ is_remote: true, 'skills.skill': 'Docker' })
 
 ## Practice
 
-[Beginner] **P1.** All users from Karachi. Then active users from Karachi (one query).
-[Beginner] **P2.** All products with the 'skincare' tag. Predict the count first (2).
-[Beginner] **P3.** `use jobs` — all jobs where a required skill is 'PostgreSQL'. Then remote jobs with 'System Design' anywhere in skills.
-[Beginner] **P4.** In `social`: posts by user_id 10; then posts with likes_count of 0.
-[Intermediate] **P5. Predict first:** exact output count of
+### 🟢 Warm Up
+
+[Beginner] **W1.** All users from Karachi. Then active users from Karachi (one query).
+
+[Beginner] **W2.** All products with the 'skincare' tag. Predict the count first (2).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` exact output count of
 
 ```javascript
 db.products.find({ category_id: 1, stock: 0 })
 ```
 
-[Intermediate] **P6.** From `ecommerce.orders`: orders with status 'delivered' AND any item having quantity 2 — using dot notation (`'items.quantity': 2`). Predict which orders (4? 6? 7? 12?) before running.
-[Intermediate] **P7. From memory:** array-contains query for products with tag 'wireless'; then the count.
-[Advanced] **P8.** The shape-comparison drill: write the MongoDB query for "jobs requiring SQL that are remote" — then, in one sentence, describe what a relational database would need for the same answer (a join table or LIKE-in-CVS — you've *seen* both; say which and why it's clunkier).
+[Intermediate] **C2.** `[From Memory]` array-contains query for products with tag 'wireless'; then the count.
 
-## Debugging
+[Intermediate] **C3.** `use jobs` — all jobs where a required skill is 'PostgreSQL'. Then remote jobs with 'System Design' anywhere in skills.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: db.users.find({ 'karachi' }) — returns EVERYTHING. Why?
@@ -85,23 +91,9 @@ db.products.find({ category_id: 1, stock: 0 })
 // whether you're printing a CURSOR. What converts it (toArray/pretty/loop)?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Insert + find (the loop closes): insert a product with tags `['practice','new']` into a scratch collection, verify by tag-query AND by a dot-notation query into a nested `specs` object you design. You've now *designed a shape and read it back* — the full micro-cycle.
 
-Insert + find (the loop closes): insert a product with tags `['practice','new']` into a scratch collection, verify by tag-query AND by a dot-notation query into a nested `specs` object you design. You've now *designed a shape and read it back* — the full micro-cycle.
-
-## Previous Knowledge
-
-1. insertMany + `{ordered:false}` — what does the flag change?
-2. What do validators enforce (and not)?
-3. What's the array-matching rule (any element)?
-4. ObjectId's free benefit?
-
-## Recall
-
-1. find vs findOne — return types?
-2. How do you query a nested field? An array field? An array-of-objects field?
-3. Multiple fields in one query = which logical connector?
-4. What's the counting method you should reach for?
+[Advanced] **H3.** The shape-comparison drill: write the MongoDB query for "jobs requiring SQL that are remote" — then, in one sentence, describe what a relational database would need for the same answer (a join table or LIKE-in-CVS — you've *seen* both; say which and why it's clunkier).
 
 ## Interview Questions
 
@@ -112,7 +104,4 @@ Insert + find (the loop closes): insert a product with tags `['practice','new']`
 ## Completion Checklist
 
 - [ ] Understand find/findOne, dot notation, array matching
-- [ ] Completed P1–P8 (P5 and P6 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the shape-design combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

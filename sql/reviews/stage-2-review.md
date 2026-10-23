@@ -31,7 +31,7 @@ timesheets(emp_id, emp_name, dept, dept_head, week, hours_json_text)
 
 Write the normalized version (tables + keys, prose is fine).
 
-## Part C — Debugging Gauntlet
+## Part C — Applied Diagnosis
 
 ```sql
 -- A: returns nothing but should return 2 orgs

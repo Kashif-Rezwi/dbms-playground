@@ -65,15 +65,23 @@ SELECT MAX(id), MIN(id) FROM orders_pg;
 
 ## Practice
 
-[Beginner] **P1.** Create `customers` (ALWAYS identity) + 3 inserts, using `RETURNING id` each time. Note the ids.
-[Beginner] **P2.** Deliberately insert a duplicate PK (`INSERT INTO customers (id, name)` — wait, ALWAYS forbids the column; so: insert twice via your app pattern and then try to copy a row including id into a new row via... do this: `INSERT INTO customers (name) SELECT name FROM customers;` — what ids appear?)
-[Beginner] **P3.** Prove the gap: BEGIN, insert (note id), ROLLBACK, insert again — which id came out? Explain.
-[Intermediate] **P4.** Sequence drill: `CREATE SEQUENCE invoice_numbers START 1000;` — take 3 values; check `CURRVAL` and one `LASTVAL`.
-[Intermediate] **P5. Predict first:** three sessions each do `INSERT ... RETURNING id` simultaneously. Can two get the same id? Can ids commit out of order? Explain both answers before arguing with anyone.
-[Intermediate] **P6. From memory:** a `posts` table DDL: identity id, author text, body text, created_at default now.
-[Advanced] **P7.** Migration thinking: you inherit a table with `SERIAL` and want identity semantics. Look up `ALTER TABLE ... ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;` — write the command for a table you create with plain INT first, apply, and verify auto-fill now works. What happens to existing rows?
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Create `customers` (ALWAYS identity) + 3 inserts, using `RETURNING id` each time. Note the ids.
+
+[Beginner] **W2.** Deliberately insert a duplicate PK (`INSERT INTO customers (id, name)` — wait, ALWAYS forbids the column; so: insert twice via your app pattern and then try to copy a row including id into a new row via... do this: `INSERT INTO customers (name) SELECT name FROM customers;` — what ids appear?)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` three sessions each do `INSERT ... RETURNING id` simultaneously. Can two get the same id? Can ids commit out of order? Explain both answers before arguing with anyone.
+
+[Intermediate] **C2.** `[From Memory]` a `posts` table DDL: identity id, author text, body text, created_at default now.
+
+[Intermediate] **C3.** Prove the gap: BEGIN, insert (note id), ROLLBACK, insert again — which id came out? Explain.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "duplicate key value violates unique constraint" on a table that
@@ -89,23 +97,9 @@ SELECT MAX(id), MIN(id) FROM orders_pg;
 -- now inserts fail with PK collisions. Sequence didn't move. Fix it.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Apply to the shared data: rebuild `users` as `users_pg` (identity id + your Day 3 type opinions) and write the SQL-track "users with no orders" pattern against `users_pg` — same query shape, engine-native ids. Then: how would you migrate the *existing* ecommerce `users` ids into `users_pg` while preserving them? (Hint: OVERRIDING SYSTEM VALUE.)
 
-Apply to the shared data: rebuild `users` as `users_pg` (identity id + your Day 3 type opinions) and write the SQL-track "users with no orders" pattern against `users_pg` — same query shape, engine-native ids. Then: how would you migrate the *existing* ecommerce `users` ids into `users_pg` while preserving them? (Hint: OVERRIDING SYSTEM VALUE.)
-
-## Previous Knowledge
-
-1. WAL — what does it guarantee?
-2. One process per connection — and the consequence for connection counts?
-3. SQL: surrogate vs natural keys.
-4. SQL: what does a FK constraint enforce?
-
-## Recall
-
-1. Identity ALWAYS vs BY DEFAULT — when would you allow the latter?
-2. Why do gaps happen, and why is that fine?
-3. What does RETURNING give you?
-4. Why must id order not be trusted as event order?
+[Advanced] **H3.** Migration thinking: you inherit a table with `SERIAL` and want identity semantics. Look up `ALTER TABLE ... ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;` — write the command for a table you create with plain INT first, apply, and verify auto-fill now works. What happens to existing rows?
 
 ## Interview Questions
 
@@ -116,7 +110,4 @@ Apply to the shared data: rebuild `users` as `users_pg` (identity id + your Day 
 ## Completion Checklist
 
 - [ ] Understand identity, SERIAL, sequences, RETURNING
-- [ ] Completed P1–P7 (P5 reasoned before testing)
-- [ ] Fixed all three bugs (setval!)
-- [ ] Completed the users_pg migration combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

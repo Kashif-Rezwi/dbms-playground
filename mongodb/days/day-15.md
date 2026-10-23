@@ -56,14 +56,23 @@ M:N is where relational instinct says "junction table always" and document model
 
 ## Practice
 
-[Beginner] **P1.** Design followers for the social app — choose a pattern, defend with the four forces, sketch the query "who does user 7 follow?" and "who follows user 7?" (Both directions! Which pattern answers BOTH cheaply — that's the classic gotcha.)
-[Beginner] **P2.** Design enrollments-with-grades (join collection + one hybrid snapshot field). Write the drift chore.
-[Intermediate] **P3.** Subset pattern, live: `products` gets `reviews_cache: { avg, count, top: [first 2] }` (in a copy of the collection) — query "product 9 with rating summary" in ONE read. Then update a review and… the cache lies. Write the two maintenance options (app-updates; scheduled recompute).
-[Intermediate] **P4. Predict first:** which query gets cheap and which gets expensive with two-sided follow arrays: "A follows B?" vs "B's followers" (answer per pattern choice from P1). Then verify your design on the social dataset's real `followers` collection (it's a join-collection — compare!).
-[Advanced] **P5.** Schema versioning, mini-drill: you have `users_v1` docs without `preferences`; design the v2 migration (read old docs → $set defaults → mark `schema_version: 2`) and run it on a copy. Two lines: why is in-place, lazy migration preferred over a big-bang rewrite?
-[Advanced] **P6.** From memory: all seven pattern names + one line each.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Design followers for the social app — choose a pattern, defend with the four forces, sketch the query "who does user 7 follow?" and "who follows user 7?" (Both directions! Which pattern answers BOTH cheaply — that's the classic gotcha.)
+
+[Beginner] **W2.** Design enrollments-with-grades (join collection + one hybrid snapshot field). Write the drift chore.
+
+### 🔵 Core
+
+[Intermediate] **C1.** Subset pattern, live: `products` gets `reviews_cache: { avg, count, top: [first 2] }` (in a copy of the collection) — query "product 9 with rating summary" in ONE read. Then update a review and… the cache lies. Write the two maintenance options (app-updates; scheduled recompute).
+
+[Intermediate] **C2.** `[Predict]` which query gets cheap and which gets expensive with two-sided follow arrays: "A follows B?" vs "B's followers" (answer per pattern choice from P1). Then verify your design on the social dataset's real `followers` collection (it's a join-collection — compare!).
+
+[Intermediate] **C3.** `[From Memory]` all seven pattern names + one line each.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: follows stored as arrays on both sides; the app updated one side
@@ -78,23 +87,11 @@ M:N is where relational instinct says "junction table always" and document model
 // write-through or delete it — ghost data is worse than no data.)
 ```
 
-## Combine Concepts → Project 4
+[Advanced] **H2.** Capstone Preview (leading into Project 4):
 
 Build **[P4: Model an E-Commerce Store](../projects/04-model-ecommerce.md)** — design a fresh e-commerce document model from requirements, with the access patterns, pattern choices, and trade-offs written down. The stage's capstone.
 
-## Previous Knowledge
-
-1. The three 1:many tiers + modeling answers.
-2. Which side holds references — and why?
-3. The 5-question embed/reference framework.
-4. The no-FK mitigation list?
-
-## Recall
-
-1. The three M:N patterns + when each wins.
-2. All seven named patterns — one line each.
-3. What does every hybrid/denormalization buy, and what's the standing chore?
-4. Why does schema versioning exist — what problem does it solve that SQL migrations solve differently?
+[Advanced] **H3.** Schema versioning, mini-drill: you have `users_v1` docs without `preferences`; design the v2 migration (read old docs → $set defaults → mark `schema_version: 2`) and run it on a copy. Two lines: why is in-place, lazy migration preferred over a big-bang rewrite?
 
 ## Interview Questions
 
@@ -105,7 +102,6 @@ Build **[P4: Model an E-Commerce Store](../projects/04-model-ecommerce.md)** —
 ## Completion Checklist
 
 - [ ] Understand M:N patterns + the seven named patterns
-- [ ] Completed P1–P6 (P4 reasoned before verifying)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 4
 - [ ] Can name all patterns from memory

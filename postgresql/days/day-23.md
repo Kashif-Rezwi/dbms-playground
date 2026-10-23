@@ -52,16 +52,23 @@ Data loss is the one unrecoverable failure. Every ops interview asks "what's you
 
 ## Practice
 
-[Beginner] **P1.** `pg_dump` the ecommerce DB in plain SQL; *read* the file — find the CREATE TABLEs, COPY data block, and the ALTER ... OWNER statements. What's the exact restore order and why? (types → tables → data → constraints/indexes → owners.)
-[Beginner] **P2.** Restore rehearsal: full restore into `ecommerce_rehearsal`; verify all table counts against the sanity numbers.
-[Beginner] **P3.** Custom format + selective restore: dump, list contents (`-l`), restore ONLY the `users` table into a scratch DB.
-[Intermediate] **P4.** Break it and prove the backup matters: `DROP TABLE reviews;` on the live DB. Restore just reviews from your dump. Then reflect in one sentence why you needed P3's skill at this exact moment.
-[Intermediate] **P5. Predict first:** dump with `-t orders -t order_items` (two tables). Does the restore succeed *without* users? (FK pointing at a missing table!) Try it — read the error. What's the minimum table set for orders to live?
-[Intermediate] **P6.** `pg_dumpall` — run it, grep the top of the file for `CREATE ROLE`. What does pg_dump cover that pg_dumpall adds? Two lines.
-[Advanced] **P7.** Compression + size audit: dump ecommerce in plain vs custom format; compare file sizes. Then dump `perf_lab` — time it, and estimate (write the arithmetic) how a 500GB production database changes your strategy (answer sketch: nightly logical becomes untenable → pg_basebackup + WAL archiving + monthly rehearsal on staging).
-[Advanced] **P8.** Write your personal **restore runbook** — data-loss incident, five steps, exact commands, verification queries, and the "when did we last rehearse" check. Keep it in your notes; Project 6 builds on it.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** `pg_dump` the ecommerce DB in plain SQL; *read* the file — find the CREATE TABLEs, COPY data block, and the ALTER ... OWNER statements. What's the exact restore order and why? (types → tables → data → constraints/indexes → owners.)
+
+[Beginner] **W2.** Restore rehearsal: full restore into `ecommerce_rehearsal`; verify all table counts against the sanity numbers.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` dump with `-t orders -t order_items` (two tables). Does the restore succeed *without* users? (FK pointing at a missing table!) Try it — read the error. What's the minimum table set for orders to live?
+
+[Intermediate] **C2.** Custom format + selective restore: dump, list contents (`-l`), restore ONLY the `users` table into a scratch DB.
+
+[Intermediate] **C3.** Break it and prove the backup matters: `DROP TABLE reviews;` on the live DB. Restore just reviews from your dump. Then reflect in one sentence why you needed P3's skill at this exact moment.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: restore fails with "role X does not exist" — dumped from a
@@ -75,23 +82,9 @@ Data loss is the one unrecoverable failure. Every ops interview asks "what's you
 -- two separate disasters hiding here?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Disaster timeline drill: (1) dump the DB, (2) make 3 data changes, (3) "crash" (drop a table), (4) restore, (5) identify exactly what was lost (the 3 changes) — 6) name the production mechanism that would have saved them (WAL archiving/PITR). Write the timeline as a 6-line story. You just derived, from experience, why production backup = dump + WAL archiving.
 
-Disaster timeline drill: (1) dump the DB, (2) make 3 data changes, (3) "crash" (drop a table), (4) restore, (5) identify exactly what was lost (the 3 changes) — 6) name the production mechanism that would have saved them (WAL archiving/PITR). Write the timeline as a 6-line story. You just derived, from experience, why production backup = dump + WAL archiving.
-
-## Previous Knowledge
-
-1. RLS USING vs WITH CHECK?
-2. The three RLS bypasses + fixes?
-3. What does FORCE RLS close?
-4. The three core grants for a role?
-
-## Recall
-
-1. pg_dump plain vs custom — one line each + when custom wins.
-2. What does pg_dumpall add?
-3. What does a dump NOT protect? Name the mechanism that does.
-4. The one-word answer to "what makes a backup real"? (Tested/restored.)
+[Advanced] **H3.** Compression + size audit: dump ecommerce in plain vs custom format; compare file sizes. Then dump `perf_lab` — time it, and estimate (write the arithmetic) how a 500GB production database changes your strategy (answer sketch: nightly logical becomes untenable → pg_basebackup + WAL archiving + monthly rehearsal on staging).
 
 ## Interview Questions
 
@@ -102,7 +95,5 @@ Disaster timeline drill: (1) dump the DB, (2) make 3 data changes, (3) "crash" (
 ## Completion Checklist
 
 - [ ] Understand dump formats, selective restore, pg_dumpall, PITR's role
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote your restore runbook
-- [ ] Answered recall without notes

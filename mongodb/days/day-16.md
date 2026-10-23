@@ -56,15 +56,23 @@ db.orders.find({ status: 'pending', user_id: 2 })   // both equality: order betw
 
 ## Practice
 
-[Beginner] **P1.** `db.orders.getIndexes()` — the automatic `_id_` index. Then create `{ user_id: 1 }`; find user 1's orders with explain() — COLLSCAN before (drop it first to see), IXSCAN after.
-[Beginner] **P2.** Compound `{ user_id: 1, ordered_at: -1 }`; explain the "user's orders newest-first" query — confirm no SORT stage. Then explain the *reverse* compound `{ ordered_at: -1, user_id: 1 }` — SORT stage appears. Write the verdict (the leftmost rule, felt).
-[Intermediate] **P3.** ESR drill: query `{ status: 'pending', user_id: 2 }` sorted by `ordered_at` — design the index (E: status+user_id, S: ordered_at): `{ status: 1, user_id: 1, ordered_at: -1 }`. Explain-check: SORT stage gone?
-[Intermediate] **P4. Predict first:** with `{ user_id: 1, ordered_at: -1 }` — will `find({ ordered_at: { $gte: ISODate('2025-03-01') } })` use it? (Leftmost prefix: user_id missing — no.) Verify in explain.
-[Intermediate] **P5.** Multikey in action: `db.products.createIndex({ tags: 1 })`; explain `find({ tags: 'usb' })` — IXSCAN on the multikey index. What's indexed per array element?
-[Advanced] **P6.** The write-cost measurement: insert 10k scratch docs with and without 3 indexes (time both in JS with Date.now()). Report the ratio and the "index what you query" verdict.
-[Advanced] **P7. From memory:** ESR rule + when a SORT stage survives a compound index.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** `db.orders.getIndexes()` — the automatic `_id_` index. Then create `{ user_id: 1 }`; find user 1's orders with explain() — COLLSCAN before (drop it first to see), IXSCAN after.
+
+[Beginner] **W2.** Compound `{ user_id: 1, ordered_at: -1 }`; explain the "user's orders newest-first" query — confirm no SORT stage. Then explain the *reverse* compound `{ ordered_at: -1, user_id: 1 }` — SORT stage appears. Write the verdict (the leftmost rule, felt).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` with `{ user_id: 1, ordered_at: -1 }` — will `find({ ordered_at: { $gte: ISODate('2025-03-01') } })` use it? (Leftmost prefix: user_id missing — no.) Verify in explain.
+
+[Intermediate] **C2.** `[From Memory]` ESR rule + when a SORT stage survives a compound index.
+
+[Intermediate] **C3.** ESR drill: query `{ status: 'pending', user_id: 2 }` sorted by `ordered_at` — design the index (E: status+user_id, S: ordered_at): `{ status: 1, user_id: 1, ordered_at: -1 }`. Explain-check: SORT stage gone?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: explain shows COLLSCAN on a field with a 100k-doc collection
@@ -77,23 +85,9 @@ db.orders.find({ status: 'pending', user_id: 2 })   // both equality: order betw
 // narrower one; measure inserts before/after to feel the reclaim.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The modeling + index tie-in: take Day 13's access-pattern contract and design the **index plan** for its top-5 reads (one line per read: the index + the ESR reasoning). Then create them and explain-verify each. You've just done the professional modeling → indexing pipeline end to end.
 
-The modeling + index tie-in: take Day 13's access-pattern contract and design the **index plan** for its top-5 reads (one line per read: the index + the ESR reasoning). Then create them and explain-verify each. You've just done the professional modeling → indexing pipeline end to end.
-
-## Previous Knowledge
-
-1. The three one-to-many tiers?
-2. The seven patterns — name them.
-3. What does the hybrid cost?
-4. What's a multikey index (Day 9 preview)?
-
-## Recall
-
-1. Which index do you get for free? What's always yours to build?
-2. The compound-order rule — and the ESR refinement?
-3. What two explain signatures tell you index health? (IXSCAN vs COLLSCAN; SORT stage presence)
-4. What's the leftmost-prefix consequence for redundant indexes?
+[Advanced] **H3.** The write-cost measurement: insert 10k scratch docs with and without 3 indexes (time both in JS with Date.now()). Report the ratio and the "index what you query" verdict.
 
 ## Interview Questions
 
@@ -104,7 +98,5 @@ The modeling + index tie-in: take Day 13's access-pattern contract and design th
 ## Completion Checklist
 
 - [ ] Understand index types, ESR, leftmost prefix, index costs
-- [ ] Completed P1–P7 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the modeling→index plan pipeline
-- [ ] Answered recall without notes

@@ -48,16 +48,23 @@ This is the difference between "knows SQL syntax" and "can design a system". Int
 
 Each scenario: decide, then defend in writing (2–3 sentences each, naming the specific trade):
 
-[Beginner] **P1.** A chat app stores 50 messages/second and displays each conversation's message count on load. Count live, or store a counter?
-[Beginner] **P2.** A hotel booking site must show the room price *booked at the time*, even if prices change later. Structure?
-[Intermediate] **P3.** An analytics dashboard runs a 20-second GROUP BY over orders on every page load, hourly traffic. Options in order of preference?
-[Intermediate] **P4.** An e-commerce product page needs avg rating + review count. Computing AVG over all reviews on every page view: keep, or denormalize? What keeps a denormalized version honest?
-[Intermediate] **P5. Decide first:** a "tags" field on products as comma-separated text (`"wireless,usb"`). What are the three concrete problems (1NF anomaly, unsearchable joins, no referential integrity) — and the normalized fix?
-[Advanced] **P6.** Full design: a **ticket-booking system** (events, seats, bookings) — write the 3NF schema (tables + keys), then list two places you'd deliberately denormalize for the *checkout flow*, with costs.
-[Advanced] **P7.** Reverse engineering: look at the shared `ecommerce` schema and find (a) a deliberate snapshot field, (b) a place where we normalized, (c) one field you'd argue to add.
-[Advanced] **P8.** Interview drill, spoken: 90 seconds, no notes — "When would you denormalize, and what are the risks?" Record yourself if you can.
+### 🟢 Warm Up
 
-## Debugging — Design Review
+[Beginner] **W1.** A chat app stores 50 messages/second and displays each conversation's message count on load. Count live, or store a counter?
+
+[Beginner] **W2.** A hotel booking site must show the room price *booked at the time*, even if prices change later. Structure?
+
+### 🔵 Core
+
+[Intermediate] **C1.** An analytics dashboard runs a 20-second GROUP BY over orders on every page load, hourly traffic. Options in order of preference?
+
+[Intermediate] **C2.** An e-commerce product page needs avg rating + review count. Computing AVG over all reviews on every page view: keep, or denormalize? What keeps a denormalized version honest?
+
+[Intermediate] **C3.** `[Predict]` a "tags" field on products as comma-separated text (`"wireless,usb"`). What are the three concrete problems (1NF anomaly, unsearchable joins, no referential integrity) — and the normalized fix?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Schema A: reviews carry product_name AND user_name copied in.
@@ -72,23 +79,9 @@ Each scenario: decide, then defend in writing (2–3 sentences each, naming the 
 -- What's wrong, and what's the right structure? (Repeating groups → 1NF.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Capstone pre-work: take your P3 (student-course) design and write a one-page **design memo** — schema, keys, two justified denormalizations (or "none, and why"), index plan (which queries are hot?), and a security note (who reads what). You'll reuse this format in the capstone.
 
-Capstone pre-work: take your P3 (student-course) design and write a one-page **design memo** — schema, keys, two justified denormalizations (or "none, and why"), index plan (which queries are hot?), and a security note (who reads what). You'll reuse this format in the capstone.
-
-## Previous Knowledge
-
-1. View vs materialized view — one line.
-2. What does a materialized view need that a view doesn't?
-3. Deep OFFSET — the fix?
-4. EXPLAIN ANALYZE — the write caveat?
-
-## Recall
-
-1. The 6-question decision framework — from memory.
-2. Why is `posts.likes_count` justified but `posts.author_name` not?
-3. When is duplication actually *history*, not denormalization?
-4. What should you try before denormalizing?
+[Advanced] **H3.** Full design: a **ticket-booking system** (events, seats, bookings) — write the 3NF schema (tables + keys), then list two places you'd deliberately denormalize for the *checkout flow*, with costs.
 
 ## Interview Questions
 
@@ -99,9 +92,7 @@ Capstone pre-work: take your P3 (student-course) design and write a one-page **d
 ## Completion Checklist
 
 - [ ] Understand the decision framework
-- [ ] Completed P1–P8 (P5 decided with reasons before reading on)
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the three schema reviews
 - [ ] Completed the design memo
-- [ ] Answered recall without notes
 - [ ] Can defend a normalize/denormalize choice out loud
-

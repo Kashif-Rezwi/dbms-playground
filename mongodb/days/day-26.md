@@ -45,15 +45,23 @@ MongoDB's scaling story is a genuine differentiator vs PostgreSQL (where shardin
 
 ## Practice
 
-[Beginner] **P1.** The disentangling drill, written: for (a) 99.9% uptime, (b) 3TB data on one box, (c) 80k writes/sec on one primary, (d) heavy reporting load — replica set, sharding, or both? One line each.
-[Beginner] **P2.** Evaluate as shard keys for `orders`: `status` (8 values), `created_at` (monotonic!), `user_id`, `_id`. Cardinality? Distribution? Query isolation for "this user's orders"? Verdict per key.
-[Intermediate] **P3. Predict first:** monotonic `_id`/ObjectId as a shard key — where does ALL traffic go? (The newest range — one hot shard. THE classic mistake.) Explain the range structure that causes it.
-[Intermediate] **P4.** Design the shard key for `analytics.events` (billions of events; queries: "this session's events", "events by type over time") — argue ranges vs hashed, and the compound key; name the trade each query accepts.
-[Intermediate] **P5.** Scatter-gather, reasoned: with shard key `{user_id}`, what does `find({ status: 'pending' })` do across shards? Can any index fix it? (Partial relief only — isolation needs the KEY in the query. Say why.)
-[Advanced] **P6.** The honest sharding memo (5 lines): when you'd shard (write throughput, working set > RAM, storage), the cost (routers, config servers, cross-shard transactions costlier), and the access-pattern-first rule.
-[Advanced] **P7. From memory:** the three properties of a good shard key + the replica-set-vs-sharding table.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** The disentangling drill, written: for (a) 99.9% uptime, (b) 3TB data on one box, (c) 80k writes/sec on one primary, (d) heavy reporting load — replica set, sharding, or both? One line each.
+
+[Beginner] **W2.** Evaluate as shard keys for `orders`: `status` (8 values), `created_at` (monotonic!), `user_id`, `_id`. Cardinality? Distribution? Query isolation for "this user's orders"? Verdict per key.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` monotonic `_id`/ObjectId as a shard key — where does ALL traffic go? (The newest range — one hot shard. THE classic mistake.) Explain the range structure that causes it.
+
+[Intermediate] **C2.** `[From Memory]` the three properties of a good shard key + the replica-set-vs-sharding table.
+
+[Intermediate] **C3.** Design the shard key for `analytics.events` (billions of events; queries: "this session's events", "events by type over time") — argue ranges vs hashed, and the compound key; name the trade each query accepts.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Scenario 1: after sharding on {created_at}, one shard's disk fills at
@@ -65,23 +73,9 @@ MongoDB's scaling story is a genuine differentiator vs PostgreSQL (where shardin
 // numbers with them — what's the recommendation and why?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The capstone cross-check: your Day 12–15 e-commerce design — would you shard it? Which collection first (orders — unbounded + hot), on what key (user_id — reads are user-centric), with what cross-shard casualty (analytics/$lookup)? Two paragraphs with numbers. This goes in the capstone's design memo.
 
-The capstone cross-check: your Day 12–15 e-commerce design — would you shard it? Which collection first (orders — unbounded + hot), on what key (user_id — reads are user-centric), with what cross-shard casualty (analytics/$lookup)? Two paragraphs with numbers. This goes in the capstone's design memo.
-
-## Previous Knowledge
-
-1. Oplog → election → write concern — the three-sentence story?
-2. Why do secondaries break read-your-writes?
-3. The production transaction template's beats?
-4. Filter-carried guards — the pattern?
-
-## Recall
-
-1. What problem does sharding solve that replica sets don't?
-2. The three properties of a good shard key?
-3. What is scatter-gather and what causes it?
-4. Why is the shard key a one-way door?
+[Advanced] **H3.** The honest sharding memo (5 lines): when you'd shard (write throughput, working set > RAM, storage), the cost (routers, config servers, cross-shard transactions costlier), and the access-pattern-first rule.
 
 ## Interview Questions
 
@@ -92,8 +86,5 @@ The capstone cross-check: your Day 12–15 e-commerce design — would you shard
 ## Completion Checklist
 
 - [ ] Understand sharding, key properties, scatter-gather, the one-way door
-- [ ] Completed P1–P7 (P3 reasoned before confirming)
-- [ ] Worked all three scenarios
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the capstone cross-check
-- [ ] Answered recall without notes
-

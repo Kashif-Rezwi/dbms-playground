@@ -67,22 +67,27 @@ SELECT DISTINCT city, is_active FROM users ORDER BY city;
 
 ## Practice
 
-[Beginner] **P1.** All products, cheapest first (name, price).
-[Beginner] **P2.** The 5 **most recent** products by `created_at` (name, created_at). Newest first!
-[Beginner] **P3.** Unique `status` values from `orders`.
-[Beginner] **P4.** Users sorted by `name` — last names (Z→A) first. That is: reverse alphabetical by name.
-[Intermediate] **P5.** The 3 cheapest **in-stock** products. (Filter then sort then limit — say the order out loud.)
-[Intermediate] **P6.** Page 3 of a 4-per-page list of products ordered by price ascending. How do you know your OFFSET is right?
-[Intermediate] **P7. Predict first** — exactly which rows and in what order:
+### 🟢 Warm Up
+
+[Beginner] **W1.** All products, cheapest first (name, price).
+
+[Beginner] **W2.** The 5 **most recent** products by `created_at` (name, created_at). Newest first!
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — exactly which rows and in what order:
 
 ```sql
 SELECT name, rating FROM reviews ORDER BY rating DESC, created_at LIMIT 4;
 ```
 
-[Intermediate] **P8. From memory:** the single most expensive product (name, price). One row only.
-[Advanced] **P9.** Unique `city` + `is_active` pairs among **inactive users only**, sorted by city. Predict the count first.
+[Intermediate] **C2.** `[From Memory]` the single most expensive product (name, price). One row only.
 
-## Debugging
+[Intermediate] **C3.** Unique `status` values from `orders`.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (logical): meant "3 most expensive", got 3 random ones
@@ -95,23 +100,9 @@ SELECT DISTINCT city FROM users ORDER BY city DESC, is_active;
 SELECT name FROM products ORDER price;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** "Top 3 reviews": product name (not id!), rating, and created date for the 3 **highest-rated** reviews, newest first. You need Day 2 (expressions? maybe) — wait, you need to *join* names... that's Day 11. Instead: from `reviews`, show rating + comment, and in a sentence explain *why* you can't show the product name yet. (Anticipating a limitation is a skill.)
 
-"Top 3 reviews": product name (not id!), rating, and created date for the 3 **highest-rated** reviews, newest first. You need Day 2 (expressions? maybe) — wait, you need to *join* names... that's Day 11. Instead: from `reviews`, show rating + comment, and in a sentence explain *why* you can't show the product name yet. (Anticipating a limitation is a skill.)
-
-## Previous Knowledge
-
-1. Why does `WHERE city = NULL` return nothing?
-2. Write from memory: in-stock products under 1000.
-3. What does `AS` do?
-4. Does ORDER BY change the table?
-
-## Recall
-
-1. What's the execution order: WHERE, ORDER BY, LIMIT?
-2. Why does "LIMIT 5 without ORDER BY" not mean "first 5 rows"?
-3. How do you paginate with SQL?
-4. What does `DISTINCT city, is_active` de-duplicate on?
+[Advanced] **H3.** Unique `city` + `is_active` pairs among **inactive users only**, sorted by city. Predict the count first.
 
 ## Interview Questions
 
@@ -122,8 +113,5 @@ SELECT name FROM products ORDER price;
 ## Completion Checklist
 
 - [ ] Understand ORDER BY, LIMIT, OFFSET, DISTINCT
-- [ ] Completed P1–P9 (prediction written first)
-- [ ] Fixed all three bugs and explained the logical ones
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain filter→sort→slice out loud

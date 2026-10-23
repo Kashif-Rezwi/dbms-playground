@@ -54,16 +54,23 @@ PostgreSQL databases that "just get slower over months" are almost always bloat 
 
 ## Practice
 
-[Beginner] **P1.** Make corpses: `UPDATE big_users SET name = name WHERE id <= 50000;` → check `n_dead_tup`. `VACUUM big_users;` → re-check. Where did they go? (Space is *reusable*, not returned to the OS — check `pg_relation_size` before/after: same!)
-[Beginner] **P2.** `\h VACUUM` — read the honest description of VACUUM vs VACUUM ANALYZE; one line each.
-[Intermediate] **P3.** Bloat generator + FULL: update a big chunk 3×, VACUUM (size unchanged), then VACUUM FULL (size drops!) — but from a second session, watch it block a concurrent SELECT. Two lessons, one experiment.
-[Intermediate] **P4.** Visibility map, verified: Day 14 P7's repeat — Index Only Scan with Heap Fetches, VACUUM, re-run → Heap Fetches ≈ 0. Write the two-line explanation.
-[Intermediate] **P5. Predict first:** after updating 50k rows with NO vacuum, what does `SELECT count(*) FROM big_users;` read — and what does a "dead" count read? (MVCC: counts read *visible* versions — unchanged. Bloat is invisible to queries; it only costs time and space.)
-[Intermediate] **P6.** `SHOW autovacuum;` — generate churn on a small table; watch `last_autovacuum` update (patience, or force VACUUM to see the effect manually).
-[Advanced] **P7.** Run the health-check query on all your databases; interpret each table's dead_pct in one line; name the table you'd investigate first and why.
-[Advanced] **P8.** The "autovacuum isn't keeping up" diagnosis tree, written: three root causes (long transactions; threshold scaling on huge tables; anti-wraparound vacuum pressure) + the tell-tale + fix for each. A genuine on-call skill.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Make corpses: `UPDATE big_users SET name = name WHERE id <= 50000;` → check `n_dead_tup`. `VACUUM big_users;` → re-check. Where did they go? (Space is *reusable*, not returned to the OS — check `pg_relation_size` before/after: same!)
+
+[Beginner] **W2.** `\h VACUUM` — read the honest description of VACUUM vs VACUUM ANALYZE; one line each.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` after updating 50k rows with NO vacuum, what does `SELECT count(*) FROM big_users;` read — and what does a "dead" count read? (MVCC: counts read *visible* versions — unchanged. Bloat is invisible to queries; it only costs time and space.)
+
+[Intermediate] **C2.** Bloat generator + FULL: update a big chunk 3×, VACUUM (size unchanged), then VACUUM FULL (size drops!) — but from a second session, watch it block a concurrent SELECT. Two lessons, one experiment.
+
+[Intermediate] **C3.** Visibility map, verified: Day 14 P7's repeat — Index Only Scan with Heap Fetches, VACUUM, re-run → Heap Fetches ≈ 0. Write the two-line explanation.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "disk usage only grows, never shrinks, but queries work."
@@ -75,23 +82,9 @@ PostgreSQL databases that "just get slower over months" are almost always bloat 
 -- lagging, and who maintains the visibility map?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The full-circle write: redo Day 18's write-path memo — now with vacuum's role and the visibility map added. Seven sentences: WAL → new row version → old version dead → autovacuum → space reuse + visibility map → honest Index Only Scans → VACUUM FULL as the nuclear option. If this reads clearly, you own the engine's write path.
 
-The full-circle write: redo Day 18's write-path memo — now with vacuum's role and the visibility map added. Seven sentences: WAL → new row version → old version dead → autovacuum → space reuse + visibility map → honest Index Only Scans → VACUUM FULL as the nuclear option. If this reads clearly, you own the engine's write path.
-
-## Previous Knowledge
-
-1. The 7-step tuning checklist — tools for steps 1, 2, 5?
-2. What does seq_tup_read tell you?
-3. pg_stat_statements — sort by total vs mean, when?
-4. MVCC — why do long transactions cause bloat?
-
-## Recall
-
-1. VACUUM vs VACUUM FULL — one line each (locks included).
-2. What does autovacuum do, and what blocks it?
-3. What is the visibility map and who maintains it?
-4. Which settings does a *developer* touch vs a DBA? (Which is only a *hint*?)
+[Advanced] **H3.** Run the health-check query on all your databases; interpret each table's dead_pct in one line; name the table you'd investigate first and why.
 
 ## Interview Questions
 
@@ -102,8 +95,5 @@ The full-circle write: redo Day 18's write-path memo — now with vacuum's role 
 ## Completion Checklist
 
 - [ ] Understand vacuum/autovacuum/visibility, settings ownership
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the upgraded write-path memo
-- [ ] Answered recall without notes
-

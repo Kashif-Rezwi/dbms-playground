@@ -45,16 +45,23 @@ app (500 potential clients) → pooler (20 real connections) → PostgreSQL
 
 ## Practice
 
-[Beginner] **P1.** Prove the cost: hammer local PostgreSQL with 200 concurrent connections running trivial queries (a small script or `pgbench -c 200`). Watch latency. Drop to 20 connections, same query rate. Compare; one-line conclusion.
-[Beginner] **P2.** During P1, check `pg_stat_activity` — what fraction of connections were idle at any instant? That's the pooling thesis, observed.
-[Intermediate] **P3.** Pooling modes on paper: session vs transaction vs statement — one line each, plus what breaks in transaction mode (persistent SET, advisory locks across transactions, LISTEN/NOTIFY). Which does a typical web app want?
-[Intermediate] **P4. Predict first:** with transaction-mode pooling, the app does `SET app.current_org='3'` on one request and queries on the *next*. What does RLS do? What's the correct pattern? (Set inside the same transaction / `set_config(..., true)`.)
-[Intermediate] **P5.** pgbench taste: `pgbench` on perf_lab with 10 vs 100 clients; read the TPS numbers. Where's your machine's sweet spot?
-[Advanced] **P6.** The scaling-plan drill: for each, name the *first two ladder steps* and why sharding isn't step one: (a) 40M-row orders table, slow dashboard; (b) read-heavy API at 5k req/s; (c) write-heavy IoT ingest 20k rows/s; (d) multi-region SaaS with EU data residency.
-[Advanced] **P7. From memory:** the scaling ladder in order, one line each on when it applies.
-[Advanced] **P8.** Interview drill, recorded: "How would you scale a PostgreSQL database?" — 3 minutes, ladder + the honest "sharding last" stance.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Prove the cost: hammer local PostgreSQL with 200 concurrent connections running trivial queries (a small script or `pgbench -c 200`). Watch latency. Drop to 20 connections, same query rate. Compare; one-line conclusion.
+
+[Beginner] **W2.** During P1, check `pg_stat_activity` — what fraction of connections were idle at any instant? That's the pooling thesis, observed.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` with transaction-mode pooling, the app does `SET app.current_org='3'` on one request and queries on the *next*. What does RLS do? What's the correct pattern? (Set inside the same transaction / `set_config(..., true)`.)
+
+[Intermediate] **C2.** `[From Memory]` the scaling ladder in order, one line each on when it applies.
+
+[Intermediate] **C3.** Pooling modes on paper: session vs transaction vs statement — one line each, plus what breaks in transaction mode (persistent SET, advisory locks across transactions, LISTEN/NOTIFY). Which does a typical web app want?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "too many connections" errors at 300 users. Two very different
@@ -66,23 +73,9 @@ app (500 potential clients) → pooler (20 real connections) → PostgreSQL
 -- with numbers (fits in RAM; ladder steps remaining; one-way door).
 ```
 
-## Combine Concepts
+[Advanced] **H2.** **Finish the Project 6 runbook**: add the pooling section (client pool + PgBouncer sketch, sizing, the context-GUC pattern) and the scaling ladder with your current product's position marked. The runbook is now complete: access control, monitoring, migrations, incidents, maintenance, backups, replication, pooling, scaling.
 
-**Finish the Project 6 runbook**: add the pooling section (client pool + PgBouncer sketch, sizing, the context-GUC pattern) and the scaling ladder with your current product's position marked. The runbook is now complete: access control, monitoring, migrations, incidents, maintenance, backups, replication, pooling, scaling.
-
-## Previous Knowledge
-
-1. Sync vs async replication — the trade?
-2. Why is replication not a backup?
-3. What blocks autovacuum?
-4. WAL — what it guarantees? (Today it became a *stream*.)
-
-## Recall
-
-1. Why are connections expensive? Two components of the cost?
-2. Session vs transaction pooling — what breaks?
-3. The scaling ladder — first three rungs?
-4. Why is sharding last? (Three costs.)
+[Advanced] **H3.** The scaling-plan drill: for each, name the *first two ladder steps* and why sharding isn't step one: (a) 40M-row orders table, slow dashboard; (b) read-heavy API at 5k req/s; (c) write-heavy IoT ingest 20k rows/s; (d) multi-region SaaS with EU data residency.
 
 ## Interview Questions
 
@@ -93,8 +86,6 @@ app (500 potential clients) → pooler (20 real connections) → PostgreSQL
 ## Completion Checklist
 
 - [ ] Understand connection costs, pooling modes, the scaling ladder
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the runbook's final sections
 - [ ] Recorded your scaling answer
-

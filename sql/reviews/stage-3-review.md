@@ -26,7 +26,7 @@ Do this *after* Day 27, before the Day 28 final review.
    - "Product's review avg on page view" with 1000s of reviews
    - "Monthly active users" report run once a day
 
-## Part C — Debugging Gauntlet
+## Part C — Applied Diagnosis
 
 ```sql
 -- A: the plan says Seq Scan but the index on user_id exists. Two hypotheses,

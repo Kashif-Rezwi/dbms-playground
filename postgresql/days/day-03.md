@@ -48,50 +48,50 @@ Types are your first, cheapest data-quality guarantee and a major performance le
 
 ## Practice
 
-[Beginner] **P1.** Create the `example` table above (your DB of choice). Insert two rows; verify. Then deliberately insert bad values for `price`, `born_on`, `ip` — read all three errors.
-[Beginner] **P2.** `SELECT 0.1::float + 0.2::float;` vs `SELECT 0.1::numeric + 0.2::numeric;` — explain the output difference in one sentence. This is *why money is NUMERIC*.
-[Intermediate] **P3.** Timezone proof: `SET timezone TO 'Asia/Karachi'; SELECT now();` then `SET timezone TO 'UTC'; SELECT now();` — same instant, different display. Now insert a `TIMESTAMP` (no tz) row with the Karachi wall-clock and select it after switching — what ambiguity did you just witness?
-[Intermediate] **P4.** Arrays: insert `tags` with two rows, then `SELECT * FROM example WHERE 'red' = ANY(tags);` and `WHERE tags @> ARRAY['red','xl'];` (contains).
-[Intermediate] **P5. Predict first:** what does this return and why?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Create the `example` table from Fundamentals (in your test schema from Day 2). Insert two valid rows, then deliberately insert bad values for `price`, `born_on`, and `ip` to observe how PostgreSQL's type system acts as a constraint.
+
+[Beginner] **W2.** Compare binary float vs exact numeric precision:
+
+```sql
+SELECT 0.1::float + 0.2::float;
+SELECT 0.1::numeric + 0.2::numeric;
+```
+
+Explain the output difference in one sentence and explain why money must always use `NUMERIC`.
+
+### 🔵 Core
+
+[Intermediate] **C1.** Timezone demonstration: run `SET timezone TO 'Asia/Karachi'; SELECT now();` followed by `SET timezone TO 'UTC'; SELECT now();`. Then insert a `TIMESTAMP` (without time zone) row with a local wall-clock time and inspect it after switching session timezones to observe the timestamp ambiguity.
+
+[Intermediate] **C2.** Arrays: insert `tags` into `example` with two rows, then query using `WHERE 'red' = ANY(tags);` and `WHERE tags @> ARRAY['red','xl'];` (contains).
+
+[Intermediate] **C3.** `[Predict]` Predict what this query returns before executing it, and explain why:
 
 ```sql
 SELECT '5' + 3;
 ```
 
-*(String + number... but there's a cast. PostgreSQL coerces literal strings. What about a TEXT column + 3? Try both variants.)*
-[Intermediate] **P6. From memory:** a `payments` table DDL with exact-money amount, method (text), paid_at (timestamp with tz), and a CHECK that amount > 0.
-[Advanced] **P7.** Storage reality: `SELECT pg_column_size(price_column)` for NUMERIC(8,2) vs a REAL holding 12345.67. Then size whole rows with `pg_total_relation_size` on a 100-row test table in two type-versions. Report: exact-money costs how much storage?
+Now test what happens when you attempt to add an integer to a column defined as `TEXT`.
 
-## Debugging
+[Intermediate] **C4.** `[From Memory]` Write the DDL for a `payments` table without notes: include an exact-money amount, method (`TEXT`), `paid_at` (`TIMESTAMPTZ`), and a `CHECK` constraint ensuring amount > 0.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix these schema definition bugs:
 
 ```sql
--- Bug 1: the balance is ALWAYS slightly off in reports.
-ALTER TABLE accounts ADD COLUMN balance FLOAT;  -- what's wrong, how bad, fix?
+-- Bug A: Financial balance precision drift in account reports
+ALTER TABLE accounts ADD COLUMN balance FLOAT;
 
--- Bug 2 (silent tz bug): event times shift by hours in some regions.
-created_at TIMESTAMP            -- diagnose + fix (TIMESTAMPTZ + data migration note)
-
--- Bug 3: insert fails with "value too long for type character varying(10)"
--- but the app "always allowed short names". What changed, what are the options?
+-- Bug B: Event times shift across timezones in multi-region deployments
+created_at TIMESTAMP;
 ```
 
-## Combine Concepts
+Explain the root cause for each bug and write the production-grade column definitions.
 
-Rebuild a slice of `ecommerce` properly: `products_pg` with all your new opinions (NUMERIC price, TIMESTAMPTZ created_at, TEXT[] tags, stock INT + CHECK). Insert 3 rows, then run one SQL-track query (top-3 by price) against *it* — same language, better foundations.
-
-## Previous Knowledge
-
-1. Schema vs database — the isolation rule.
-2. What is `search_path`?
-3. SQL: what does CHECK enforce, and when does it fire?
-4. SQL: LEFT JOIN + WHERE trap — one line.
-
-## Recall
-
-1. Money → which type, and the one-sentence reason FLOAT is disqualified?
-2. TIMESTAMPTZ vs TIMESTAMP — which do real apps use and why?
-3. TEXT vs VARCHAR(n) — when does VARCHAR win?
-4. Name three "special" PG types and one use each.
+[Advanced] **H2.** Combine PostgreSQL types with SQL queries: rebuild a slice of the `ecommerce` catalog as `products_pg` using explicit types (`NUMERIC` price, `TIMESTAMPTZ` created_at, `TEXT[]` tags, and `INT` stock with a `CHECK` constraint). Insert 3 rows and run a top-3 by price query against it.
 
 ## Interview Questions
 
@@ -102,7 +102,5 @@ Rebuild a slice of `ecommerce` properly: `products_pg` with all your new opinion
 ## Completion Checklist
 
 - [ ] Understand the five big type decisions
-- [ ] Completed P1–P7 (P5 predicted first; P2's float demo understood)
-- [ ] Fixed all three bugs
-- [ ] Completed the products_pg combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
+- [ ] Can explain the 0.1 + 0.2 float trap and timezone handling out loud

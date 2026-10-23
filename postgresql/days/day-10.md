@@ -73,16 +73,23 @@ CREATE TRIGGER sync_order_total AFTER INSERT OR UPDATE OR DELETE ON order_items
 
 ## Practice
 
-[Beginner] **P1.** Add `updated_at` to a scratch table; create the touch trigger; UPDATE; verify.
-[Beginner] **P2.** Build the audit trigger on `reviews`; insert/update/delete; read the log — and what does `to_jsonb(NEW)` miss on DELETE? (Should it be OLD there?)
-[Intermediate] **P3.** Build the order-total sync on real `ecommerce` (reset after): update an item's quantity; verify the order's total follows automatically.
-[Intermediate] **P4. Predict first:** with that trigger active, insert an order_item for a *nonexistent* order. What fires first — FK or trigger? What does that teach about AFTER triggers vs constraints?
-[Intermediate] **P5.** Procedure drill: `CALL transfer` with sufficient funds, then insufficient — read the error; verify balances unchanged.
-[Intermediate] **P6. From memory:** the touch pair (function + trigger) for a new table `products_t`.
-[Advanced] **P7.** The veto: a BEFORE trigger returning NULL silently drops the write. Build `block_price_hikes` (veto price rises > 2×). Try 1.5× (works) and 3× (silently vanishes). Is silent veto good design? What's responsible instead? (`RAISE EXCEPTION`.)
-[Advanced] **P8.** Recursive trigger danger: trigger A on X updates Y; trigger B on Y updates X. What happens (loop → depth-limit error)? Two lines on why trigger graphs need rules.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Add `updated_at` to a scratch table; create the touch trigger; UPDATE; verify.
+
+[Beginner] **W2.** Build the audit trigger on `reviews`; insert/update/delete; read the log — and what does `to_jsonb(NEW)` miss on DELETE? (Should it be OLD there?)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` with that trigger active, insert an order_item for a *nonexistent* order. What fires first — FK or trigger? What does that teach about AFTER triggers vs constraints?
+
+[Intermediate] **C2.** `[From Memory]` the touch pair (function + trigger) for a new table `products_t`.
+
+[Intermediate] **C3.** Build the order-total sync on real `ecommerce` (reset after): update an item's quantity; verify the order's total follows automatically.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "trigger returned null value" — writes vanish without errors.
@@ -93,23 +100,9 @@ CREATE TRIGGER sync_order_total AFTER INSERT OR UPDATE OR DELETE ON order_items
 -- mixing COMMIT semantics; when must a procedure NOT call COMMIT?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Everything into **[P2: SaaS Task Tracker (triggers)](../projects/02-saas-tracker.md)** — the saas schema rebuilt with triggers for updated_at, audit, and a drift-proof denormalized counter. Attempt before solutions.
 
-Everything into **[P2: SaaS Task Tracker (triggers)](../projects/02-saas-tracker.md)** — the saas schema rebuilt with triggers for updated_at, audit, and a drift-proof denormalized counter. Attempt before solutions.
-
-## Previous Knowledge
-
-1. IMMUTABLE vs VOLATILE — one line each.
-2. What does a SETOF function enable?
-3. SQL: denormalization costs — name all three.
-4. SQL: when is a likes_count counter justified?
-
-## Recall
-
-1. Procedure vs function — the transaction difference.
-2. BEFORE vs AFTER triggers — one line each.
-3. Triggers' 3 legitimate jobs? What are they NOT for?
-4. What does `RETURN NULL` in BEFORE do — and the responsible alternative?
+[Advanced] **H3.** The veto: a BEFORE trigger returning NULL silently drops the write. Build `block_price_hikes` (veto price rises > 2×). Try 1.5× (works) and 3× (silently vanishes). Is silent veto good design? What's responsible instead? (`RAISE EXCEPTION`.)
 
 ## Interview Questions
 
@@ -120,8 +113,5 @@ Everything into **[P2: SaaS Task Tracker (triggers)](../projects/02-saas-tracker
 ## Completion Checklist
 
 - [ ] Understand procedures, BEFORE/AFTER triggers, trade-offs
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 2
-- [ ] Answered recall without notes
-```

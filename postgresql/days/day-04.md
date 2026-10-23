@@ -53,15 +53,23 @@ Every performance, concurrency, or reliability question in the rest of this trac
 
 ## Practice
 
-[Beginner] **P1.** `ps aux | grep postgres` — identify postmaster, autovacuum, walwriter, and your own backend (match your `pg_backend_pid()`). Screenshot/notes.
-[Beginner] **P2.** Load all four datasets (`./scripts/seed/seed-postgres.sh <name>`) and verify counts against each seed file's sanity-check comment.
-[Intermediate] **P3.** In two psql sessions, `SELECT pg_backend_pid();` — different PIDs, both visible in ps. One line: what proves each connection is a process?
-[Intermediate] **P4.** Work memory felt: in `perf_lab` (load it), `SET work_mem = '64kB';` then EXPLAIN ANALYZE a big `ORDER BY` — look for "Sort Method: external merge". Then `SET work_mem = '256MB';` re-run — "Sort Method: quicksort/memory". Write the timing delta.
-[Intermediate] **P5. Predict first:** which finishes first — a 1000-row `INSERT ... VALUES` list or `COPY` of the same rows from a CSV? Then build the CSV via `COPY TO` and prove it.
-[Intermediate] **P6. From memory:** the command to run a .sql file into a database from the shell (two forms: psql -f, and \i inside psql).
-[Advanced] **P7.** WAL intuition: insert a row in one session; before you commit... it's already WAL-logged? Research with `\db` no — just explain in two sentences: why can PostgreSQL recover "uncommitted-at-crash" data boundaries exactly, and what would be lost without WAL?
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** `ps aux | grep postgres` — identify postmaster, autovacuum, walwriter, and your own backend (match your `pg_backend_pid()`). Screenshot/notes.
+
+[Beginner] **W2.** Load all four datasets (`./scripts/seed/seed-postgres.sh <name>`) and verify counts against each seed file's sanity-check comment.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which finishes first — a 1000-row `INSERT ... VALUES` list or `COPY` of the same rows from a CSV? Then build the CSV via `COPY TO` and prove it.
+
+[Intermediate] **C2.** `[From Memory]` the command to run a .sql file into a database from the shell (two forms: psql -f, and \i inside psql).
+
+[Intermediate] **C3.** In two psql sessions, `SELECT pg_backend_pid();` — different PIDs, both visible in ps. One line: what proves each connection is a process?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "out of memory" on a huge sort. Which setting is the lever, what's
@@ -73,23 +81,9 @@ Every performance, concurrency, or reliability question in the rest of this trac
 -- verification step was skipped, and what's the habit?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The verification habit, generalized: write a *single catalog query* that reports every table in the current database with its row count (`pg_stat_user_tables`) — the "did my load work" dashboard. Run it on all four datasets. Keep this query in your notes forever.
 
-The verification habit, generalized: write a *single catalog query* that reports every table in the current database with its row count (`pg_stat_user_tables`) — the "did my load work" dashboard. Run it on all four datasets. Keep this query in your notes forever.
-
-## Previous Knowledge
-
-1. Money → which type, why?
-2. TIMESTAMPTZ vs TIMESTAMP?
-3. SQL: what's the top-N-per-group pattern?
-4. SQL: what does EXPLAIN ANALYZE do + write caveat?
-
-## Recall
-
-1. What does WAL stand for and what does it guarantee?
-2. One process per ___ — and why that makes connections expensive?
-3. What is shared_buffers? What is work_mem (and per-what)?
-4. COPY vs INSERT — roughly how much faster, and why?
+[Advanced] **H3.** WAL intuition: insert a row in one session; before you commit... it's already WAL-logged? Research with `\db` no — just explain in two sentences: why can PostgreSQL recover "uncommitted-at-crash" data boundaries exactly, and what would be lost without WAL?
 
 ## Interview Questions
 
@@ -100,7 +94,5 @@ The verification habit, generalized: write a *single catalog query* that reports
 ## Completion Checklist
 
 - [ ] Understand processes, memory, WAL, COPY
-- [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Built your row-count dashboard query
-- [ ] Answered recall without notes

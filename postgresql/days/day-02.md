@@ -56,15 +56,23 @@ The catalog turns "how do I find out X about my database?" from a GUI question i
 
 ## Practice
 
-[Beginner] **P1.** Create database `bookstore`; connect; create a `books` table; one insert; select. Now `\c ecommerce` and try selecting `books` — what error? Say why.
-[Beginner] **P2.** Back in `bookstore`: `CREATE SCHEMA archive;` and move your books table there (`ALTER TABLE books SET SCHEMA archive;`). Where is it now? (Check `\dt` vs `\dt archive.*`.)
-[Intermediate] **P3.** Catalog questions: (a) all tables with a `user_id` column across the `ecommerce` database; (b) all columns of `order_items` with types; (c) all NOT NULL columns of `orders`.
-[Intermediate] **P4.** `SHOW search_path;` — then `SET search_path TO archive, public;` and confirm unqualified `books` resolves.
-[Intermediate] **P5. Predict first:** `\dt` output before vs after `SET search_path`. What changes and what doesn't?
-[Intermediate] **P6. From memory:** the information_schema query to find all columns named `status` in the current database.
-[Advanced] **P7.** One-line report per schema question, all via catalog: which table in `ecommerce` has the most columns? Which indexes exist on `orders` (hint: `pg_indexes`)? Which tables have zero rows (`pg_stat_user_tables.n_live_tup`)?
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Create database `bookstore`; connect; create a `books` table; one insert; select. Now `\c ecommerce` and try selecting `books` — what error? Say why.
+
+[Beginner] **W2.** Back in `bookstore`: `CREATE SCHEMA archive;` and move your books table there (`ALTER TABLE books SET SCHEMA archive;`). Where is it now? (Check `\dt` vs `\dt archive.*`.)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `\dt` output before vs after `SET search_path`. What changes and what doesn't?
+
+[Intermediate] **C2.** `[From Memory]` the information_schema query to find all columns named `status` in the current database.
+
+[Intermediate] **C3.** Catalog questions: (a) all tables with a `user_id` column across the `ecommerce` database; (b) all columns of `order_items` with types; (c) all NOT NULL columns of `orders`.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: this works from the app but not psql. 
@@ -78,23 +86,9 @@ SELECT * FROM orders;   -- ERROR: relation "orders" does not exist
 -- app tables. What goes wrong over time, and what's the migration plan?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Catalog + SQL: write "the FK report" — for every foreign key in `ecommerce` (use `information_schema.table_constraints` + `key_column_usage`... or simpler: `pg_constraint` via `SELECT conname, conrelid::regclass, confrelid::regclass FROM pg_constraint WHERE contype='f';`), produce child-table, parent-table pairs. Cross-check against `shared/diagrams/ecommerce-er.md`.
 
-Catalog + SQL: write "the FK report" — for every foreign key in `ecommerce` (use `information_schema.table_constraints` + `key_column_usage`... or simpler: `pg_constraint` via `SELECT conname, conrelid::regclass, confrelid::regclass FROM pg_constraint WHERE contype='f';`), produce child-table, parent-table pairs. Cross-check against `shared/diagrams/ecommerce-er.md`.
-
-## Previous Knowledge
-
-1. Client vs server — one line.
-2. What did `SELECT pg_backend_pid()` prove yesterday?
-3. SQL: write from memory the "users with no orders" pattern.
-4. SQL: WHERE vs HAVING.
-
-## Recall
-
-1. Database vs schema — the isolation difference?
-2. What is `search_path` for?
-3. Which two catalog views would you query to inspect columns?
-4. Why can't a query span two databases?
+[Advanced] **H3.** One-line report per schema question, all via catalog: which table in `ecommerce` has the most columns? Which indexes exist on `orders` (hint: `pg_indexes`)? Which tables have zero rows (`pg_stat_user_tables.n_live_tup`)?
 
 ## Interview Questions
 
@@ -105,7 +99,4 @@ Catalog + SQL: write "the FK report" — for every foreign key in `ecommerce` (u
 ## Completion Checklist
 
 - [ ] Understand databases, schemas, search_path, catalog
-- [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the FK-report combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises

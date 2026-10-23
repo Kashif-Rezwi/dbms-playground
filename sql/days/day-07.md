@@ -72,11 +72,15 @@ FROM tasks;
 
 ## Practice
 
-[Beginner] **P1.** Find all unassigned tasks (`assignee_id IS NULL`). Predict the count first.
-[Beginner] **P2.** Find all projects **with** a deadline. Then all projects, with missing deadlines shown as `2099-12-31` (COALESCE).
-[Beginner] **P3.** List tasks with a column `is_late` = TRUE when `status <> 'done'` and `completed_at IS NULL` and... actually simpler: `completed_at IS NULL AND status <> 'todo'`. Name the flag `stuck`.
-[Intermediate] **P4.** Bucket invoices by status: `'overdue'` → `'URGENT'`, `'open'` → `'waiting'`, else `'settled'`. Sort by the bucket.
-[Intermediate] **P5. Predict first:** exact output of both:
+### 🟢 Warm Up
+
+[Beginner] **W1.** Find all unassigned tasks (`assignee_id IS NULL`). Predict the count first.
+
+[Beginner] **W2.** Find all projects **with** a deadline. Then all projects, with missing deadlines shown as `2099-12-31` (COALESCE).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` exact output of both:
 
 ```sql
 SELECT COUNT(*) FROM tasks;
@@ -84,11 +88,14 @@ SELECT COUNT(assignee_id) FROM tasks;
 ```
 
 Explain the difference in one sentence.
-[Intermediate] **P6.** For every task: title, plus `days_taken` = `completed_at - created_at`. Which completed tasks took more than 30 days? (Some rows will be NULL — why?)
-[Intermediate] **P7. From memory:** users whose `renews_at` is NULL in subscriptions.
-[Advanced] **P8.** For each project (GROUP BY comes tomorrow — use plain SELECT with CASE today): show project tasks with a computed column `urgency` = 'high' priority AND not done → `'urgent'`; deadline passed (before today) → `'late'`; else `'ok'`. Use `CURRENT_DATE`.
 
-## Debugging
+[Intermediate] **C2.** `[From Memory]` users whose `renews_at` is NULL in subscriptions.
+
+[Intermediate] **C3.** List tasks with a column `is_late` = TRUE when `status <> 'done'` and `completed_at IS NULL` and... actually simpler: `completed_at IS NULL AND status <> 'todo'`. Name the flag `stuck`.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (silent wrong answer)
@@ -103,23 +110,9 @@ SELECT name FROM projects WHERE deadline <> NULL;
 
 For each: what's wrong, why, fix, verify. (Bug 2: 'medium' is a string, not a boolean — PostgreSQL may even error. What did you actually mean, and what operator should you use?)
 
-## Combine Concepts
+[Advanced] **H2.** Yesterday's safety habits + today: write an **UPDATE with CASE** — set every unassigned task's priority to `'medium'` (preview first, verify after). Then filter & sort: all unassigned tasks by priority, top 5.
 
-Yesterday's safety habits + today: write an **UPDATE with CASE** — set every unassigned task's priority to `'medium'` (preview first, verify after). Then filter & sort: all unassigned tasks by priority, top 5.
-
-## Previous Knowledge
-
-1. What does UPDATE without WHERE do? What do you run first, always?
-2. Write from memory: top 3 most expensive in-stock products.
-3. What's the execution order: WHERE, ORDER BY, LIMIT?
-4. What does `price * 1.05` inside a SET clause use — old or new value?
-
-## Recall
-
-1. What is NULL, in one sentence — and what are its two impostors (values beginners confuse it with)?
-2. Why does `WHERE col = NULL` return nothing? What's the fix?
-3. What does COALESCE do? Give a use case from today.
-4. What does `COUNT(col)` skip that `COUNT(*)` doesn't?
+[Advanced] **H3.** For each project (GROUP BY comes tomorrow — use plain SELECT with CASE today): show project tasks with a computed column `urgency` = 'high' priority AND not done → `'urgent'`; deadline passed (before today) → `'late'`; else `'ok'`. Use `CURRENT_DATE`.
 
 ## Interview Questions
 
@@ -130,8 +123,5 @@ Yesterday's safety habits + today: write an **UPDATE with CASE** — set every u
 ## Completion Checklist
 
 - [ ] Understand NULL semantics, IS NULL, COALESCE, CASE
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain NULL + CASE out loud

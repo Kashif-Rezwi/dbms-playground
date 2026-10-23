@@ -55,16 +55,23 @@ Partial unique indexes quietly solve some of the most-asked modeling questions (
 
 ## Practice
 
-[Beginner] **P1.** Build the one-active-subscription partial unique; prove: two active subs for one user fails, active + cancelled + active again succeeds.
-[Beginner] **P2.** Build the case-insensitive email index; prove 'A@x.com' collides with 'a@x.com'. Then explain what your app's login query must now look like (`WHERE lower(email) = lower($1)` — or the expression index is useless! Day 15-16 callback).
-[Intermediate] **P3.** The TSRANGE booking table: 3 inserts — legal, overlapping-same-room (fails), overlapping-DIFFERENT-room (passes). Explain why one fails.
-[Intermediate] **P4. Predict first:** `INSERT INTO t (email) VALUES ('a@x.com')`, again `'a@x.com'`, again `'A@X.COM'` — with the *lower(email)* index and no plain one. Which of the three fail?
-[Intermediate] **P5.** Defaults as expressions: a table with `created_at TIMESTAMPTZ DEFAULT now()` and `code TEXT DEFAULT 'TEMP-' || md5(random()::text)` — insert without those columns; verify.
-[Intermediate] **P6. From memory:** the DDL for "at most one 'featured' product per category".
-[Advanced] **P7.** The debate, written: your team stores money transfers. Should `amount > 0` be a CHECK, an app validation, or both? And "from_account ≠ to_account"? Write 4 sentences total, then implement both.
-[Advanced] **P8.** A constraint that *needs* another row ("salary ≤ 2× team average") — impossible as CHECK. What's the right tool (trigger — tomorrow... Day 10 — or a deferred constraint design)? Sketch both options' trade-offs in two lines.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Build the one-active-subscription partial unique; prove: two active subs for one user fails, active + cancelled + active again succeeds.
+
+[Beginner] **W2.** Build the case-insensitive email index; prove 'A@x.com' collides with 'a@x.com'. Then explain what your app's login query must now look like (`WHERE lower(email) = lower($1)` — or the expression index is useless! Day 15-16 callback).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` `INSERT INTO t (email) VALUES ('a@x.com')`, again `'a@x.com'`, again `'A@X.COM'` — with the *lower(email)* index and no plain one. Which of the three fail?
+
+[Intermediate] **C2.** `[From Memory]` the DDL for "at most one 'featured' product per category".
+
+[Intermediate] **C3.** The TSRANGE booking table: 3 inserts — legal, overlapping-same-room (fails), overlapping-DIFFERENT-room (passes). Explain why one fails.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: "check constraint is violated by some row" on ALTER TABLE ADD
@@ -78,23 +85,9 @@ Partial unique indexes quietly solve some of the most-asked modeling questions (
 -- still weak — domain-level validation discussion)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Project 1 uses all of it: build **[P1: Task Manager, the PostgreSQL Way](../projects/01-task-manager-pg.md)** — the SQL-track project rebuilt with identity columns, TIMESTAMPTZ, partial unique constraints, and constraint-driven design. Attempt before solutions.
 
-Project 1 uses all of it: build **[P1: Task Manager, the PostgreSQL Way](../projects/01-task-manager-pg.md)** — the SQL-track project rebuilt with identity columns, TIMESTAMPTZ, partial unique constraints, and constraint-driven design. Attempt before solutions.
-
-## Previous Knowledge
-
-1. The four ON DELETE behaviors.
-2. Which index doesn't PG auto-create on FKs?
-3. SQL: why is money NUMERIC?
-4. WAL — what it guarantees.
-
-## Recall
-
-1. Partial unique index — the syntax and one real problem it solves.
-2. What's stronger than UNIQUE for time ranges?
-3. What can a CHECK never reference? (Two things.)
-4. DB constraints vs app validation — the rule in one line.
+[Advanced] **H3.** The debate, written: your team stores money transfers. Should `amount > 0` be a CHECK, an app validation, or both? And "from_account ≠ to_account"? Write 4 sentences total, then implement both.
 
 ## Interview Questions
 
@@ -105,7 +98,5 @@ Project 1 uses all of it: build **[P1: Task Manager, the PostgreSQL Way](../proj
 ## Completion Checklist
 
 - [ ] Understand partial/expression constraints, EXCLUDE, defaults
-- [ ] Completed P1–P8 (P4 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 1
-- [ ] Answered recall without notes

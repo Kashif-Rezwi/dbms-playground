@@ -78,14 +78,15 @@ WHERE EXISTS (SELECT 1 FROM applications a WHERE a.candidate_id = c.id);
 
 ## Practice
 
-[Beginner] **P1.** Job titles containing the word `'Data'`.
-[Beginner] **P2.** Candidates whose email ends with `'@mail.dev'`.
-[Beginner] **P3.** Remote jobs (`is_remote = TRUE`) with max salary between 100000 and 150000.
-[Beginner] **P4.** Companies in Karachi or Lahore (use IN).
-[Intermediate] **P5.** Jobs whose title **starts with** 'Data' — then a separate query for titles where 'Data' appears but **not** at the start. Predict both counts first.
-[Intermediate] **P6.** Candidates with **more than 5 years** experience who live in Karachi or Toronto.
-[Intermediate] **P7.** Candidates who have **never** applied to anything. (Hint: `NOT EXISTS`.) Predict the names before running.
-[Intermediate] **P8. Predict first:** which candidates match?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Job titles containing the word `'Data'`.
+
+[Beginner] **W2.** Candidates whose email ends with `'@mail.dev'`.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which candidates match?
 
 ```sql
 SELECT name FROM candidates
@@ -93,10 +94,13 @@ WHERE experience_years BETWEEN 2 AND 6
   AND city LIKE '%o%';
 ```
 
-[Intermediate] **P9. From memory:** companies founded between 2012 and 2019, in Software or Analytics.
-[Advanced] **P10.** Advanced stencil work: emails where the **username part** (before @) is exactly 5 characters long. (Hint: `%` is greedy — think about `_` × 5 followed by `@`.)
+[Intermediate] **C2.** `[From Memory]` companies founded between 2012 and 2019, in Software or Analytics.
 
-## Debugging
+[Intermediate] **C3.** Remote jobs (`is_remote = TRUE`) with max salary between 100000 and 150000.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (logical: too greedy)
@@ -113,23 +117,9 @@ SELECT name FROM candidates WHERE name NOT IN (SELECT NULL FROM candidates WHERE
 -- What does NOT IN do when the list contains NULL, and why?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Yesterday's CASE + today: jobs with a computed column `salary_tier` — max salary ≥ 130000 → `'senior'`, ≥ 100000 → `'mid'`, else `'junior'` — filtered to remote jobs only, sorted by tier then title. (CASE from Day 7 + BETWEEN/IN from today + ORDER BY from Day 4.)
 
-Yesterday's CASE + today: jobs with a computed column `salary_tier` — max salary ≥ 130000 → `'senior'`, ≥ 100000 → `'mid'`, else `'junior'` — filtered to remote jobs only, sorted by tier then title. (CASE from Day 7 + BETWEEN/IN from today + ORDER BY from Day 4.)
-
-## Previous Knowledge
-
-1. Why does `= NULL` fail and what replaces it?
-2. Write from memory: tasks with missing deadlines (COALESCE to 2099).
-3. What do you always run before an UPDATE? Why?
-4. What does `COUNT(assignee_id)` do that `COUNT(*)` doesn't?
-
-## Recall
-
-1. What do `%` and `_` mean in LIKE? Give one example each.
-2. Is BETWEEN inclusive of its endpoints? Prove it with a query from today.
-3. IN vs OR-chains: what does IN make cleaner?
-4. What does EXISTS answer, and when would you use `NOT EXISTS`?
+[Advanced] **H3.** Advanced stencil work: emails where the **username part** (before @) is exactly 5 characters long. (Hint: `%` is greedy — think about `_` × 5 followed by `@`.)
 
 ## Interview Questions
 
@@ -140,8 +130,5 @@ Yesterday's CASE + today: jobs with a computed column `salary_tier` — max sala
 ## Completion Checklist
 
 - [ ] Understand LIKE/ILIKE, IN, BETWEEN, EXISTS
-- [ ] Completed P1–P10 (P8 predicted first)
-- [ ] Fixed all three bugs — including the NOT IN NULL trap
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain all four operators out loud

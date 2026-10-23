@@ -70,12 +70,15 @@ JOIN posts p ON p.id = l.post_id;
 
 ## Practice
 
-[Beginner] **P1.** Every post with author username, newest first.
-[Beginner] **P2.** Every comment with its commenter's username.
-[Beginner] **P3.** Every like: liker username + liked post content.
-[Intermediate] **P4.** Posts written by users from Karachi — username, content, city in the output.
-[Intermediate] **P5.** Likes on posts with at least 3 likes (join + filter on likes_count), liker + content.
-[Intermediate] **P6. Predict first** — how many rows?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Every post with author username, newest first.
+
+[Beginner] **W2.** Every comment with its commenter's username.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — how many rows?
 
 ```sql
 SELECT u.username, p.content
@@ -84,11 +87,13 @@ JOIN posts p ON p.user_id = u.id
 WHERE u.username = 'junaid_s';
 ```
 
-[Intermediate] **P7. From memory:** every message body with sender's username.
-[Advanced] **P8.** Every comment on posts containing the word 'databases' (LIKE + JOIN): comment, commenter, post content.
-[Advanced] **P9.** Using GROUP BY (Day 10) + JOIN: number of posts **per username**, busiest first. Write your prediction for the top username before running.
+[Intermediate] **C2.** `[From Memory]` every message body with sender's username.
 
-## Debugging
+[Intermediate] **C3.** Every like: liker username + liked post content.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (wrong join column — runs fine, garbage meaning)
@@ -110,23 +115,9 @@ WHERE p.user_id = 1 OR u.id = 1;
 
 *(Bug 2: which table owns `user_id`? Both! Qualify: `p.user_id`.)*
 
-## Combine Concepts
+[Advanced] **H2.** Full stack: comments (with commenter username) on posts that have at least 2 likes, newest comments first, top 5. JOIN × 2 + WHERE + ORDER + LIMIT — everything from ten days in one query.
 
-Full stack: comments (with commenter username) on posts that have at least 2 likes, newest comments first, top 5. JOIN × 2 + WHERE + ORDER + LIMIT — everything from ten days in one query.
-
-## Previous Knowledge
-
-1. WHERE vs HAVING — one sentence each.
-2. Write from memory: users per city, only cities with 2+ users.
-3. What's the rule for columns in SELECT with GROUP BY?
-4. Why is `SELECT name, MAX(price)` an error?
-
-## Recall
-
-1. What does the ON clause do, exactly?
-2. Why do we alias tables?
-3. What happens to rows with no match in an INNER JOIN?
-4. In one sentence: why is data split across tables instead of one big table?
+[Advanced] **H3.** Every comment on posts containing the word 'databases' (LIKE + JOIN): comment, commenter, post content.
 
 ## Interview Questions
 
@@ -137,8 +128,5 @@ Full stack: comments (with commenter username) on posts that have at least 2 lik
 ## Completion Checklist
 
 - [ ] Understand INNER JOIN, ON, aliases
-- [ ] Completed P1–P9 (P6 and P9 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain join matching out loud

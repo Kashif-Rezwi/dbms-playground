@@ -48,16 +48,23 @@ Can you, without notes: create a database and schema, choose types for money/tim
 
 ## Practice
 
-[Beginner] **P1.** Build a `stats(user_id PK, login_count)` table; run the upsert twice for user 1; verify count = 2 — explain why it's atomic.
-[Beginner] **P2.** `IS DISTINCT FROM` drill: with NULLs in `bio`, compare `WHERE bio <> NULL` vs `WHERE bio IS DISTINCT FROM NULL`.
-[Intermediate] **P3.** Build a 3-worker job queue table (pending/running/done + 10 jobs); run the SKIP LOCKED claim in two sessions; verify each worker got *different* jobs with zero waiting. One line: what would plain `FOR UPDATE` have done?
-[Intermediate] **P4.** ROLLUP on `orders`: status, city, subtotals + grand total in one query. Which row is the grand total?
-[Intermediate] **P5. Predict first:** upsert with `DO UPDATE SET login_count = stats.login_count + 1` run 5 times in *concurrent* sessions (simulate with 5 sequential — then reason about true concurrency: is `login_count + 1` safe under two simultaneous upserts? Why?).
-[Intermediate] **P6. From memory:** an idempotent "record webhook" insert (unique on (event_id), DO NOTHING).
-[Advanced] **P7.** Pattern match: for each problem — upsert, SKIP LOCKED, ROLLUP, IS DISTINCT FROM, advisory lock — one line on *why* it's the right tool and what the naive version gets wrong.
-[Advanced] **P8.** Write your Stage 1–3 self-check honestly (the 7 skills listed above): pass or fail per skill, and the day to revisit for each fail.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Build a `stats(user_id PK, login_count)` table; run the upsert twice for user 1; verify count = 2 — explain why it's atomic.
+
+[Beginner] **W2.** `IS DISTINCT FROM` drill: with NULLs in `bio`, compare `WHERE bio <> NULL` vs `WHERE bio IS DISTINCT FROM NULL`.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` upsert with `DO UPDATE SET login_count = stats.login_count + 1` run 5 times in *concurrent* sessions (simulate with 5 sequential — then reason about true concurrency: is `login_count + 1` safe under two simultaneous upserts? Why?).
+
+[Intermediate] **C2.** `[From Memory]` an idempotent "record webhook" insert (unique on (event_id), DO NOTHING).
+
+[Intermediate] **C3.** Build a 3-worker job queue table (pending/running/done + 10 jobs); run the SKIP LOCKED claim in two sessions; verify each worker got *different* jobs with zero waiting. One line: what would plain `FOR UPDATE` have done?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: upsert gives "there is no unique or exclusion constraint
@@ -69,23 +76,9 @@ Can you, without notes: create a database and schema, choose types for money/tim
 -- (IS DISTINCT FROM / IS NOT NULL) and the semantic reason <> fails.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The mini-ETL: a `daily_stats` table (day, signups, orders, revenue) fed by an **upsert-from-source** statement (`INSERT ... SELECT ... ON CONFLICT (day) DO UPDATE SET ...`) over `ecommerce` — idempotent: run it twice, same numbers (prove it!). This exact pattern is how real pipelines become re-runnable.
 
-The mini-ETL: a `daily_stats` table (day, signups, orders, revenue) fed by an **upsert-from-source** statement (`INSERT ... SELECT ... ON CONFLICT (day) DO UPDATE SET ...`) over `ecommerce` — idempotent: run it twice, same numbers (prove it!). This exact pattern is how real pipelines become re-runnable.
-
-## Previous Knowledge
-
-1. `->>` vs `@>` — one line each.
-2. When columns beat JSONB?
-3. What does a GIN index serve?
-4. Procedure vs function — the transaction difference.
-
-## Recall
-
-1. What does `ON CONFLICT` require on the target?
-2. What does SKIP LOCKED prevent?
-3. `IS DISTINCT FROM` vs `<>` — the NULL story.
-4. Name all four grab-bag patterns and one use each.
+[Advanced] **H3.** Pattern match: for each problem — upsert, SKIP LOCKED, ROLLUP, IS DISTINCT FROM, advisory lock — one line on *why* it's the right tool and what the naive version gets wrong.
 
 ## Interview Questions
 
@@ -96,7 +89,6 @@ The mini-ETL: a `daily_stats` table (day, signups, orders, revenue) fed by an **
 ## Completion Checklist
 
 - [ ] Understand upsert, SKIP LOCKED, ROLLUP, IS DISTINCT FROM
-- [ ] Completed P1–P8 (P5 reasoned before testing)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the idempotent mini-ETL
 - [ ] Honest self-check written; gaps scheduled

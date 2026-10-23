@@ -62,23 +62,27 @@ SELECT SUM(quantity * unit_price) FROM order_items;                  -- gross me
 
 ## Practice
 
-[Beginner] **P1.** How many products are in the catalog?
-[Beginner] **P2.** Total stock across all products (SUM of stock).
-[Beginner] **P3.** Average price of category 5 (Sports) — rounded to 2 decimals.
-[Beginner] **P4.** Cheapest and most expensive product prices (one query, two aggregates).
-[Intermediate] **P5.** Total value of all *delivered* orders.
-[Intermediate] **P6.** Number of reviews, and the average rating, where rating >= 3.
-[Intermediate] **P7. Predict first** (write the number down before running):
+### 🟢 Warm Up
+
+[Beginner] **W1.** How many products are in the catalog?
+
+[Beginner] **W2.** Total stock across all products (SUM of stock).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` (write the number down before running):
 
 ```sql
 SELECT COUNT(*) FROM orders WHERE status <> 'cancelled';
 ```
 
-[Intermediate] **P8. From memory:** count of users joined in 2024.
-[Advanced] **P9.** One query, four numbers: for products in category 1 — the count, average price, min price, and max price. What is the column header for each?
-[Advanced] **P10.** Revenue if every out-of-stock item were restocked to 1 and sold at current price. (Silly, but it forces: COUNT + price. One aggregate query.)
+[Intermediate] **C2.** `[From Memory]` count of users joined in 2024.
 
-## Debugging
+[Intermediate] **C3.** Average price of category 5 (Sports) — rounded to 2 decimals.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: what is wrong and what error do you get?
@@ -91,23 +95,9 @@ SELECT COUNT(is_active) FROM users WHERE is_active = FALSE;
 SELECT AVG(price) FROM products WHERE category_id <> 5;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Business questions need filters + aggregates: **average rating of products that cost more than 2000** (join reviews to prices? not yet — reviews don't carry price. Instead: average price of *reviewed* products is Day 11+ territory). Do this instead: **total quantity sold** across all `order_items` for `quantity >= 2` — then repeat with `BETWEEN` on `unit_price` (Day 8 + today). Predict both numbers first.
 
-Business questions need filters + aggregates: **average rating of products that cost more than 2000** (join reviews to prices? not yet — reviews don't carry price. Instead: average price of *reviewed* products is Day 11+ territory). Do this instead: **total quantity sold** across all `order_items` for `quantity >= 2` — then repeat with `BETWEEN` on `unit_price` (Day 8 + today). Predict both numbers first.
-
-## Previous Knowledge
-
-1. What do `%` and `_` mean in LIKE?
-2. Why does `COUNT(col)` differ from `COUNT(*)`? (You proved it on Day 7.)
-3. Write from memory: candidates with 2–6 years experience in cities containing 'o'.
-4. What does EXISTS answer?
-
-## Recall
-
-1. What does an aggregate function do to a result set — input vs output?
-2. Why is `SELECT name, MAX(price)` an error?
-3. How does WHERE interact with aggregates (which happens first)?
-4. What does AVG do with NULLs?
+[Advanced] **H3.** One query, four numbers: for products in category 1 — the count, average price, min price, and max price. What is the column header for each?
 
 ## Interview Questions
 
@@ -118,8 +108,5 @@ Business questions need filters + aggregates: **average rating of products that 
 ## Completion Checklist
 
 - [ ] Understand all five aggregates + NULL behavior
-- [ ] Completed P1–P10 (P7 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain "one value out, rows in" out loud

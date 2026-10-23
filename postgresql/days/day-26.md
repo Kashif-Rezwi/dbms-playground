@@ -39,15 +39,23 @@ Everything before Day 26 was *skills*; this day is *responsibility*. The differe
 
 ## Practice
 
-[Beginner] **P1.** Lock-timeout taste: S1 holds a row lock; S2 `SET lock_timeout='2s'; ALTER TABLE ...` → clean error. Without the timeout, S2 blocks — and *every session behind S2* queues too. Write the two-line lesson.
-[Beginner] **P2.** Classify these DDLs (instant vs table-rewrite) by timing them on perf_lab: add nullable column; add a column with DEFAULT; add NOT NULL to an existing nullable column; change TEXT→INT; CREATE INDEX vs CREATE INDEX CONCURRENTLY.
-[Intermediate] **P3.** Write your migration discipline as 5 one-line rules; skeleton a migrations folder for a hypothetical app (001_add_users.sql...).
-[Intermediate] **P4.** Build your one-query **vitals report** (connection count + bloat top-1 + your slowest query + disk usage). This is your own little Grafana.
-[Intermediate] **P5. Predict first:** a migration adds NOT NULL to a column holding NULLs — what error, and what's the correct three-step sequence? (backfill → set NOT NULL → drop helper). Rehearse it.
-[Advanced] **P6.** Incident tabletop: as *first responder* for "Friday 3 PM: checkout page timing out" — write your first 10 minutes with exact commands (pg_stat_activity? lock waits? deploy log?), and where stabilize ends and diagnose begins. No code changes in the first 10 minutes!
-[Advanced] **P7. From memory:** the four monitoring dials + the incident shape (detect/stabilize/diagnose/fix/postmortem).
+### 🟢 Warm Up
 
-## Debugging — Postmortem Practice
+[Beginner] **W1.** Lock-timeout taste: S1 holds a row lock; S2 `SET lock_timeout='2s'; ALTER TABLE ...` → clean error. Without the timeout, S2 blocks — and *every session behind S2* queues too. Write the two-line lesson.
+
+[Beginner] **W2.** Classify these DDLs (instant vs table-rewrite) by timing them on perf_lab: add nullable column; add a column with DEFAULT; add NOT NULL to an existing nullable column; change TEXT→INT; CREATE INDEX vs CREATE INDEX CONCURRENTLY.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` a migration adds NOT NULL to a column holding NULLs — what error, and what's the correct three-step sequence? (backfill → set NOT NULL → drop helper). Rehearse it.
+
+[Intermediate] **C2.** `[From Memory]` the four monitoring dials + the incident shape (detect/stabilize/diagnose/fix/postmortem).
+
+[Intermediate] **C3.** Write your migration discipline as 5 one-line rules; skeleton a migrations folder for a hypothetical app (001_add_users.sql...).
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Diagnose each; name root cause + one-line prevention (all from days you've lived):
@@ -59,23 +67,9 @@ Everything before Day 26 was *skills*; this day is *responsibility*. The differe
 --    table, never purged. (Root: ___. Prevention: ___.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** **[P6: Ops Runbook](../projects/06-ops-runbook.md)** — a complete runbook for a hypothetical production PostgreSQL: backup/restore, monitoring vitals, migration discipline, incident response, maintenance, access control. Written by you, for a teammate, from 25 days of experience.
 
-**[P6: Ops Runbook](../projects/06-ops-runbook.md)** — a complete runbook for a hypothetical production PostgreSQL: backup/restore, monitoring vitals, migration discipline, incident response, maintenance, access control. Written by you, for a teammate, from 25 days of experience.
-
-## Previous Knowledge
-
-1. VACUUM vs VACUUM FULL — locks?
-2. What blocks autovacuum?
-3. The 7-step tuning checklist.
-4. Day 23's restore runbook — its five steps?
-
-## Recall
-
-1. Why lock_timeout before DDL? What queues behind a blocked DDL?
-2. Instant vs rewrite DDL — name one of each.
-3. The four monitoring dials? The incident shape?
-4. What does "stabilize" mean, and why not "fix" first?
+[Advanced] **H3.** Incident tabletop: as *first responder* for "Friday 3 PM: checkout page timing out" — write your first 10 minutes with exact commands (pg_stat_activity? lock waits? deploy log?), and where stabilize ends and diagnose begins. No code changes in the first 10 minutes!
 
 ## Interview Questions
 
@@ -86,8 +80,5 @@ Everything before Day 26 was *skills*; this day is *responsibility*. The differe
 ## Completion Checklist
 
 - [ ] Understand migrations, monitoring, incidents, environments
-- [ ] Completed P1–P7 (P5 predicted first)
-- [ ] Diagnosed all three postmortems
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 6 (the runbook)
-- [ ] Answered recall without notes
-

@@ -74,11 +74,15 @@ LIMIT 10;
 
 ## Practice
 
-[Beginner] **P1.** Time `SELECT * FROM big_orders LIMIT 100000` vs `SELECT id FROM big_orders LIMIT 100000`. Explain the gap.
-[Beginner] **P2.** `SELECT EXISTS (SELECT 1 FROM big_orders WHERE user_id = 417);` vs `SELECT COUNT(*) ... WHERE user_id = 417;` — compare plans. Which can stop early?
-[Intermediate] **P3.** Measure OFFSET degradation: time `LIMIT 10 OFFSET 1000`, `OFFSET 100000`, `OFFSET 190000` on big_orders ordered by id. Plot ms vs offset in your notes.
-[Intermediate] **P4.** Convert to keyset: "next 10 orders after id 150000". Compare timing with OFFSET at the same depth.
-[Intermediate] **P5. Predict first:** which is faster and why —
+### 🟢 Warm Up
+
+[Beginner] **W1.** Time `SELECT * FROM big_orders LIMIT 100000` vs `SELECT id FROM big_orders LIMIT 100000`. Explain the gap.
+
+[Beginner] **W2.** `SELECT EXISTS (SELECT 1 FROM big_orders WHERE user_id = 417);` vs `SELECT COUNT(*) ... WHERE user_id = 417;` — compare plans. Which can stop early?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` which is faster and why —
 
 ```sql
 SELECT COUNT(*) FROM big_orders WHERE ordered_at >= DATE '2025-06-01';
@@ -86,11 +90,14 @@ SELECT COUNT(*) FROM big_orders WHERE ordered_at - DATE '2025-01-01' > 150;
 ```
 
 Then measure. Which can use an index on `ordered_at`?
-[Intermediate] **P6. From memory:** rewrite `WHERE UPPER(city) = 'KARACHI'` so it can use an index.
-[Advanced] **P7.** Correlated-vs-window showdown: "each order with the average total of its user's orders." Write both versions (correlated subquery in SELECT; `AVG() OVER (PARTITION BY user_id)`). EXPLAIN ANALYZE both. Which wins? Why?
-[Advanced] **P8.** Over-fetch audit: for "top 5 products by revenue", check the plan for how much data flows *before* the LIMIT. Would a CTE-with-limit rewrite be equivalent? (Careful: LIMIT before GROUP BY changes semantics — when is it safe?)
 
-## Debugging
+[Intermediate] **C2.** `[From Memory]` rewrite `WHERE UPPER(city) = 'KARACHI'` so it can use an index.
+
+[Intermediate] **C3.** Measure OFFSET degradation: time `LIMIT 10 OFFSET 1000`, `OFFSET 100000`, `OFFSET 190000` on big_orders ordered by id. Plot ms vs offset in your notes.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (performance): why will app page 20,000 be slow?
@@ -104,23 +111,9 @@ SELECT * FROM big_orders WHERE user_id = 417 AND status = 'delivered';
 -- Correct but wasteful for a yes/no question. Rewrite it.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The report that uses everything: "each user's total delivered revenue, top 10, with rank" — write the naive version, EXPLAIN ANALYZE, optimize with CTE pre-aggregation, re-measure, and write a before/after report. This is exactly Project 6's workflow.
 
-The report that uses everything: "each user's total delivered revenue, top 10, with rank" — write the naive version, EXPLAIN ANALYZE, optimize with CTE pre-aggregation, re-measure, and write a before/after report. This is exactly Project 6's workflow.
-
-## Previous Knowledge
-
-1. EXPLAIN vs EXPLAIN ANALYZE — one line + the write caveat.
-2. What is selectivity?
-3. Two costs of any index?
-4. The 5-step diagnostic method — from memory.
-
-## Recall
-
-1. Name four optimization patterns with one line each.
-2. Why does deep OFFSET get slow, and what's the fix?
-3. Why do functions on columns break index use?
-4. When is `SELECT *` actually fine?
+[Advanced] **H3.** Correlated-vs-window showdown: "each order with the average total of its user's orders." Write both versions (correlated subquery in SELECT; `AVG() OVER (PARTITION BY user_id)`). EXPLAIN ANALYZE both. Which wins? Why?
 
 ## Interview Questions
 
@@ -136,9 +129,5 @@ Build **[P6: Query Performance Lab](../projects/06-performance-lab.md)** — a s
 
 - [ ] Understand the optimization patterns
 - [ ] Measured every before/after (numbers in notes)
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task with a written report
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 6
-

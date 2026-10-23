@@ -71,16 +71,23 @@ db.orders.aggregate([
 
 ## Practice
 
-[Beginner] **P1.** Revenue per order status (example above — type it yourself). Predict the top status's revenue first.
-[Beginner] **P2.** Products per category_id (count) — then the top 2 categories by count.
-[Beginner] **P3.** Average rating per product — top 3 products. (Hint: reviews collection.)
-[Intermediate] **P4.** Users with ≥ 2 orders — the $group + post-$match HAVING pattern. Predict who (users 1, 2, 3 have 2 orders each... verify!).
-[Intermediate] **P5. Predict first:** what's `_id` in the output of `{$group: {_id: null, total: {$sum: '$total_amount'}}}` on non-cancelled orders? (One group, whole collection: `{ _id: null, total: ... }` — predict the number too: 60595.5+... compute from the seed data first!)
-[Intermediate] **P6.** $push collection: each user's order totals as an array + lifetime sum — then explain how this compares to embedding orders on the user (a *computed* view vs a *stored* design — the computed pattern's whole argument).
-[Advanced] **P7.** $addToSet vs $push, felt: group orders by status with both `statuses: {$push: '$user_id'}` and `uniques: {$addToSet: '$user_id'}`... on orders grouped by status — who differs? (Users appearing multiple times.)
-[Advanced] **P8.** From memory: $match-before vs $match-after — which is WHERE, which is HAVING, and why must the doc-level one go first?
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Revenue per order status (example above — type it yourself). Predict the top status's revenue first.
+
+[Beginner] **W2.** Products per category_id (count) — then the top 2 categories by count.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` what's `_id` in the output of `{$group: {_id: null, total: {$sum: '$total_amount'}}}` on non-cancelled orders? (One group, whole collection: `{ _id: null, total: ... }` — predict the number too: 60595.5+... compute from the seed data first!)
+
+[Intermediate] **C2.** `[From Memory]` $match-before vs $match-after — which is WHERE, which is HAVING, and why must the doc-level one go first?
+
+[Intermediate] **C3.** Average rating per product — top 3 products. (Hint: reviews collection.)
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: $group without _id — error: "a group specification must include
@@ -92,23 +99,9 @@ db.orders.aggregate([
 // Verify each.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The full pipeline, everything so far: **"top 3 users by delivered revenue, with their order count and first order date"** — $match (delivered) → $group (sum, count, $min) → $sort → $limit → $project (rename _id → user_id). Predict the top user first (user 1 or 3? — check the seed!). This is Project 6's opening move.
 
-The full pipeline, everything so far: **"top 3 users by delivered revenue, with their order count and first order date"** — $match (delivered) → $group (sum, count, $min) → $sort → $limit → $project (rename _id → user_id). Predict the top user first (user 1 or 3? — check the seed!). This is Project 6's opening move.
-
-## Previous Knowledge
-
-1. Pipeline rule #1 + reason?
-2. What does every pipeline return (shape)?
-3. $project's expression superpower?
-4. Covered queries — what breaks them?
-
-## Recall
-
-1. What is `_id` in $group — and what does null do?
-2. Name all seven accumulators.
-3. WHERE vs HAVING in pipeline terms?
-4. What does $push build, and what stored design is it the computed alternative to?
+[Advanced] **H3.** $addToSet vs $push, felt: group orders by status with both `statuses: {$push: '$user_id'}` and `uniques: {$addToSet: '$user_id'}`... on orders grouped by status — who differs? (Users appearing multiple times.)
 
 ## Interview Questions
 
@@ -119,7 +112,5 @@ The full pipeline, everything so far: **"top 3 users by delivered revenue, with 
 ## Completion Checklist
 
 - [ ] Understand $group, _id, accumulators, WHERE vs HAVING positioning
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Completed the top-3-users pipeline
-- [ ] Answered recall without notes

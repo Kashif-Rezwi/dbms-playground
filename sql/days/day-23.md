@@ -71,17 +71,23 @@ GROUP BY u.name;
 
 ## Practice
 
-[Beginner] **P1.** EXPLAIN (plain) the `user_id = 417` query. Which node appears? What is the estimated `rows=`?
-[Beginner] **P2.** Drop yesterday's index (`DROP INDEX idx_big_orders_user;`), EXPLAIN again. What changed? Recreate the index.
-[Beginner] **P3.** EXPLAIN ANALYZE the same query. Write down: estimated rows vs actual rows — equal?
-[Intermediate] **P4.** EXPLAIN ANALYZE `WHERE status = 'delivered'`. Did the planner choose a Seq Scan *on purpose*? Explain why that's correct.
-[Intermediate] **P5. Predict first:** for `WHERE user_id = 417 AND status = 'pending'` — which node will appear and roughly why? Then check.
-[Intermediate] **P6.** Run the join example. Identify the two child nodes of the join node.
-[Advanced] **P7. From memory:** the 5-step diagnostic method, out loud.
-[Advanced] **P8.** Find a query where estimated rows differ *hugely* from actual rows (try date ranges or LIKE patterns). Then run `ANALYZE big_orders;` and re-EXPLAIN. What changed?
-[Advanced] **P9.** Explain why `WHERE user_id = 417` and `WHERE user_id + 0 = 417` give different plans. (Indexes die at functions.)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** EXPLAIN (plain) the `user_id = 417` query. Which node appears? What is the estimated `rows=`?
+
+[Beginner] **W2.** Drop yesterday's index (`DROP INDEX idx_big_orders_user;`), EXPLAIN again. What changed? Recreate the index.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` for `WHERE user_id = 417 AND status = 'pending'` — which node will appear and roughly why? Then check.
+
+[Intermediate] **C2.** `[From Memory]` the 5-step diagnostic method, out loud.
+
+[Intermediate] **C3.** EXPLAIN ANALYZE the same query. Write down: estimated rows vs actual rows — equal?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: EXPLAIN ANALYZE on a write — what danger?
@@ -95,23 +101,9 @@ EXPLAIN ANALYZE DELETE FROM big_orders WHERE user_id = 417;
 EXPLAIN SELECT FROM big_orders WHERE user_id = 417;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Full diagnostic loop on a slow query: "revenue per city" on the big dataset (join big_users to big_orders, group by city, excluding cancelled). EXPLAIN ANALYZE it, find the expensive node, add the index that helps most, re-EXPLAIN, and write a 2-sentence before/after report with numbers.
 
-Full diagnostic loop on a slow query: "revenue per city" on the big dataset (join big_users to big_orders, group by city, excluding cancelled). EXPLAIN ANALYZE it, find the expensive node, add the index that helps most, re-EXPLAIN, and write a 2-sentence before/after report with numbers.
-
-## Previous Knowledge
-
-1. Two costs of an index?
-2. What's selectivity, and why does an index on a mostly-TRUE column fail?
-3. ACID — four letters, one line each.
-4. What does ROLLBACK undo?
-
-## Recall
-
-1. What does EXPLAIN show vs EXPLAIN ANALYZE?
-2. Seq Scan — when is it a problem, and when is it *correct*?
-3. What does a bad rows-estimate suggest, and how do you fix it?
-4. The 5-step diagnostic method?
+[Advanced] **H3.** Find a query where estimated rows differ *hugely* from actual rows (try date ranges or LIKE patterns). Then run `ANALYZE big_orders;` and re-EXPLAIN. What changed?
 
 ## Interview Questions
 
@@ -122,9 +114,5 @@ Full diagnostic loop on a slow query: "revenue per city" on the big dataset (joi
 ## Completion Checklist
 
 - [ ] Understand plans, nodes, estimates vs actuals
-- [ ] Completed P1–P9 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed the diagnostic-loop combine task with numbers
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can run the 5-step method from memory
-

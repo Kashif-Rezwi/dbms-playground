@@ -48,16 +48,23 @@ ANALYZE users;   -- now "city='K' AND is_active" estimates use the correlation
 
 ## Practice
 
-[Beginner] **P1.** Run the professional format on a user lookup. Report: hit vs read pages, actual vs estimate, and one line on JIT presence.
-[Beginner] **P2.** Run it twice — the second run should show more hits (cache warm). Explain why "cold run" is the honest benchmark for disk-bound queries.
-[Intermediate] **P3.** Temp spill experiment: `SET work_mem='64kB';` then EXPLAIN (ANALYZE, BUFFERS) a big `ORDER BY` — find `temp read/written`. Bump work_mem, re-run, watch temp vanish. Report both.
-[Intermediate] **P4.** Loops: EXPLAIN ANALYZE `SELECT u.id, (SELECT count(*) FROM big_orders o WHERE o.user_id = u.id) FROM big_users u WHERE u.id <= 100;` — find `loops=100` on the subplan. Time it. Rewrite with a LEFT JOIN + GROUP BY and compare. (Day 24 P7's rematch, now with visible evidence.)
-[Intermediate] **P5. Predict first:** a skewed column (`city` with 50% Karachi from Day 15's sabotage): default statistics — does the planner estimate 25k correctly? Then `SET STATISTICS 1000`, ANALYZE, re-EXPLAIN. Did depth change the estimate?
-[Advanced] **P6. From memory:** the full diagnostic loop with BUFFERS, in five steps.
-[Advanced] **P7.** Extended statistics demo: create a table where two columns correlate (`SELECT i, i % 2 AS even FROM generate_series(1, 50000) i` → t(a, b) with b = a % 2)... simpler: `CREATE TABLE t AS SELECT g AS a, g % 7 AS b FROM generate_series(1,200000) g;` — query `WHERE a = 100 AND b = 2`: plan estimate assumes independence. Create extended stats on (a, b), ANALYZE, re-EXPLAIN — the estimate tightens. Explain what "functional dependency" taught the planner.
-[Advanced] **P8.** Write the one-page "reading plan" cheat card for future-you: node types you've met, loops, buffers, temp, estimate-vs-actual. You'll use it on Day 17's project.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Run the professional format on a user lookup. Report: hit vs read pages, actual vs estimate, and one line on JIT presence.
+
+[Beginner] **W2.** Run it twice — the second run should show more hits (cache warm). Explain why "cold run" is the honest benchmark for disk-bound queries.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` a skewed column (`city` with 50% Karachi from Day 15's sabotage): default statistics — does the planner estimate 25k correctly? Then `SET STATISTICS 1000`, ANALYZE, re-EXPLAIN. Did depth change the estimate?
+
+[Intermediate] **C2.** `[From Memory]` the full diagnostic loop with BUFFERS, in five steps.
+
+[Intermediate] **C3.** Temp spill experiment: `SET work_mem='64kB';` then EXPLAIN (ANALYZE, BUFFERS) a big `ORDER BY` — find `temp read/written`. Bump work_mem, re-run, watch temp vanish. Report both.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: query feels slow but every node's actual time looks tiny.
@@ -69,23 +76,9 @@ ANALYZE users;   -- now "city='K' AND is_active" estimates use the correlation
 -- silently rots over weeks? (stats staleness + bloat — Day 25 links)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Full instrumentation of the top-5 report from Day 14's P8: rerun each query with (ANALYZE, BUFFERS, SETTINGS); annotate each with hit/read/temp totals and a loops-warning if any; end with a 3-sentence executive summary ("the two heaviest are..., both spill temp at current work_mem, recommended levers are..."). This IS the project-ready report format.
 
-Full instrumentation of the top-5 report from Day 14's P8: rerun each query with (ANALYZE, BUFFERS, SETTINGS); annotate each with hit/read/temp totals and a loops-warning if any; end with a 3-sentence executive summary ("the two heaviest are..., both spill temp at current work_mem, recommended levers are..."). This IS the project-ready report format.
-
-## Previous Knowledge
-
-1. The three join strategies + "wins when".
-2. What does correlation tell the planner?
-3. Composite ordering rule.
-4. SQL: functions on indexed columns — why fatal?
-
-## Recall
-
-1. shared hit vs read vs temp — one line each.
-2. Why do loops multiply, and where do you check them?
-3. When do YOU run ANALYZE manually (vs autovacuum)?
-4. What do extended statistics teach the planner?
+[Advanced] **H3.** Extended statistics demo: create a table where two columns correlate (`SELECT i, i % 2 AS even FROM generate_series(1, 50000) i` → t(a, b) with b = a % 2)... simpler: `CREATE TABLE t AS SELECT g AS a, g % 7 AS b FROM generate_series(1,200000) g;` — query `WHERE a = 100 AND b = 2`: plan estimate assumes independence. Create extended stats on (a, b), ANALYZE, re-EXPLAIN — the estimate tightens. Explain what "functional dependency" taught the planner.
 
 ## Interview Questions
 
@@ -96,7 +89,5 @@ Full instrumentation of the top-5 report from Day 14's P8: rerun each query with
 ## Completion Checklist
 
 - [ ] Understand BUFFERS, loops, temp, statistics depth, extended stats
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote your plan-reading cheat card
-- [ ] Answered recall without notes

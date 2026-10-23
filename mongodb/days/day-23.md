@@ -69,16 +69,23 @@ db.stats.updateOne({ _id: 1 }, { $inc: { count: 1 }, $set: { last_at: new Date()
 
 ## Practice
 
-[Beginner] **P1.** Single-doc atomicity observed: an update with $inc AND $set — why no transaction needed? Then name one case where two ops on the same doc still want a transaction (two sequential updates — reads see the middle state!).
-[Beginner] **P2.** `rs.initiate()` setup; `rs.status()` — one member, PRIMARY. (Try a transaction BEFORE initiating and read the error first!)
-[Beginner] **P3.** Run the transfer transaction (pattern above) on a scratch `bank` DB — balances move together.
-[Intermediate] **P4.** The abort demo: debit, then `throw new Error('boom')` — catch, abort, verify BOTH balances unchanged.
-[Intermediate] **P5. Predict first:** a stray `db.accounts.updateOne(...)` (NOT through `session`) during an open transaction — inside or outside? Verify: the change appears immediately even after abort. Write the lesson.
-[Intermediate] **P6.** Two mongosh tabs: S1's open transaction debited account 1; S2 tries updating account 1 — blocked? Verify; abort S1; watch S2 complete.
-[Advanced] **P7.** The retry-shaped truth: transactions fail with TransientTransactionError and must be RETRIED. Write the 3-attempt retry wrapper around the transfer (if you did the PostgreSQL track: Day 19's discipline, different database).
-[Advanced] **P8.** The design memo: for (a) counter increment, (b) transfer between accounts, (c) order + inventory decrement, (d) status + history append — transaction or design-around? One line each, single-doc option first when it exists.
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Single-doc atomicity observed: an update with $inc AND $set — why no transaction needed? Then name one case where two ops on the same doc still want a transaction (two sequential updates — reads see the middle state!).
+
+[Beginner] **W2.** `rs.initiate()` setup; `rs.status()` — one member, PRIMARY. (Try a transaction BEFORE initiating and read the error first!)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` a stray `db.accounts.updateOne(...)` (NOT through `session`) during an open transaction — inside or outside? Verify: the change appears immediately even after abort. Write the lesson.
+
+[Intermediate] **C2.** Run the transfer transaction (pattern above) on a scratch `bank` DB — balances move together.
+
+[Intermediate] **C3.** The abort demo: debit, then `throw new Error('boom')` — catch, abort, verify BOTH balances unchanged.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```javascript
 // Bug 1: "Illegal operation... session" — an operation in the
@@ -90,23 +97,9 @@ db.stats.updateOne({ _id: 1 }, { $inc: { count: 1 }, $set: { last_at: new Date()
 // rs.initiate(), RECONNECT.
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The modeling ↔ transactions bridge, as your track synthesis: take Day 15's e-commerce design; list which operations need transactions (order + stock across collections) vs which embedding already made atomic (items inside the order). Two paragraphs, concrete operations — the document-model payoff speech.
 
-The modeling ↔ transactions bridge, as your track synthesis: take Day 15's e-commerce design; list which operations need transactions (order + stock across collections) vs which embedding already made atomic (items inside the order). Two paragraphs, concrete operations — the document-model payoff speech.
-
-## Previous Knowledge
-
-1. $lookup's four fields + the array rule?
-2. $unwind's two behaviors?
-3. WHERE vs HAVING, pipeline terms?
-4. Day 13's no-FK reality — what does today add for multi-doc invariants?
-
-## Recall
-
-1. What has ALWAYS been atomic in MongoDB — before transactions existed?
-2. What setup does a multi-doc transaction require (even locally)?
-3. The three rules that bite everyone?
-4. The senior order of consideration: transaction vs design-around?
+[Advanced] **H3.** The retry-shaped truth: transactions fail with TransientTransactionError and must be RETRIED. Write the 3-attempt retry wrapper around the transfer (if you did the PostgreSQL track: Day 19's discipline, different database).
 
 ## Interview Questions
 
@@ -117,8 +110,5 @@ The modeling ↔ transactions bridge, as your track synthesis: take Day 15's e-c
 ## Completion Checklist
 
 - [ ] Understand single-doc atomicity, session transactions, limits, retries
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Wrote the modeling↔transactions synthesis
-- [ ] Answered recall without notes
-

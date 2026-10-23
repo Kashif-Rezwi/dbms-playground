@@ -58,11 +58,15 @@ SELECT * FROM categories ORDER BY id;
 
 ## Practice
 
-[Beginner] **P1.** Insert yourself as a user (invent an id — pick 101 so future answers line up; email must be unique).
-[Beginner] **P2.** Insert two more users of your choosing.
-[Beginner] **P3.** Insert a product into category 9 (Pet Supplies) — your choice of name/price/stock/id.
-[Beginner] **P4.** Verify all three inserts with SELECTs.
-[Intermediate] **P5. Predict first:** what exactly happens?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Insert yourself as a user (invent an id — pick 101 so future answers line up; email must be unique).
+
+[Beginner] **W2.** Insert two more users of your choosing.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` what exactly happens?
 
 ```sql
 INSERT INTO users (name, email, city) VALUES ('NoID Person', 'noid@example.com', 'Quetta');
@@ -70,12 +74,13 @@ INSERT INTO users (name, email, city) VALUES ('NoID Person', 'noid@example.com',
 
 Write your prediction, run it, read the *whole* error message, explain what rule fired.
 
-[Intermediate] **P6.** Insert an order for your user (status `'pending'`, ordered today — use `CURRENT_DATE`). Now *update your prediction skills*: before verifying, what columns did you not provide, and what are they now?
+[Intermediate] **C2.** `[From Memory]` insert a review for the product you created in P3, written by your user, rating 4.
 
-[Intermediate] **P7. From memory:** insert a review for the product you created in P3, written by your user, rating 4.
-[Advanced] **P8.** Insert a product that violates a constraint on purpose (e.g., negative price). Read the error. Which constraint name appears? Now write one sentence explaining what a CHECK constraint does.
+[Intermediate] **C3.** Insert a product into category 9 (Pet Supplies) — your choice of name/price/stock/id.
 
-## Debugging
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (syntax: wrong keyword order)
@@ -91,23 +96,9 @@ INSERT INTO users (id, name, email, city, is_active, joined_at)
 VALUES (1, 'Duplicate ID', 'dupe@example.com', 'Sialkot', TRUE, '2025-02-02');
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Full mini-flow: **insert** a new user, **verify** with a filtered SELECT (WHERE email = yours), then show **only** the users who joined in 2025, **sorted** newest first, **top 3**. (INSERT + SELECT + WHERE + ORDER BY + LIMIT in one chain.)
 
-Full mini-flow: **insert** a new user, **verify** with a filtered SELECT (WHERE email = yours), then show **only** the users who joined in 2025, **sorted** newest first, **top 3**. (INSERT + SELECT + WHERE + ORDER BY + LIMIT in one chain.)
-
-## Previous Knowledge
-
-1. Predict-before-run: what does `SELECT DISTINCT status FROM orders` return?
-2. Write from memory: top 2 priciest in-stock products.
-3. What's the NULL trap in WHERE?
-4. Does ORDER BY change the table? Does INSERT?
-
-## Recall
-
-1. Why must you always list columns in an INSERT?
-2. What happens to columns you don't list?
-3. How do you insert 5 rows in one statement?
-4. What did you do after every insert, and why?
+[Advanced] **H3.** Insert a product that violates a constraint on purpose (e.g., negative price). Read the error. Which constraint name appears? Now write one sentence explaining what a CHECK constraint does.
 
 ## Interview Questions
 
@@ -122,8 +113,5 @@ Build **[P1: Task Manager Database](../projects/01-task-manager.md)** — create
 ## Completion Checklist
 
 - [ ] Understand INSERT, column lists, defaults, multi-row
-- [ ] Completed P1–P8
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 1

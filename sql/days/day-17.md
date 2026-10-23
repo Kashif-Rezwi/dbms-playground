@@ -64,23 +64,29 @@ SELECT name, SUBSTRING(name, 1, 5) AS short_name FROM products;
 
 ## Practice
 
-[Beginner] **P1.** Orders ordered between 2025-02-01 and 2025-04-30 (inclusive) — id, total, date.
-[Beginner] **P2.** Users who joined more than a year before today... (data is 2024 — use `WHERE joined_at < CURRENT_DATE - 400`). Adjust and explain why you adjusted.
-[Beginner] **P3.** Product names in all-caps (just name).
-[Intermediate] **P4.** Revenue per month for **delivered** orders (the pattern above — type it yourself).
-[Intermediate] **P5.** Orders in the last 90 days of the data's range: use `SELECT MAX(ordered_at) FROM orders` as a scalar subquery in your WHERE — "recent relative to the data, not the clock".
-[Intermediate] **P6. Predict first:** output of
+### 🟢 Warm Up
+
+[Beginner] **W1.** Orders ordered between 2025-02-01 and 2025-04-30 (inclusive) — id, total, date.
+
+[Beginner] **W2.** Users who joined more than a year before today... (data is 2024 — use `WHERE joined_at < CURRENT_DATE - 400`). Adjust and explain why you adjusted.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` output of
 
 ```sql
 SELECT UPPER(SUBSTRING('database', 1, 4)) || '!';
 ```
 
 Then run it. Also predict `SELECT DATE '2025-01-10' + 25;`
-[Intermediate] **P7. From memory:** user emails that end with `'@example.com'` — then the same but with the domain stripped (`REPLACE` or `SPLIT_PART`... stick to what you know: `REPLACE(email, '@example.com', '')`).
-[Advanced] **P8.** "Users joined per year" — GROUP BY EXTRACT(YEAR FROM joined_at), ordered chronologically. Predict counts first.
-[Advanced] **P9.** Review activity by weekday hint: `EXTRACT(DOW FROM created_at)` (0=Sunday). Which weekday had the most reviews in this data?
 
-## Debugging
+[Intermediate] **C2.** `[From Memory]` user emails that end with `'@example.com'` — then the same but with the domain stripped (`REPLACE` or `SPLIT_PART`... stick to what you know: `REPLACE(email, '@example.com', '')`).
+
+[Intermediate] **C3.** Product names in all-caps (just name).
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: what type error, and why?
@@ -93,23 +99,9 @@ SELECT id FROM orders WHERE ordered_at = '2025-01-10';
 SELECT name FROM products WHERE LENGTH(price) > 4;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The monthly retention report: **month, users who ordered that month, revenue** — GROUP BY month with COUNT(DISTINCT user_id) + SUM, excluding cancelled, ordered chronologically. Dates + GROUP BY + join-free multi-aggregate. Predict January's numbers before running.
 
-The monthly retention report: **month, users who ordered that month, revenue** — GROUP BY month with COUNT(DISTINCT user_id) + SUM, excluding cancelled, ordered chronologically. Dates + GROUP BY + join-free multi-aggregate. Predict January's numbers before running.
-
-## Previous Knowledge
-
-1. Window vs GROUP BY — output rows?
-2. Write from memory: top 3 tasks per project (the CTE + row_number pattern).
-3. What does PARTITION BY do?
-4. Correlated subquery — what makes it correlated?
-
-## Recall
-
-1. What's the pattern for "revenue per month"? (The three steps.)
-2. What does EXTRACT return — a date or a number?
-3. `||` does what? In what don't you use `+` for strings?
-4. Why is `WHERE date = '2025-01-10'` usually a bug?
+[Advanced] **H3.** "Users joined per year" — GROUP BY EXTRACT(YEAR FROM joined_at), ordered chronologically. Predict counts first.
 
 ## Interview Questions
 
@@ -120,8 +112,5 @@ The monthly retention report: **month, users who ordered that month, revenue** �
 ## Completion Checklist
 
 - [ ] Understand date comparisons, EXTRACT, intervals, string functions
-- [ ] Completed P1–P9 (P6 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can write the monthly-revenue pattern from memory

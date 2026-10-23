@@ -67,27 +67,31 @@ for user in SELECT id FROM users:                -- 1 query
 -- The fix: ONE join.
 ```
 
-## Practice — Diagnose on Sight
+## Practice
 
 Each has exactly one anti-pattern. Name it, explain the symptom, write the fix:
 
-[Beginner] **P1.** `SELECT COUNT(*) FROM users u LEFT JOIN reviews r ON r.user_id = u.id WHERE u.name = 'Ayesha Khan';` — right count? What if she has no reviews? Fix it.
-[Intermediate] **P2.** The LEFT JOIN + WHERE trap (example 2). Predict the row-count change vs moving `o.status = 'delivered'` into the ON clause. Measure both.
-[Intermediate] **P3.** `SELECT * FROM users WHERE SUBSTRING(email, 1, 6) = 'ayesha'` with an index on email — name the problem and rewrite.
-[Intermediate] **P4. Predict first:** rows returned by
+### 🟢 Warm Up
+
+[Beginner] **W1.** `SELECT COUNT(*) FROM users u LEFT JOIN reviews r ON r.user_id = u.id WHERE u.name = 'Ayesha Khan';` — right count? What if she has no reviews? Fix it.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` rows returned by
 
 ```sql
 SELECT name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'cancelled');
 ```
 
 — then check whether `orders.user_id` being NOT NULL saves this query (it does — but say exactly why).
-[Advanced] **P5.** Fix `bad_products`: design the normalized version (products, tags, product_tags) and write the query "products with the 'usb' tag" in *both* worlds. Feel the difference.
-[Advanced] **P6.** The N+1 rewrite: write the single query that replaces the pseudo-code loop — plus the window-function version listing each user's orders in one round trip.
-[Advanced] **P7. From memory:** write the anti-pattern catalog's *titles* from memory. Which three did you personally hit in this track? Link the day.
 
-## Debugging — The Gauntlet
+[Intermediate] **C2.** `[From Memory]` write the anti-pattern catalog's *titles* from memory. Which three did you personally hit in this track? Link the day.
 
-Three snippets, three different families — diagnose, fix, verify:
+[Intermediate] **C3.** The LEFT JOIN + WHERE trap (example 2). Predict the row-count change vs moving `o.status = 'delivered'` into the ON clause. Measure both.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Three snippets, three different families — diagnose, fix, verify:
 
 ```sql
 -- A: "users who never reviewed" returns nothing, but some users have no reviews
@@ -100,23 +104,9 @@ SELECT * FROM orders WHERE ordered_at - INTERVAL '30 days' > CURRENT_DATE - INTE
 SELECT name FROM bad_products WHERE tags = 'black';
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Write your team's **SQL style guide**, 10 rules max, in your notes — mixing this day's catalog with your own scars ("always preview WHERE before UPDATE", "always COUNT(child.id)", "no functions on indexed columns"). The capstone asks you to apply it.
 
-Write your team's **SQL style guide**, 10 rules max, in your notes — mixing this day's catalog with your own scars ("always preview WHERE before UPDATE", "always COUNT(child.id)", "no functions on indexed columns"). The capstone asks you to apply it.
-
-## Previous Knowledge
-
-1. The 6-question denormalization framework — from memory.
-2. Why is a price snapshot in order_items *history*, not duplication?
-3. What should you try before denormalizing?
-4. EXPLAIN vs EXPLAIN ANALYZE — one line.
-
-## Recall
-
-1. Name the five correctness anti-patterns.
-2. Explain the LEFT JOIN + WHERE trap in one sentence.
-3. Why is `NOT IN` risky, and what's the safer idiom?
-4. What is N+1 and its fix?
+[Advanced] **H3.** Fix `bad_products`: design the normalized version (products, tags, product_tags) and write the query "products with the 'usb' tag" in *both* worlds. Feel the difference.
 
 ## Interview Questions
 
@@ -127,9 +117,7 @@ Write your team's **SQL style guide**, 10 rules max, in your notes — mixing th
 ## Completion Checklist
 
 - [ ] Understand all three anti-pattern families
-- [ ] Completed P1–P7 (P4 predicted first)
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Survived the gauntlet
 - [ ] Wrote your personal style guide
-- [ ] Answered recall without notes
 - [ ] Can diagnose wrong-results vs slow-results queries on sight
-
