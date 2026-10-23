@@ -52,22 +52,27 @@ SELECT * FROM big_orders WHERE user_id = 417;
 
 ## Practice
 
-[Beginner] **P1.** Load `perf_lab` (`./scripts/utilities/load-large-postgres.sh`), turn on `\timing`, and run the `user_id = 417` query *before* indexing. Record the ms.
-[Beginner] **P2.** Create the index. Rerun. Record the ms. Write one sentence: how many times faster?
-[Beginner] **P3.** `\d big_orders` — find your index in the listing.
-[Intermediate] **P4.** Now time a query that filters on `ordered_at` (a *different* column): `SELECT count(*) FROM big_orders WHERE ordered_at = DATE '2025-01-15';` — slow again? Why didn't the user_id index help?
-[Intermediate] **P5.** Create an index on `ordered_at`, rerun P4's query. Compare.
-[Intermediate] **P6. Predict first:** will this query use your `user_id` index? Why or why not? Then find out (Day 23 gives the tool, but you can guess by timing):
+### 🟢 Warm Up
+
+[Beginner] **W1.** Load `perf_lab` (`./scripts/utilities/load-large-postgres.sh`), turn on `\timing`, and run the `user_id = 417` query *before* indexing. Record the ms.
+
+[Beginner] **W2.** Create the index. Rerun. Record the ms. Write one sentence: how many times faster?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` will this query use your `user_id` index? Why or why not? Then find out (Day 23 gives the tool, but you can guess by timing):
 
 ```sql
 SELECT * FROM big_orders WHERE user_id = 417 OR status = 'pending';
 ```
 
-[Intermediate] **P7. From memory:** create an index on `big_order_items.order_id`. Time the difference on `SELECT * FROM big_order_items WHERE order_id = 100000;`
-[Advanced] **P8.** Range query: time `SELECT * FROM big_orders WHERE ordered_at BETWEEN '2025-01-01' AND '2025-01-31'` before and after an index on `ordered_at`. Does an index help ranges, or only equality? Write one sentence.
-[Advanced] **P9.** The write cost, measured: time `INSERT INTO big_users ... ` (one row, any values, id 60000) — then DROP both indexes on big tables that reference writes... actually simpler: create 3 more indexes on big_orders, then insert one row and time it. Now drop all 5 indexes, insert, time again. Feel the write tax.
+[Intermediate] **C2.** `[From Memory]` create an index on `big_order_items.order_id`. Time the difference on `SELECT * FROM big_order_items WHERE order_id = 100000;`
 
-## Debugging
+[Intermediate] **C3.** `\d big_orders` — find your index in the listing.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (logical): "my index isn't being used!" 
@@ -85,23 +90,9 @@ SELECT * FROM big_users WHERE name LIKE '%User 42%';
 -- jump. What WOULD use the index: LIKE 'User 42%'. Verify with a timing test.)
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Everything together: find the top 5 users by **total delivered revenue** on the big dataset (`big_orders` + GROUP BY + ORDER + LIMIT). Before creating any index, time the join+group query. Then add an index on `big_orders(user_id, status)`... rerun. Which index matters for the GROUP BY key? (Composite index order — a taste of tomorrow's PG-track depth.)
 
-Everything together: find the top 5 users by **total delivered revenue** on the big dataset (`big_orders` + GROUP BY + ORDER + LIMIT). Before creating any index, time the join+group query. Then add an index on `big_orders(user_id, status)`... rerun. Which index matters for the GROUP BY key? (Composite index order — a taste of tomorrow's PG-track depth.)
-
-## Previous Knowledge
-
-1. ACID — the four letters, one line each.
-2. What can't ROLLBACK undo?
-3. Write from memory: the safe-experiment pattern (BEGIN/DELETE/ROLLBACK).
-4. 1NF violation example — one line.
-
-## Recall
-
-1. What structure does a typical index use, and why is lookup O(log n)?
-2. Two costs of an index — name both.
-3. When does an index NOT help (two cases: wrong column / low selectivity)?
-4. What's a sequential scan?
+[Advanced] **H3.** Range query: time `SELECT * FROM big_orders WHERE ordered_at BETWEEN '2025-01-01' AND '2025-01-31'` before and after an index on `ordered_at`. Does an index help ranges, or only equality? Write one sentence.
 
 ## Interview Questions
 
@@ -113,8 +104,5 @@ Everything together: find the top 5 users by **total delivered revenue** on the 
 
 - [ ] Understand index structure, benefits, costs
 - [ ] Measured before/after timings (wrote them down!)
-- [ ] Completed P1–P9 (P6 predicted first)
-- [ ] Fixed all three "bugs" (they're diagnostic thinking exercises)
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain index trade-offs out loud

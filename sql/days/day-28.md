@@ -6,7 +6,7 @@
 
 ## Goal
 
-Prove to yourself the 27 days stuck. Written review → query drills → debugging drills → a recorded mock interview.
+Prove to yourself the 27 days stuck. Written review → query drills → applied diagnosis → a recorded mock interview.
 
 ## The Skill Map — what today must prove
 
@@ -14,7 +14,7 @@ Prove to yourself the 27 days stuck. Written review → query drills → debuggi
 |---|---|---|
 | Read/filter/sort/page | Drills D1–D3 | 2–4 |
 | Safe writes + verification | D3 | 5–6 |
-| NULL-aware queries | D2, debugging A | 7 |
+| NULL-aware queries | D2, diagnosis A | 7 |
 | Aggregation + grouping | D2, D5 | 9–10 |
 | Joins incl. "no match" | D4 | 11–13 |
 | Subqueries & CTEs | D6 | 14–15 |
@@ -57,7 +57,7 @@ Write each from memory. Verify. If you can't, re-read that day — that's the *s
 [Advanced] **D9.** A transaction: create order + item + decrement stock, with a deliberate failure showing atomicity. (Day 21)
 [Advanced] **D10.** EXPLAIN ANALYZE a query of your choice on `perf_lab`; fix one thing; show before/after. (Days 22–24)
 
-## Part 3 — Debugging Drills
+## Part 3 — Applied Diagnosis
 
 ```sql
 -- A: silent empty result (name it, fix it)
@@ -102,6 +102,6 @@ Grade yourself per question: could I answer the *follow-ups* without notes? Anyt
 
 - [ ] Part 1 answered in writing before checking
 - [ ] D1–D10 written from memory and verified
-- [ ] Debugging drills diagnosed correctly
+- [ ] Applied diagnosis completed correctly
 - [ ] Mock interview recorded and graded honestly
 - [ ] Shaky topics scheduled for morning review

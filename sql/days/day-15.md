@@ -102,28 +102,23 @@ SELECT n FROM seq;
 
 ## Practice
 
-[Beginner] **P1.** CTE `paid` = paid invoices; total per organization (org name, sum).
-[Beginner] **P2.** CTE `busy` = users with at least one `doing` task; list their names.
-[Beginner] **P3.** Type the CTE version of the "pro-plan chain" example yourself, then verify it matches the nested version's result.
-[Intermediate] **P4.** Chained: `late_deadlines` (projects past deadline) → `tasks_in_those` → per-project open task count.
-[Intermediate] **P5. Predict first** — output of the countdown CTE above (exact rows, exact order).
-[Intermediate] **P6. From memory:** with a CTE named `big`, select pro-plan organizations having more than 1 project; output org name + project count.
-[Advanced] **P7.** Recursion on the Day 13 `employees` table (recreate it if needed): walk the hierarchy from the CEO — id, name, manager_id, **depth** (CEO = 1, reports = 2, ...):
+### 🟢 Warm Up
 
-```sql
-WITH RECURSIVE tree AS (
-    SELECT id, name, manager_id, 1 AS depth FROM employees WHERE manager_id IS NULL
-    UNION ALL
-    SELECT e.id, e.name, e.manager_id, t.depth + 1
-    FROM employees e JOIN tree t ON e.manager_id = t.id
-)
-SELECT * FROM tree;
-```
+[Beginner] **W1.** CTE `paid` = paid invoices; total per organization (org name, sum).
 
-Type it, run it, then **explain each line out loud** — a famous interview pattern.
-[Advanced] **P8.** A recursive date series: every date from Jan 1 to Jan 7, 2025 (`DATE '2025-01-01' + n`).
+[Beginner] **W2.** CTE `busy` = users with at least one `doing` task; list their names.
 
-## Debugging
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — output of the countdown CTE above (exact rows, exact order).
+
+[Intermediate] **C2.** `[From Memory]` with a CTE named `big`, select pro-plan organizations having more than 1 project; output org name + project count.
+
+[Intermediate] **C3.** Type the CTE version of the "pro-plan chain" example yourself, then verify it matches the nested version's result.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: something is missing before "tree"
@@ -146,23 +141,21 @@ WITH done AS (SELECT * FROM tasks WHERE status = 'done')
 SELECT COUNT(*) FROM tasks;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Yesterday's two-queries limitation, solved: **username, post_count, follower_count in ONE query** — two CTEs (posts grouped, followers grouped) + join + COALESCE for zeros. Dataset: `social`. This is the glue you couldn't write yesterday — feel the upgrade.
 
-Yesterday's two-queries limitation, solved: **username, post_count, follower_count in ONE query** — two CTEs (posts grouped, followers grouped) + join + COALESCE for zeros. Dataset: `social`. This is the glue you couldn't write yesterday — feel the upgrade.
+[Advanced] **H3.** Recursion on the Day 13 `employees` table (recreate it if needed): walk the hierarchy from the CEO — id, name, manager_id, **depth** (CEO = 1, reports = 2, ...):
 
-## Previous Knowledge
+```sql
+WITH RECURSIVE tree AS (
+    SELECT id, name, manager_id, 1 AS depth FROM employees WHERE manager_id IS NULL
+    UNION ALL
+    SELECT e.id, e.name, e.manager_id, t.depth + 1
+    FROM employees e JOIN tree t ON e.manager_id = t.id
+)
+SELECT * FROM tree;
+```
 
-1. Correlated vs plain subquery — one line each.
-2. Write from memory: products above their own category's average price.
-3. The "never X" LEFT JOIN pattern — from memory.
-4. What does `> ALL` do?
-
-## Recall
-
-1. What is a CTE and how long does it live?
-2. What makes chaining possible — what can a later CTE see?
-3. What are the two required parts of a recursive CTE?
-4. When is a CTE better than a subquery in FROM?
+Type it, run it, then **explain each line out loud** — a famous interview pattern.
 
 ## Interview Questions
 
@@ -173,9 +166,5 @@ Yesterday's two-queries limitation, solved: **username, post_count, follower_cou
 ## Completion Checklist
 
 - [ ] Understand WITH, chained CTEs, recursion
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task (the two-CTE user report)
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain CTEs + recursion out loud
-

@@ -69,12 +69,15 @@ FROM orders o FULL JOIN payments pay ON pay.order_id = o.id;
 
 ## Practice
 
-[Beginner] **P1.** Every user with their order count — **including users with zero orders**. (`COUNT(o.id)`, not `COUNT(*)` — why?)
-[Beginner] **P2.** Every user with order ids; users without orders appear once. (This is P1's little sibling.)
-[Beginner] **P3.** Users who have never written a review. LEFT JOIN pattern.
-[Intermediate] **P4.** Products never ordered — with their category_id and price.
-[Intermediate] **P5.** Categories that have **no products** in them. (Careful: which side is categories?)
-[Intermediate] **P6. Predict first** — exact rows:
+### 🟢 Warm Up
+
+[Beginner] **W1.** Every user with their order count — **including users with zero orders**. (`COUNT(o.id)`, not `COUNT(*)` — why?)
+
+[Beginner] **W2.** Every user with order ids; users without orders appear once. (This is P1's little sibling.)
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — exact rows:
 
 ```sql
 SELECT u.name, o.id AS order_id
@@ -83,11 +86,14 @@ ORDER BY u.name;
 ```
 
 *(Tricky! A join condition can carry extra terms. Which users' rows have NULL? Note: users 5 and 9 have delivered orders... check the data first, predict, run.)*
-[Intermediate] **P7. From memory:** reviews with product names (every review, even if... there's a subtlety — which join type and why?).
-[Advanced] **P8.** Orders with **no payment** (pending or cancelled but unpaid — but be careful: one delivered order also has no payment? Check with data). Show order id + status.
-[Advanced] **P9.** Users whose **only** orders are cancelled (they ordered, but nothing ever shipped/delivered). Hard! Hint: LEFT JOIN with condition `status <> 'cancelled'`, then `IS NULL`... on what?
 
-## Debugging
+[Intermediate] **C2.** `[From Memory]` reviews with product names (every review, even if... there's a subtlety — which join type and why?).
+
+[Intermediate] **C3.** Users who have never written a review. LEFT JOIN pattern.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: meant "users without orders" — why does this return nobody... ever?
@@ -108,23 +114,9 @@ LEFT JOIN categories c ON p.category_id = c.id
 WHERE c.id IS NULL;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The retention report: **users who joined in 2024, have never ordered, and are active** — name, city, joined_at. LEFT JOIN + IS NULL + WHERE (two conditions) + ORDER BY join date. Predict the count first.
 
-The retention report: **users who joined in 2024, have never ordered, and are active** — name, city, joined_at. LEFT JOIN + IS NULL + WHERE (two conditions) + ORDER BY join date. Predict the count first.
-
-## Previous Knowledge
-
-1. What does ON do in a JOIN?
-2. What happens to unmatched rows in INNER JOIN?
-3. Write from memory: posts per username, top 3 busiest.
-4. What was the NOT IN NULL trap?
-
-## Recall
-
-1. LEFT vs INNER: what's the difference in output for a user with no orders?
-2. How do you find "rows with no match"? (The full pattern, from memory.)
-3. Why must you count `COUNT(o.id)` and not `COUNT(*)` in a LEFT JOIN?
-4. When is FULL JOIN actually useful?
+[Advanced] **H3.** Orders with **no payment** (pending or cancelled but unpaid — but be careful: one delivered order also has no payment? Check with data). Show order id + status.
 
 ## Interview Questions
 
@@ -135,8 +127,5 @@ The retention report: **users who joined in 2024, have never ordered, and are ac
 ## Completion Checklist
 
 - [ ] Understand LEFT/RIGHT/FULL joins + IS NULL pattern
-- [ ] Completed P1–P9 (P6 predicted first)
-- [ ] Fixed all three bugs (Bug 2 is a famous trap)
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain outer joins + the no-match pattern out loud

@@ -72,23 +72,27 @@ DELETE FROM flat_orders WHERE order_id = 2;
 
 ## Practice
 
-[Beginner] **P1.** Build `flat_orders`. Run the update-anomaly UPDATE. SELECT * and point at the duplicated fact.
-[Beginner] **P2.** Show the delete anomaly: what knowledge about Blenders disappeared with Bilal's order?
-[Intermediate] **P3.** **Normalize to 1NF:** design tables where every cell is atomic (orders + order_items split). Write the CREATEs and INSERTs.
-[Intermediate] **P4.** **Normalize to 3NF:** continue — customers get their own table, products get their own. Four tables: customers, products, orders, order_items. Add PKs and FKs (Day 19!).
-[Intermediate] **P5. Predict first** — which normal form is violated, and which anomaly can bite?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Build `flat_orders`. Run the update-anomaly UPDATE. SELECT * and point at the duplicated fact.
+
+[Beginner] **W2.** Show the delete anomaly: what knowledge about Blenders disappeared with Bilal's order?
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — which normal form is violated, and which anomaly can bite?
 
 ```text
 students(student_id PK, name, advisor_id, advisor_name, advisor_room)
 ```
 
-[Intermediate] **P6.** Is the `ecommerce` schema normalized? Walk each table: 1NF? 2NF? 3NF?
-[Advanced] **P7.** Denormalize *on purpose*: add `likes_count` to a copy of posts (mental exercise is fine). Write the UPDATE that maintains it after inserting a like. What can go wrong over time?
-[Advanced] **P8.** Argue in 3 sentences: should `orders.total_amount` exist, or should it always be computed from `order_items`? Consider read speed, write cost, drift risk.
+[Intermediate] **C2.** **Normalize to 1NF:** design tables where every cell is atomic (orders + order_items split). Write the CREATEs and INSERTs.
 
-## Debugging
+[Intermediate] **C3.** **Normalize to 3NF:** continue — customers get their own table, products get their own. Four tables: customers, products, orders, order_items. Add PKs and FKs (Day 19!).
 
-Design debugging — each design invites an anomaly. Name it:
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Design debugging — each design invites an anomaly. Name it:
 
 ```sql
 -- Design 1
@@ -102,23 +106,9 @@ CREATE TABLE playlists (id INT PRIMARY KEY, song1 TEXT, song2 TEXT, song3 TEXT);
 CREATE TABLE invoices (id INT PRIMARY KEY, client_name TEXT, client_email TEXT, amount NUMERIC);
 ```
 
-## Combine Concepts
+[Advanced] **H2.** Full cycle: take `flat_orders` → normalize into 4 tables (P4) → write the JOIN that *reconstructs* the original flat view (orders JOIN customers JOIN order_items JOIN products) → compare row-for-row with `flat_orders`. That's the whole point: **normalized storage, denormalized views via joins**.
 
-Full cycle: take `flat_orders` → normalize into 4 tables (P4) → write the JOIN that *reconstructs* the original flat view (orders JOIN customers JOIN order_items JOIN products) → compare row-for-row with `flat_orders`. That's the whole point: **normalized storage, denormalized views via joins**.
-
-## Previous Knowledge
-
-1. PK vs FK — one line each.
-2. What does ON DELETE CASCADE do — and its risk?
-3. The "users with no orders" pattern — from memory.
-4. Constraints — name all five you know.
-
-## Recall
-
-1. Name the three anomalies with one-line examples.
-2. 1NF, 2NF, 3NF — one line each.
-3. The working rule of thumb (four words)?
-4. When is denormalization correct — and what does it cost?
+[Advanced] **H3.** Denormalize *on purpose*: add `likes_count` to a copy of posts (mental exercise is fine). Write the UPDATE that maintains it after inserting a like. What can go wrong over time?
 
 ## Interview Questions
 
@@ -130,8 +120,5 @@ Full cycle: take `flat_orders` → normalize into 4 tables (P4) → write the JO
 
 - [ ] Understand anomalies, 1NF–3NF, denormalization trade-offs
 - [ ] Built flat_orders and felt every anomaly
-- [ ] Completed P1–P8 (P5 predicted first)
-- [ ] Completed the normalize-then-reconstruct combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain normalization out loud with an example
-

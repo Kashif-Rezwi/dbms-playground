@@ -77,12 +77,15 @@ HAVING SUM(total_amount) > 5000;
 
 ## Practice
 
-[Beginner] **P1.** Users per city (city, count), alphabetical by city.
-[Beginner] **P2.** Products per category, most products first.
-[Beginner] **P3.** Orders per status.
-[Intermediate] **P4.** Revenue per **payment method** — but only delivered orders. (Two tables! But wait — payments is a separate table... you can do it purely on `payments` with a hint... no: payment.method + orders.status need a join. **Stretch goal** — skip if stuck, revisit Day 12. Instead do: revenue per method using just `payments`.)
-[Intermediate] **P5.** Average rating per product (product_id, avg rounded), only products with at least 2 reviews.
-[Intermediate] **P6. Predict first** — exactly which groups appear?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Users per city (city, count), alphabetical by city.
+
+[Beginner] **W2.** Products per category, most products first.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — exactly which groups appear?
 
 ```sql
 SELECT category_id, MAX(price) AS priciest
@@ -92,15 +95,13 @@ GROUP BY category_id
 HAVING MAX(price) > 5000;
 ```
 
-[Intermediate] **P7. From memory:** total quantity sold per product_id from `order_items`, sorted best-seller first, top 5.
-[Advanced] **P8.** Customers (user_id) whose **average** order value exceeds 3000, counting non-cancelled orders only. Two filters + one group + one having.
-[Advanced] **P9.** Explain in one sentence why this fails, then fix it *two ways* (one fix: GROUP BY more; other fix: aggregate it):
+[Intermediate] **C2.** `[From Memory]` total quantity sold per product_id from `order_items`, sorted best-seller first, top 5.
 
-```sql
-SELECT status, ordered_at, COUNT(*) FROM orders GROUP BY status;
-```
+[Intermediate] **C3.** Orders per status.
 
-## Debugging
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1
@@ -113,23 +114,9 @@ SELECT city, COUNT(*) AS n FROM users WHERE COUNT(*) > 1 GROUP BY city;
 SELECT category_id, AVG(name) FROM products GROUP BY category_id;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** A real analytics sentence: **"Revenue per city, for cities whose total revenue exceeds 5000, excluding cancelled orders, biggest city first."** You need users→orders (two tables — hint: today, run it on `orders` grouped by `user_id` and map ids to cities by eye from a second query; Day 11 automates the join). Write both queries.
 
-A real analytics sentence: **"Revenue per city, for cities whose total revenue exceeds 5000, excluding cancelled orders, biggest city first."** You need users→orders (two tables — hint: today, run it on `orders` grouped by `user_id` and map ids to cities by eye from a second query; Day 11 automates the join). Write both queries.
-
-## Previous Knowledge
-
-1. Write from memory: count of out-of-stock products.
-2. What are `%` and `_` in LIKE? One example each.
-3. What does BETWEEN do at its endpoints?
-4. What does COALESCE do?
-
-## Recall
-
-1. What does GROUP BY do — describe the boxes.
-2. WHERE vs HAVING: what does each filter, and in what order?
-3. What's the rule for which columns can appear in SELECT alongside aggregates?
-4. Full clause order: list all seven from memory.
+[Advanced] **H3.** Customers (user_id) whose **average** order value exceeds 3000, counting non-cancelled orders only. Two filters + one group + one having.
 
 ## Interview Questions
 
@@ -144,8 +131,5 @@ Build **[P2: Library Analytics](../projects/02-library-analytics.md)** — a sma
 ## Completion Checklist
 
 - [ ] Understand GROUP BY, HAVING, clause ordering
-- [ ] Completed P1–P9 (P6 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 2

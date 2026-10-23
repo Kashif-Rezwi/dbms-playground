@@ -77,16 +77,23 @@ COMMIT;      -- observe: order 51 is NOT in the table
 
 ## Practice
 
-[Beginner] **P1.** Run the safe-experiment block. Say out loud what just happened.
-[Beginner] **P2.** Run the multi-step write. Verify: order 50 exists, its item exists, stock dropped by 1.
-[Beginner] **P3.** Run the FK-failure example. Check `SELECT * FROM orders WHERE id = 51;` — is the half-written order there? Which ACID letter saved you?
-[Intermediate] **P4.** Atomicity drill: BEGIN, update two users' `is_active`, ROLLBACK. Verify both reverted.
-[Intermediate] **P5.** Write the transaction for: order 51 — insert order AND item AND decrement stock — *successfully* (product 1). Verify all three effects.
-[Intermediate] **P6. Predict first:** inside a transaction you UPDATE a price; another psql session (new terminal tab) SELECTs that price *before your COMMIT*. What does session 2 see? Test with two tabs.
-[Intermediate] **P7. From memory:** the safe-experiment pattern — delete all payments and bring them back.
-[Advanced] **P8.** Build `CREATE TABLE accounts (id INT PRIMARY KEY, name TEXT, balance NUMERIC(12,2) CHECK (balance >= 0));` + two rows. Attempt a transfer that would overdraw it inside a transaction. What fires? What state is the transaction in? What must you do next? (Foreshadows PG Days 18–20.)
+### 🟢 Warm Up
 
-## Debugging
+[Beginner] **W1.** Run the safe-experiment block. Say out loud what just happened.
+
+[Beginner] **W2.** Run the multi-step write. Verify: order 50 exists, its item exists, stock dropped by 1.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` inside a transaction you UPDATE a price; another psql session (new terminal tab) SELECTs that price *before your COMMIT*. What does session 2 see? Test with two tabs.
+
+[Intermediate] **C2.** `[From Memory]` the safe-experiment pattern — delete all payments and bring them back.
+
+[Intermediate] **C3.** Run the FK-failure example. Check `SELECT * FROM orders WHERE id = 51;` — is the half-written order there? Which ACID letter saved you?
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (logical): why is this NOT a transaction?
@@ -104,23 +111,9 @@ ROLLBACK;      -- what happens? What does this teach about COMMIT's finality?
 -- Your psql has been open 10 minutes. What problems can that cause others?
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The full checkout: one transaction that (1) inserts an order, (2) inserts its items, (3) decrements stock, (4) inserts a payment, (5) sets order to paid — and add a *deliberate failure* at step 4 (UNIQUE violation: insert a second payment for order 1). Verify nothing survived. Then fix and rerun clean.
 
-The full checkout: one transaction that (1) inserts an order, (2) inserts its items, (3) decrements stock, (4) inserts a payment, (5) sets order to paid — and add a *deliberate failure* at step 4 (UNIQUE violation: insert a second payment for order 1). Verify nothing survived. Then fix and rerun clean.
-
-## Previous Knowledge
-
-1. The three anomalies of bad normalization — one line each.
-2. Write from memory: revenue per month pattern.
-3. What does a FK enforce?
-4. Window vs GROUP BY — output rows?
-
-## Recall
-
-1. The four ACID letters, one line each — from your own experience today.
-2. What does ROLLBACK undo, exactly? What *can't* it undo?
-3. What's autocommit?
-4. Which ACID letter stopped the half-written order?
+[Advanced] **H3.** Build `CREATE TABLE accounts (id INT PRIMARY KEY, name TEXT, balance NUMERIC(12,2) CHECK (balance >= 0));` + two rows. Attempt a transfer that would overdraw it inside a transaction. What fires? What state is the transaction in? What must you do next? (Foreshadows PG Days 18–20.)
 
 ## Interview Questions
 
@@ -135,9 +128,5 @@ Build **[P5: Bank Transfer Simulation](../projects/05-bank-transfer.md)** — ac
 ## Completion Checklist
 
 - [ ] Understand BEGIN/COMMIT/ROLLBACK + ACID
-- [ ] Completed P1–P8 (P6 tested with two sessions)
-- [ ] Fixed all three bugs
-- [ ] Completed the full-checkout combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 5
-

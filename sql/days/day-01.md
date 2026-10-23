@@ -67,13 +67,17 @@ Notice: `users` has a rule (`email` is UNIQUE) and a type on every column. The D
 
 ## Practice
 
-[Beginner] **P1.** List all tables. Then describe `orders`, `products`, and `reviews` (`\d orders`). For each, write down: how many columns, and what types you see (`int`, `text`, `numeric`, `date`, `bool`).
+### 🟢 Warm Up
 
-[Beginner] **P2.** Look at `shared/datasets/ecommerce.sql` (the seed file). Match each `CREATE TABLE` to what `\d` showed you.
+[Beginner] **W1.** List all tables. Then describe `orders`, `products`, and `reviews` (`\d orders`). For each, write down: how many columns, and what types you see (`int`, `text`, `numeric`, `date`, `bool`).
 
-[Beginner] **P3.** Open `shared/diagrams/ecommerce-er.md` and find the arrows. Each arrow reads "*one* → *many*": one user has many orders. Say out loud what these mean: users→orders, orders→order_items, products→order_items.
+[Beginner] **W2.** Look at `shared/datasets/ecommerce.sql` (the seed file). Match each `CREATE TABLE` to what `\d` showed you.
 
-[Intermediate] **P4. Predict first** (write your answer, *then* run it):
+### 🔵 Core
+
+[Intermediate] **C1.** Open `shared/diagrams/ecommerce-er.md` and find the arrows. Each arrow reads "*one* → *many*": one user has many orders. Say out loud what these mean: users→orders, orders→order_items, products→order_items.
+
+[Intermediate] **C2.** `[Predict]` (write your answer, *then* run it):
 
 ```sql
 SELECT * FROM categories;
@@ -81,11 +85,11 @@ SELECT * FROM categories;
 
 How many rows? What columns? (Hint: check the seed file.)
 
-[Intermediate] **P5.** Compare `SELECT * FROM users;` with `SELECT name, city FROM users;`. In one sentence: what did `*` do?
+[Intermediate] **C3.** Compare `SELECT * FROM users;` with `SELECT name, city FROM users;`. In one sentence: what did `*` do?
 
-## Debugging
+### 🟠 Challenge
 
-This query fails. Run it and read the error carefully:
+[Advanced] **H1.** `[Fix It]` This query fails. Run it and read the error carefully:
 
 ```sql
 SELECT * FROM user;
@@ -93,22 +97,7 @@ SELECT * FROM user;
 
 **Questions:** What exactly does the error say? What is wrong? What are the two ways to fix it? *(Check `\dt` — is there a table called `user`?)*
 
-## Combine Concepts
-
-Not much to combine yet — instead, do this: using `\d` and the ER diagram, trace the path from an `order` to a `user` to a `city`. Which column connects `orders` to `users`? Write your answer as a sentence.
-
-## Previous Knowledge
-
-First day — nothing to recall. Instead, warm up your *prediction* habit: before running any query in this course, always say the expected result out loud first.
-
-## Recall
-
-Without notes, answer:
-
-1. What's the difference between a database and a DBMS?
-2. What is a row? What is a column? Give a concrete example of each from `users`.
-3. Why not just store data in a JSON file?
-4. Is SQL a database? What is it?
+[Advanced] **H2.** Not much to combine yet — instead, do this: using `\d` and the ER diagram, trace the path from an `order` to a `user` to a `city`. Which column connects `orders` to `users`? Write your answer as a sentence.
 
 ## Interview Questions
 
@@ -120,7 +109,5 @@ Without notes, answer:
 
 - [ ] Understand concept: database, DBMS, table, row, column
 - [ ] Ran all examples, described 3+ tables with `\d`
-- [ ] Completed exercises P1–P5
-- [ ] Fixed the broken query and explained the error
-- [ ] Answered recall questions without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain "database vs DBMS vs SQL" out loud

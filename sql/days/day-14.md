@@ -81,23 +81,28 @@ WHERE p.price > (SELECT AVG(p2.price) FROM products p2
 
 ## Practice
 
-[Beginner] **P1.** Products priced above the overall average (scalar subquery).
-[Beginner] **P2.** Users who have cancelled at least one order (list subquery).
-[Beginner] **P3.** Categories whose average price is above the overall average — grouped query *inside* a comparison. Predict which categories before running.
-[Intermediate] **P4.** Products whose stock is above the average stock **of their own category** (correlated).
-[Intermediate] **P5.** Orders whose total is greater than **every** cancelled order's total (`> ALL`).
-[Intermediate] **P6. Predict first** — exact rows:
+### 🟢 Warm Up
+
+[Beginner] **W1.** Products priced above the overall average (scalar subquery).
+
+[Beginner] **W2.** Users who have cancelled at least one order (list subquery).
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` — exact rows:
 
 ```sql
 SELECT name FROM users
 WHERE id IN (SELECT user_id FROM orders WHERE status = 'pending');
 ```
 
-[Intermediate] **P7. From memory:** products cheaper than the Sports category's average price.
-[Advanced] **P8.** Reviews whose rating is above the **average rating of the same product** (correlated, two tables). Predict roughly which reviews these would be.
-[Advanced] **P9.** Rewrite Day 12's "users with no orders" using `NOT IN` instead of LEFT JOIN. Is `NOT IN` safe here? (`\d orders` — `user_id` is NOT NULL, so yes *here*. Say why it's safe, and when it wouldn't be.)
+[Intermediate] **C2.** `[From Memory]` products cheaper than the Sports category's average price.
 
-## Debugging
+[Intermediate] **C3.** Categories whose average price is above the overall average — grouped query *inside* a comparison. Predict which categories before running.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1: IN needs a column, the subquery returns a table
@@ -113,23 +118,9 @@ SELECT name FROM users
 WHERE joined_at > (SELECT ordered_at FROM orders);
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The pricing report: **name, price, category average, overall average** in one row — via a correlated subquery *in the SELECT list* (yes, subqueries can live there!). Then filter to products above their category average.
 
-The pricing report: **name, price, category average, overall average** in one row — via a correlated subquery *in the SELECT list* (yes, subqueries can live there!). Then filter to products above their category average.
-
-## Previous Knowledge
-
-1. Write from memory: users who never wrote a review (LEFT JOIN way).
-2. What's the NULL trap in NOT IN?
-3. When do you need aliases in a join? (Two cases now.)
-4. LEFT vs INNER JOIN — one sentence.
-
-## Recall
-
-1. What are the three subquery flavors by return type?
-2. What makes a subquery *correlated* — and what does that cost?
-3. `IN` vs JOIN: when would you prefer each?
-4. What does `> ALL` mean? `> ANY`?
+[Advanced] **H3.** Reviews whose rating is above the **average rating of the same product** (correlated, two tables). Predict roughly which reviews these would be.
 
 ## Interview Questions
 
@@ -144,9 +135,5 @@ Build **[P3: Student Course System](../projects/03-student-courses.md)** — stu
 ## Completion Checklist
 
 - [ ] Understand scalar/list/correlated subqueries
-- [ ] Completed P1–P9 (P6 predicted first)
-- [ ] Fixed all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Started Project 3
-

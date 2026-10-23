@@ -61,55 +61,39 @@ SELECT name FROM users WHERE bio IS NULL;
 
 ## Practice
 
-[Beginner] **P1.** Products with `stock = 0` (name and stock only).
-[Beginner] **P2.** Orders with status `'pending'` — all columns.
-[Beginner] **P3.** Products priced **under 1000** (name, price).
-[Beginner] **P4.** Users who are **inactive** (name).
-[Intermediate] **P5.** Products that cost more than 2000 **and** are in category 5 (Sports). Columns: name, price, category_id.
-[Intermediate] **P6.** Users from Karachi **or** Islamabad, who are active. (Two ways: OR and IN — IN arrives tomorrow, OR is enough today.)
-[Intermediate] **P7. Predict first**: write down exactly how many rows this returns *before* running:
+### 🟢 Warm Up
+
+[Beginner] **W1.** Products with `stock = 0` (display `name` and `stock`).
+
+[Beginner] **W2.** Inactive users from the `users` table — display `name` and `city` (revisiting Day 2's column selection).
+
+### 🔵 Core
+
+[Intermediate] **C1.** Products that cost more than 2000 **and** are in category 5 (Sports). Display `name`, `price`, and `category_id`.
+
+[Intermediate] **C2.** `[Predict]` Write down exactly how many rows this returns *before* running:
 
 ```sql
 SELECT name FROM users WHERE is_active = TRUE AND city = 'Karachi';
 ```
 
-[Intermediate] **P8. From memory:** products in category 3 (Books) with stock greater than 10. No notes.
-[Advanced] **P9.** Write a single query returning users whose city is Karachi, Lahore, **or** Multan, and who are inactive. Now write its opposite (same cities, active). Compare row counts.
+[Intermediate] **C3.** `[From Memory]` Retrieve products in category 3 (Books) with `stock > 10` without consulting notes.
 
-## Debugging
+[Intermediate] **C4.** Users whose city is Karachi, Lahore, **or** Multan, and who are inactive. Then write the opposite query (same cities, active users) and compare row counts.
 
-Each of these is broken. For each: what's wrong, why, fix, verify.
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Each of these queries contains a classic WHERE clause bug. Diagnose what is wrong, explain why, fix it, and verify the result:
 
 ```sql
--- Bug 1 (syntax)
-SELECT name FROM products WHERE price > 2000 AND;
-
--- Bug 2 (logical: runs fine, wrong meaning)
+-- Bug A (logical conflict: a single column cannot hold two values simultaneously)
 SELECT name FROM users WHERE city = 'Karachi' AND city = 'Lahore';
 
--- Bug 3 (silent zero rows)
+-- Bug B (the NULL trap: comparisons with NULL evaluate to UNKNOWN)
 SELECT name FROM users WHERE bio = NULL;
 ```
 
-*(Bug 2 is the classic: a row can never have two values for one column — `OR` was meant.)*
-
-## Combine Concepts
-
-Yesterday you computed `stock_value = price * stock`. Now write: **products whose stock value exceeds 50,000**, showing name, price, stock, and the computed stock value. (Filter on a computed column — WHERE can use expressions too.)
-
-## Previous Knowledge
-
-1. What does `AS` do?
-2. What are the two questions SELECT answers? Which clause answers "which rows"?
-3. What does the ER diagram say about orders and users — one-to-what?
-4. Write from memory: select name and email from users.
-
-## Recall
-
-1. Which rows survive a WHERE clause?
-2. Why does `= NULL` return nothing — even if NULLs exist?
-3. Difference between `AND` and `OR` — with a one-row example.
-4. What happens if you write `WHERE` twice in one query?
+[Advanced] **H2.** Combine Day 2's computed expressions with today's filtering: write a query for products whose computed stock value (`price * stock`) exceeds 50,000. Display `name`, `price`, `stock`, and the computed `stock_value`.
 
 ## Interview Questions
 
@@ -120,8 +104,5 @@ Yesterday you computed `stock_value = price * stock`. Now write: **products whos
 ## Completion Checklist
 
 - [ ] Understand WHERE, operators, NULL behavior
-- [ ] Completed P1–P9 (prediction written first for P7)
-- [ ] Fixed and explained all three bugs
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain the NULL trap out loud

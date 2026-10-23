@@ -68,21 +68,27 @@ DELETE FROM orders WHERE status = 'pending';
 
 ## Practice
 
-[Beginner] **P1.** Set `is_active` to TRUE for user id 8. Verify.
-[Beginner] **P2.** Raise the price of every product in category 1 (Electronics) by 5% (`price * 1.05`). Preview the affected rows *first*, then update, then verify.
-[Beginner] **P3.** Reduce stock of product 7 by 1 (as if one sold). One statement, using the old value.
-[Beginner] **P4.** Delete any user you created on Day 5 — *but preview first*. What happens if that user has orders? Read the error: that's a **foreign key violation**, the DB protecting you.
-[Intermediate] **P5. Predict first:** exactly how many rows change?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Set `is_active` to TRUE for user id 8. Verify.
+
+[Beginner] **W2.** Raise the price of every product in category 1 (Electronics) by 5% (`price * 1.05`). Preview the affected rows *first*, then update, then verify.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` exactly how many rows change?
 
 ```sql
 UPDATE users SET is_active = TRUE WHERE is_active = FALSE;
 ```
 
-[Intermediate] **P6.** Mark order 8 (pending) as `'shipped'`, setting its `ordered_at` to today — two columns, one statement.
-[Intermediate] **P7. From memory:** delete all reviews with rating 1 (none exist — predict the count first).
-[Advanced] **P8.** "Soft delete" pattern: instead of `DELETE`ing reviews with rating ≤ 2, *keep* them but... invent a way to mark them as hidden without adding a column. (Hint: a comment can be changed.) Explain when soft deletes beat hard deletes.
+[Intermediate] **C2.** `[From Memory]` delete all reviews with rating 1 (none exist — predict the count first).
 
-## Debugging
+[Intermediate] **C3.** Reduce stock of product 7 by 1 (as if one sold). One statement, using the old value.
+
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose and fix the broken queries:
 
 ```sql
 -- Bug 1 (catastrophic-by-design — run in a scratch table you create for safety)
@@ -101,23 +107,9 @@ UPDATE products SET stock = 0 WHERE category_id = 4;
 UPDATE products SET price = 100 WHERE id = 1 AND;
 ```
 
-## Combine Concepts
+[Advanced] **H2.** The Day 5 mini-flow, reversed: **update** all inactive users to active (preview → update → verify), then **list** active Karachi users sorted by join date, **top 3**. One workflow, four concepts.
 
-The Day 5 mini-flow, reversed: **update** all inactive users to active (preview → update → verify), then **list** active Karachi users sorted by join date, **top 3**. One workflow, four concepts.
-
-## Previous Knowledge
-
-1. What happens to unlisted columns in an INSERT?
-2. Write from memory: insert a category `(99, 'Testing')`. Then delete it. Safely.
-3. What does `SELECT DISTINCT status FROM orders` return?
-4. Why is `SELECT *` risky in code?
-
-## Recall
-
-1. What does an UPDATE without WHERE do? A DELETE without WHERE?
-2. What safety check do you run before every write?
-3. What does `SET stock = stock - 1` do that `SET stock = 99` doesn't?
-4. What stopped you from deleting a user with orders — and what is that mechanism called?
+[Advanced] **H3.** "Soft delete" pattern: instead of `DELETE`ing reviews with rating ≤ 2, *keep* them but... invent a way to mark them as hidden without adding a column. (Hint: a comment can be changed.) Explain when soft deletes beat hard deletes.
 
 ## Interview Questions
 
@@ -129,8 +121,5 @@ The Day 5 mini-flow, reversed: **update** all inactive users to active (preview 
 
 - [ ] Understand UPDATE, DELETE, WHERE scoping
 - [ ] Previewed before EVERY write
-- [ ] Completed P1–P8
-- [ ] Fixed all three bugs (on the sandbox copy!)
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain the no-WHERE danger out loud

@@ -55,12 +55,15 @@ SELECT name, name || ' (out of stock)' AS label FROM products;
 
 ## Practice
 
-[Beginner] **P1.** Select `name` and `email` from `users`.
-[Beginner] **P2.** Select `name`, `price`, and `stock` from `products` — but reverse the column order in your output (`stock` first). Verify order matters.
-[Beginner] **P3.** From `products`, show `name` and a computed column `stock_value` = `price * stock`. Alias it.
-[Beginner] **P4.** From `orders`, select `id` and a computed column `is_big` = `total_amount > 5000` (a boolean expression).
-[Intermediate] **P5.** Same as P3, but with `AS` omitted on the computed column. What header does PostgreSQL give it? Why does the alias matter?
-[Intermediate] **P6. Predict first:** how many columns and rows will this return, and what will the third column's values be?
+### 🟢 Warm Up
+
+[Beginner] **W1.** Select `name` and `email` from `users`.
+
+[Beginner] **W2.** Select `name`, `price`, and `stock` from `products` — but reverse the column order in your output (`stock` first). Verify order matters.
+
+### 🔵 Core
+
+[Intermediate] **C1.** `[Predict]` how many columns and rows will this return, and what will the third column's values be?
 
 ```sql
 SELECT name, price, price * 2 AS doubled FROM products WHERE price > 8000;
@@ -68,11 +71,13 @@ SELECT name, price, price * 2 AS doubled FROM products WHERE price > 8000;
 
 (If WHERE is unfamiliar, run it *after* predicting — Day 3 makes it clear.)
 
-[Intermediate] **P7. From memory:** write a query showing each product's `name` and `price_in_cents` (price × 100), for the products table. No notes, no peeking at today's examples.
+[Intermediate] **C2.** `[From Memory]` write a query showing each product's `name` and `price_in_cents` (price × 100), for the products table. No notes, no peeking at today's examples.
 
-## Debugging
+[Intermediate] **C3.** From `products`, show `name` and a computed column `stock_value` = `price * stock`. Alias it.
 
-Diagnose both. For each: what's wrong, why, fix it, verify the fix.
+### 🟠 Challenge
+
+[Advanced] **H1.** `[Fix It]` Diagnose both. For each: what's wrong, why, fix it, verify the fix.
 
 ```sql
 -- Bug 1
@@ -84,23 +89,7 @@ SELECT name, price FROM product;
 
 *(Hint for Bug 1: there's no error message! That's what makes it a logical bug.)*
 
-## Combine Concepts
-
-Use the ER diagram from Day 1: write a query on `order_items` showing `order_id`, `product_id`, and a computed column `line_total` (`quantity * unit_price`). Then, in a sentence, connect this to why the `order_items` table exists at all.
-
-## Previous Knowledge
-
-1. What's the difference between a database and a DBMS?
-2. Which table connects orders to the products inside them?
-3. What psql command shows a table's structure?
-4. Is `SELECT` dangerous to run? Why or why not?
-
-## Recall
-
-1. What are the two "questions" a SELECT answers?
-2. What does `AS` do? What happens without it?
-3. When is `SELECT *` acceptable?
-4. Does SELECT change data? Prove it: run a query twice, check the table between runs.
+[Advanced] **H2.** Use the ER diagram from Day 1: write a query on `order_items` showing `order_id`, `product_id`, and a computed column `line_total` (`quantity * unit_price`). Then, in a sentence, connect this to why the `order_items` table exists at all.
 
 ## Interview Questions
 
@@ -111,8 +100,5 @@ Use the ER diagram from Day 1: write a query on `order_items` showing `order_id`
 ## Completion Checklist
 
 - [ ] Understand SELECT, expressions, aliases
-- [ ] Completed P1–P7 (predictions written *before* running)
-- [ ] Fixed Bug 1 and Bug 2 and explained each
-- [ ] Completed combine task
-- [ ] Answered recall without notes
+- [ ] Completed Warm Up, Core, and Challenge exercises
 - [ ] Can explain SELECT + aliasing out loud
