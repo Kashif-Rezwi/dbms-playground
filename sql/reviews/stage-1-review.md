@@ -33,7 +33,7 @@ HAVING COUNT(*) > 0
 ORDER BY 2 DESC;
 ```
 
-## Part C — Debugging Gauntlet
+## Part C — Applied Diagnosis
 
 ```sql
 -- A: silent emptiness
